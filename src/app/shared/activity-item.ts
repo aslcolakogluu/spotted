@@ -1,0 +1,157 @@
+import { Component, Input, input } from '@angular/core';
+import { Activity, ActivityType } from '@core/models';
+
+@Component({
+  selector: 'app-activity-item',
+  standalone: true,
+  imports: [],
+  template: `
+    <div class="flex items-start gap-3 p-4 hover:bg-gray-50 rounded-lg transition-colors duration-200">
+      <!-- User Avatar -->
+      <div class="flex-shrink-0">
+        <div class="w-10 h-10 rounded-full bg-gradient-to-br from-indigo-400 to-purple-500 flex items-center justify-center text-white font-semibold">
+          {{ getUserInitials() }}
+        </div>
+      </div>
+
+      <!-- Content -->
+      <div class="flex-1 min-w-0">
+        <div class="flex items-start justify-between gap-2">
+          <div class="flex-1">
+            <p class="text-sm text-gray-900">
+              <span class="font-semibold">{{ activity.userName }}</span>
+              <span class="text-gray-600 mx-1">{{ activity.action }}</span>
+              @if (activity.description) {
+                <span class="text-gray-900">{{ activity.description }}</span>
+              }
+            </p>
+            
+            <!-- Metadata -->
+            @if (hasMetadata()) {
+              <div class="mt-1 flex items-center gap-2">
+                <!-- Rating -->
+                @if (activity.metadata?.rating) {
+                  <div class="flex items-center gap-1">
+                    <svg class="w-4 h-4 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                    </svg>
+                    <span class="text-xs font-medium text-gray-700">{{ activity.metadata!.rating }}/5</span>
+                  </div>
+                }
+
+                <!-- Share Count -->
+                @if (activity.metadata?.shareCount) {
+                  <span class="text-xs text-gray-500">
+                  {{ activity.metadata!.shareCount }} paylaşım
+                  </span>
+                }
+              </div>
+            }
+
+            <!-- Timestamp -->
+            <p class="mt-1 text-xs text-gray-500">
+              {{ getTimeAgo() }}
+            </p>
+          </div>
+
+          <!-- Activity Type Icon -->
+          <div class="flex-shrink-0">
+            <div [class]="getIconContainerClass()">
+              <!-- ✅ innerHTML yerine @switch kullan - daha güvenli -->
+              @switch (activity.type) {
+                @case (ActivityType.SPOT_ADDED) {
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                  </svg>
+                }
+                @case (ActivityType.SPOT_REVIEWED) {
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                  </svg>
+                }
+                @case (ActivityType.SPOT_VISITED) {
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                  </svg>
+                }
+                @case (ActivityType.SPOT_FAVORITED) {
+                  <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" />
+                  </svg>
+                }
+                @case (ActivityType.SPOT_SHARED) {
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
+                  </svg>
+                }
+                @case (ActivityType.USER_JOINED) {
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
+                  </svg>
+                }
+              }
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  `,
+  styles: []
+})
+export class ActivityItemComponent {
+  @Input() activity!: Activity;
+
+  // ✅ Enum'u template'de kullanabilmek için
+  ActivityType = ActivityType;
+
+  getUserInitials(): string {
+    const names = this.activity.userName.split(' ');
+    if (names.length >= 2) {
+      return (names[0][0] + names[1][0]).toUpperCase();
+    }
+    return this.activity.userName.substring(0, 2).toUpperCase();
+  }
+
+  hasMetadata(): boolean {
+    return !!(this.activity.metadata && 
+      (this.activity.metadata.rating || this.activity.metadata.shareCount));
+  }
+
+  getTimeAgo(): string {
+    const now = new Date();
+    const timestamp = new Date(this.activity.timestamp);
+    const diffInMs = now.getTime() - timestamp.getTime();
+    const diffInMinutes = Math.floor(diffInMs / (1000 * 60));
+
+    if (diffInMinutes < 1) return 'Az önce';
+    if (diffInMinutes < 60) return `${diffInMinutes} dakika önce`;
+    
+    const diffInHours = Math.floor(diffInMinutes / 60);
+    if (diffInHours < 24) return `${diffInHours} saat önce`;
+    
+    const diffInDays = Math.floor(diffInHours / 24);
+    if (diffInDays < 7) return `${diffInDays} gün önce`;
+    
+    const diffInWeeks = Math.floor(diffInDays / 7);
+    if (diffInWeeks < 4) return `${diffInWeeks} hafta önce`;
+    
+    return timestamp.toLocaleDateString('tr-TR');
+  }
+
+  getIconContainerClass(): string {
+    const baseClass = 'w-8 h-8 rounded-full flex items-center justify-center';
+    
+    const colorClasses: Record<ActivityType, string> = {
+      [ActivityType.SPOT_ADDED]: 'bg-green-100 text-green-600',
+      [ActivityType.SPOT_REVIEWED]: 'bg-blue-100 text-blue-600',
+      [ActivityType.SPOT_VISITED]: 'bg-purple-100 text-purple-600',
+      [ActivityType.SPOT_FAVORITED]: 'bg-red-100 text-red-600',
+      [ActivityType.SPOT_SHARED]: 'bg-yellow-100 text-yellow-600',
+      [ActivityType.USER_JOINED]: 'bg-indigo-100 text-indigo-600'
+    };
+
+    return `${baseClass} ${colorClasses[this.activity.type]}`;
+  }
+
+  
+}

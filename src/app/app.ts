@@ -1,12 +1,25 @@
-import { Component, signal } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Component } from '@angular/core';
+import { NavbarComponent } from './layout/navbar';
+import { HeroComponent } from './layout/hero';
+import { FeaturedSpotComponent } from './layout/featured-spots';
+import { ActivityListComponent } from './layout/activity-list';
+import { AddSpotCtaComponent } from './layout/added-spot-cta';
+import { FooterComponent } from './layout/footer';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
+  standalone: true,
+  imports: [
+    NavbarComponent,
+    HeroComponent,
+    FeaturedSpotComponent,
+    ActivityListComponent,
+    AddSpotCtaComponent,
+    FooterComponent
+  ],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
-export class App {
-  protected readonly title = signal('spotted');
+export class AppComponent {
+  title = 'spotted-in';
 }
