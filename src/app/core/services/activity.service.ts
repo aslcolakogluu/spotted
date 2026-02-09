@@ -97,7 +97,7 @@ export class ActivityService {
         userName: 'Ahmet Yılmaz',
         userAvatar: '/assets/avatars/user1.jpg',
         spotId: '1',
-        action: 'Adding a new spot',
+        action: ' Adding a new spot',
         description: 'Coffee Shop - "Newly opened cozy cafe in town!"',
         timestamp: new Date(now.getTime() - 1000 * 60 * 15),
         metadata: {}
@@ -110,7 +110,7 @@ export class ActivityService {
         userAvatar: '/assets/avatars/user2.jpg',
         spotId: '2',
         action: 'Wrote a review',
-        description: 'Pizza Place',
+        description: ' Pizza Place',
         timestamp: new Date(now.getTime() - 1000 * 60 * 30),
         metadata: {
           rating: 5,
@@ -125,7 +125,7 @@ export class ActivityService {
         userAvatar: '/assets/avatars/user3.jpg',
         spotId: '3',
         action: 'visited',
-        description: 'City Park',
+        description: ' City Park',
         timestamp: new Date(now.getTime() - 1000 * 60 * 45),
         metadata: {}
       },
@@ -137,7 +137,7 @@ export class ActivityService {
         userAvatar: '/assets/avatars/user4.jpg',
         spotId: '4',
         action: 'favorited',
-        description: 'Art Museum',
+        description: ' Art Museum',
         timestamp: new Date(now.getTime() - 1000 * 60 * 60),
         metadata: {}
       },
@@ -149,7 +149,7 @@ export class ActivityService {
         userAvatar: '/assets/avatars/user5.jpg',
         spotId: '5',
         action: 'shared',
-        description: 'AVM Center',
+        description: ' AVM Center',
         timestamp: new Date(now.getTime() - 1000 * 60 * 90),
         metadata: {
           shareCount: 12
@@ -161,7 +161,7 @@ export class ActivityService {
         userId: 'user6',
         userName: 'Zeynep Arslan',
         userAvatar: '/assets/avatars/user6.jpg',
-        action: 'joined the community',
+        action: ' joined the community',
         timestamp: new Date(now.getTime() - 1000 * 60 * 120),
         metadata: {}
       }

@@ -1,70 +1,51 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { ActivityService } from '@core/services';
 import { Activity } from '@core/models';
-import { ActivityItemComponent } from '@shared/activity-item';
 
 @Component({
   selector: 'app-activity-list',
   standalone: true,
-  imports: [ActivityItemComponent],
+  imports: [],
   template: `
-    <section class="py-16 px-4 bg-white">
-      <div class="max-w-7xl mx-auto">
-        <div class="flex items-center justify-between mb-8">
-          <div>
-            <h2 class="text-3xl font-bold text-gray-900 mb-2">
-              Son Aktiviteler
-            </h2>
-            <p class="text-gray-600">
-              Topluluğumuzda neler oluyor, hemen keşfet
-            </p>
-          </div>
+    <section class="px-12 py-18">
+      <div class="flex justify-between items-end mb-10">
+        <h2 style="font-family: 'Playfair Display', serif; font-size: 1.9rem; font-weight: 600; color: #eee8df;">
+          Last <em style="font-style: italic; color: #c8a96e;">Activities</em>
+        </h2>
+        <a href="#" style="font-size: 0.78rem; letter-spacing: 0.1em; text-transform: uppercase; color: #c8a96e; text-decoration: none; font-weight: 500; transition: opacity 0.2s;">All</a>
+      </div>
 
-          <button class="hidden md:flex items-center gap-2 px-4 py-2 text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
-            </svg>
-            <span class="font-medium">Yenile</span>
-          </button>
-        </div>
-
-        <!-- Activities -->
-        <div class="bg-white rounded-xl border border-gray-200 overflow-hidden">
-          @if (activities().length > 0) {
-            <div class="divide-y divide-gray-100">
-              @for (activity of activities(); track activity.id) {
-                <app-activity-item 
-                  [activity]="activity">
-                </app-activity-item>
-              }
-            </div>
-          } @else {
-            <!-- Empty State -->
-            <div class="text-center py-12">
-              <svg class="w-16 h-16 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-              </svg>
-              <h3 class="text-lg font-semibold text-gray-900 mb-2">Henüz aktivite yok</h3>
-              <p class="text-gray-600">İlk aktiviteyi sen oluştur!</p>
+      <!-- Activities -->
+      @if (activities().length > 0) {
+        <div class="flex flex-col gap-3">
+          @for (activity of activities(); track activity.id) {
+            <div class="activity-item flex items-center gap-3 p-3" style="background: #12141a; border: 1px solid rgba(255,255,255,0.06); border-radius: 8px; transition: all 0.2s;">
+              <div style="width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, #3a4550 0%, #2a3540 100%); flex-shrink: 0;"></div>
+              <div class="flex-1" style="font-size: 0.85rem; color: rgba(238,232,223,0.45);">
+                <strong style="color: #eee8df; font-weight: 500;">{{ activity.userName }}</strong> 
+                <span [innerHTML]="getActivityText(activity)"></span>
+              </div>
+              <span style="font-size: 0.72rem; color: rgba(238,232,223,0.45);">{{ getTimeAgo(activity.timestamp) }}</span>
             </div>
           }
         </div>
-
-        <!-- View More Button -->
-        @if (activities().length > 0 && activities().length >= limit) {
-          <div class="text-center mt-8">
-            <button 
-              (click)="loadMore()"
-              class="inline-flex items-center gap-2 px-6 py-3 border-2 border-indigo-600 text-indigo-600 font-semibold rounded-lg hover:bg-indigo-50 transition-colors">
-              Daha Fazla Göster
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-              </svg>
-            </button>
-          </div>
-        }
-      </div>
+      } @else {
+        <div class="text-center py-12">
+          <p style="color: rgba(238,232,223,0.45);">Henüz aktivite yok</p>
+        </div>
+      }
     </section>
+
+    <style>
+      .activity-item:hover {
+        background: #181c26;
+        border-color: rgba(200,169,110,0.15);
+      }
+      
+      .activity-item :global(.spot-name) {
+        color: #c8a96e;
+      }
+    </style>
   `,
   styles: []
 })
@@ -84,8 +65,38 @@ export class ActivityListComponent implements OnInit {
     });
   }
 
-  loadMore(): void {
-    this.limit += 10;
-    this.loadActivities();
+  getActivityText(activity: Activity): string {
+    const spotName = activity.description || '';
+    switch (activity.action) {
+      case 'Adding a new spot':
+        return `Adding a new spot:  <span class="spot-name">${spotName}</span>`;
+      case 'Wrote a review':
+        return ` wrote a review for <span class="spot-name">${spotName}</span>`;
+      case 'visited':
+        return ` visited <span class="spot-name">${spotName}</span>`;
+      case 'favorited':
+        return ` favorited <span class="spot-name">${spotName}</span>`;
+      case 'shared':
+        return ` shared <span class="spot-name">${spotName}</span>`;
+      case 'joined the community':
+        return 'joined the community';
+      default:
+        return activity.action;
+    }
+  }
+
+  getTimeAgo(timestamp: Date): string {
+    const now = new Date();
+    const diffInMs = now.getTime() - new Date(timestamp).getTime();
+    const diffInMinutes = Math.floor(diffInMs / (1000 * 60));
+
+    if (diffInMinutes < 1) return 'Just now';
+    if (diffInMinutes < 60) return `${diffInMinutes} minutes ago`;
+    
+    const diffInHours = Math.floor(diffInMinutes / 60);
+    if (diffInHours < 24) return `${diffInHours} hours ago`;
+    
+    const diffInDays = Math.floor(diffInHours / 24);
+    return `${diffInDays} days ago`;
   }
 }

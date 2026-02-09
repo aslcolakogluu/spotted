@@ -157,7 +157,7 @@ export class StatsService {
         },
         {
           spotId: '2',
-          spotName: 'Manzara Restaurant',
+          spotName: 'Pizza Restaurant',
           trendScore: 89,
           recentVisits: 198,
           growthRate: 38.2

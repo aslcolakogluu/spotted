@@ -1,71 +1,106 @@
 import { Component } from '@angular/core';
-import { ButtonComponent } from '@shared/button';
 
 @Component({
   selector: 'app-hero',
   standalone: true,
-  imports: [ButtonComponent],
+  imports: [],
   template: `
-    <section class="relative bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 py-20 px-4">
-      <div class="max-w-7xl mx-auto">
-        <div class="text-center">
-          <h1 class="text-4xl md:text-6xl font-bold text-white mb-6">
-            Şehrini Keşfet,
-            <br/>
-            <span class="bg-gradient-to-r from-yellow-300 to-orange-300 bg-clip-text text-transparent">
-              Deneyimlerini Paylaş
-            </span>
-          </h1>
-          
-          <p class="text-xl text-white/90 mb-8 max-w-2xl mx-auto">
-            En sevdiğin mekanları keşfet, yorumla ve topluluğumuzla paylaş. 
-            Şehrindeki gizli kalmış harika yerleri ortaya çıkar.
-          </p>
+    <section class="relative flex flex-col justify-end px-12 pb-20 overflow-hidden" style="height: 100vh;">
+      <!-- Background -->
+      <div class="absolute inset-0" style="background: linear-gradient(180deg, rgba(10,11,13,0.15) 0%, rgba(10,11,13,0.7) 60%, #0a0b0d 100%), linear-gradient(135deg, #1a2530 0%, #0d1117 40%, #1a1520 70%, #0d1117 100%); background-size: cover;"></div>
+      <div class="absolute inset-0" style="background: radial-gradient(ellipse 80% 50% at 30% 40%, rgba(40,60,80,0.35) 0%, transparent 70%), radial-gradient(ellipse 60% 40% at 75% 55%, rgba(60,40,60,0.25) 0%, transparent 70%), radial-gradient(ellipse 40% 30% at 60% 25%, rgba(80,100,60,0.2) 0%, transparent 70%);"></div>
+      
+      <!-- Content -->
+      <div class="relative z-10" style="max-width: 620px;">
+        <div class="inline-flex items-center gap-2 px-3.5 py-1.5 mb-6" style="background: rgba(200,169,110,0.15); border: 1px solid rgba(200,169,110,0.2); border-radius: 20px; font-size: 0.75rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: #c8a96e;">
+          <span class="dot" style="width: 6px; height: 6px; background: #6fbf82; border-radius: 50%; animation: pulse 2s infinite;"></span>
+          <span>Quiet corners of the city</span>
+        </div>
+        
+        <h1 style="font-family: 'Playfair Display', serif; font-size: clamp(2.8rem, 6vw, 4.5rem); font-weight: 600; line-height: 1.1; color: #eee8df; margin-bottom: 18px;">
+          Explore, <em style="font-style: italic; color: #c8a96e;">Share</em>,<br/>
+          Find the City's Hidden Gems
+        </h1>
+        
+        <p style="font-size: 1.05rem; font-weight: 300; line-height: 1.7; color: rgba(238,232,223,0.45); max-width: 480px; margin-bottom: 36px;">
+          Discover quiet and inspiring spots away from the city's noise.
+          Find a quiet corner for yourself during the quiet hours.
+        </p>
 
-          <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <app-button variant="primary" size="lg" class="bg-white text-indigo-600 hover:bg-gray-100">
-              <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-              </svg>
-              Mekanları Keşfet
-            </app-button>
-            
-            <app-button variant="outline" size="lg" class="border-white text-white hover:bg-white/10">
-              <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
-              </svg>
-              Mekan Ekle
-            </app-button>
-          </div>
-
-          <!-- Stats -->
-          <div class="mt-16 grid grid-cols-2 md:grid-cols-4 gap-8">
-            <div class="bg-white/10 backdrop-blur-sm rounded-xl p-6">
-              <div class="text-3xl font-bold text-white mb-2">1,247</div>
-              <div class="text-white/80 text-sm">Mekan</div>
-            </div>
-            <div class="bg-white/10 backdrop-blur-sm rounded-xl p-6">
-              <div class="text-3xl font-bold text-white mb-2">8,934</div>
-              <div class="text-white/80 text-sm">Kullanıcı</div>
-            </div>
-            <div class="bg-white/10 backdrop-blur-sm rounded-xl p-6">
-              <div class="text-3xl font-bold text-white mb-2">5,621</div>
-              <div class="text-white/80 text-sm">Yorum</div>
-            </div>
-            <div class="bg-white/10 backdrop-blur-sm rounded-xl p-6">
-              <div class="text-3xl font-bold text-white mb-2">23K+</div>
-              <div class="text-white/80 text-sm">Ziyaret</div>
-            </div>
-          </div>
+        <div class="flex gap-3.5 flex-wrap">
+          <button class="btn-hero-primary">Explore →</button>
+          <button class="btn-hero-secondary">Map View</button>
         </div>
       </div>
-
-      <!-- Decorative Elements -->
-      <div class="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
-        <div class="absolute top-20 left-10 w-72 h-72 bg-white/5 rounded-full blur-3xl"></div>
-        <div class="absolute bottom-20 right-10 w-96 h-96 bg-white/5 rounded-full blur-3xl"></div>
-      </div>
     </section>
+
+    <!-- STATS BAR -->
+    <div class="flex gap-12 px-12 py-7" style="background: #12141a; border-top: 1px solid rgba(255,255,255,0.06); border-bottom: 1px solid rgba(255,255,255,0.06);">
+      <div class="flex flex-col gap-1">
+        <span style="font-family: 'Playfair Display', serif; font-size: 1.6rem; font-weight: 600; color: #eee8df;">47</span>
+        <span style="font-size: 0.75rem; font-weight: 400; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(238,232,223,0.45);">Discovered Spots</span>
+      </div>
+      <div class="flex flex-col gap-1">
+        <span style="font-family: 'Playfair Display', serif; font-size: 1.6rem; font-weight: 600; color: #eee8df;">128</span>
+        <span style="font-size: 0.75rem; font-weight: 400; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(238,232,223,0.45);">Reviews</span>
+      </div>
+      <div class="flex flex-col gap-1">
+        <span style="font-family: 'Playfair Display', serif; font-size: 1.6rem; font-weight: 600; color: #eee8df;">23</span>
+        <span style="font-size: 0.75rem; font-weight: 400; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(238,232,223,0.45);">Active Explorers</span>
+      </div>
+      <div class="flex flex-col gap-1">
+        <span style="font-family: 'Playfair Display', serif; font-size: 1.6rem; font-weight: 600; color: #eee8df;">4.6</span>
+        <span style="font-size: 0.75rem; font-weight: 400; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(238,232,223,0.45);">Average Quietness</span>
+      </div>
+    </div>
+
+    <style>
+      @keyframes pulse {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.3; }
+      }
+      
+      .btn-hero-primary {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 14px 30px;
+        border-radius: 8px;
+        font-size: 0.88rem;
+        font-weight: 500;
+        letter-spacing: 0.04em;
+        background: #c8a96e;
+        color: #0a0b0d;
+        border: none;
+        cursor: pointer;
+        transition: all 0.3s;
+      }
+      
+      .btn-hero-primary:hover {
+        background: #d9bf84;
+        transform: translateY(-1px);
+      }
+      
+      .btn-hero-secondary {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 14px 30px;
+        border-radius: 8px;
+        font-size: 0.88rem;
+        font-weight: 500;
+        letter-spacing: 0.04em;
+        background: rgba(255,255,255,0.06);
+        color: #eee8df;
+        border: 1px solid rgba(255,255,255,0.06);
+        cursor: pointer;
+        transition: all 0.3s;
+      }
+      
+      .btn-hero-secondary:hover {
+        background: rgba(255,255,255,0.1);
+      }
+    </style>
   `,
   styles: []
 })

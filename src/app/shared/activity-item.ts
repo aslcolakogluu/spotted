@@ -42,7 +42,7 @@ import { Activity, ActivityType } from '@core/models';
                 <!-- Share Count -->
                 @if (activity.metadata?.shareCount) {
                   <span class="text-xs text-gray-500">
-                  {{ activity.metadata!.shareCount }} paylaşım
+                  {{ activity.metadata!.shareCount }} shared
                   </span>
                 }
               </div>
@@ -57,7 +57,6 @@ import { Activity, ActivityType } from '@core/models';
           <!-- Activity Type Icon -->
           <div class="flex-shrink-0">
             <div [class]="getIconContainerClass()">
-              <!-- ✅ innerHTML yerine @switch kullan - daha güvenli -->
               @switch (activity.type) {
                 @case (ActivityType.SPOT_ADDED) {
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -123,19 +122,19 @@ export class ActivityItemComponent {
     const diffInMs = now.getTime() - timestamp.getTime();
     const diffInMinutes = Math.floor(diffInMs / (1000 * 60));
 
-    if (diffInMinutes < 1) return 'Az önce';
-    if (diffInMinutes < 60) return `${diffInMinutes} dakika önce`;
+    if (diffInMinutes < 1) return 'Just now';
+    if (diffInMinutes < 60) return `${diffInMinutes} minutes ago`;
     
     const diffInHours = Math.floor(diffInMinutes / 60);
-    if (diffInHours < 24) return `${diffInHours} saat önce`;
+    if (diffInHours < 24) return `${diffInHours} hours ago`;
     
     const diffInDays = Math.floor(diffInHours / 24);
-    if (diffInDays < 7) return `${diffInDays} gün önce`;
+    if (diffInDays < 7) return `${diffInDays} days ago`;
     
     const diffInWeeks = Math.floor(diffInDays / 7);
-    if (diffInWeeks < 4) return `${diffInWeeks} hafta önce`;
+    if (diffInWeeks < 4) return `${diffInWeeks} weeks ago`;
     
-    return timestamp.toLocaleDateString('tr-TR');
+    return timestamp.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
   }
 
   getIconContainerClass(): string {

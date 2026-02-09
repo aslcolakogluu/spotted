@@ -1,66 +1,138 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { SpotService } from '@core/services';
 import { Spot } from '@core/models';
-import { SpotCardComponent } from '@shared/spot-card';
 
 @Component({
   selector: 'app-featured-spot',
   standalone: true,
-  imports: [SpotCardComponent],
+  imports: [],
   template: `
-    <section class="py-16 px-4 bg-gray-50">
-      <div class="max-w-7xl mx-auto">
-        <div class="text-center mb-12">
-          <div class="inline-flex items-center gap-2 px-4 py-2 bg-yellow-100 rounded-full mb-4">
-            <svg class="w-5 h-5 text-yellow-600" fill="currentColor" viewBox="0 0 20 20">
-              <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
-            </svg>
-            <span class="text-sm font-semibold text-yellow-800">Öne Çıkan Mekanlar</span>
-          </div>
-          
-          <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-            Bu Hafta En Popüler Mekanlar
-          </h2>
-          
-          <p class="text-lg text-gray-600 max-w-2xl mx-auto">
-            Topluluğumuz tarafından en çok beğenilen ve ziyaret edilen mekanları keşfedin
-          </p>
-        </div>
-
-        <!-- Featured Spots Grid -->
-        @if (featuredSpots().length > 0) {
-          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            @for (spot of featuredSpots(); track spot.id) {
-              <app-spot-card 
-                [spot]="spot"
-                (spotClick)="onSpotClick($event)">
-              </app-spot-card>
-            }
-          </div>
-        } @else {
-          <!-- Empty State -->
-          <div class="text-center py-12">
-            <svg class="w-16 h-16 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"></path>
-            </svg>
-            <h3 class="text-lg font-semibold text-gray-900 mb-2">Henüz öne çıkan mekan yok</h3>
-            <p class="text-gray-600">İlk öne çıkan mekanı ekleyin!</p>
-          </div>
-        }
-
-        <!-- View All Button -->
-        @if (featuredSpots().length > 0) {
-          <div class="text-center mt-12">
-            <button class="inline-flex items-center gap-2 px-6 py-3 bg-indigo-600 text-white font-semibold rounded-lg hover:bg-indigo-700 transition-colors">
-              Tüm Mekanları Gör
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
-              </svg>
-            </button>
-          </div>
-        }
+    <section class="px-12 py-18">
+      <div class="flex justify-between items-end mb-10">
+        <h2 style="font-family: 'Playfair Display', serif; font-size: 1.9rem; font-weight: 600; color: #eee8df;">
+          This week's <em style="font-style: italic; color: #c8a96e;">Featured Spot</em>
+        </h2>
       </div>
+
+      <!-- Featured Spot (Big Card) -->
+      @if (featuredSpots().length > 0) {
+        <div class="relative overflow-hidden mb-12 cursor-pointer" style="border-radius: 16px; height: 420px; background: linear-gradient(135deg, #1c2a35 0%, #162028 50%, #1a1520 100%);">
+          <div class="absolute inset-0" style="background: radial-gradient(ellipse 60% 40% at 30% 50%, rgba(40,60,80,0.3) 0%, transparent 70%), radial-gradient(ellipse 50% 35% at 75% 45%, rgba(60,40,60,0.2) 0%, transparent 70%);"></div>
+          
+          <div class="absolute top-6 left-6 px-4 py-2" style="background: rgba(200,169,110,0.15); border: 1px solid rgba(200,169,110,0.3); border-radius: 20px; font-size: 0.72rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: #c8a96e;">
+            ★ This week's featured spot
+          </div>
+          
+          <div class="absolute bottom-8 left-8 right-8 z-10">
+            <div class="flex gap-4 mb-3 text-sm">
+              <span style="color: rgba(238,232,223,0.45);"> {{ featuredSpots()[0].type }}</span>
+              <span style="color: rgba(238,232,223,0.45);">
+                <span style="color: #c8a96e;">★★★★★</span> {{ featuredSpots()[0].rating.toFixed(1) }}
+              </span>
+            </div>
+            <h3 style="font-family: 'Playfair Display', serif; font-size: 2.2rem; font-weight: 600; color: #eee8df; margin-bottom: 12px;">
+              {{ featuredSpots()[0].name }}
+            </h3>
+            <p style="font-size: 0.95rem; line-height: 1.6; color: rgba(238,232,223,0.45); max-width: 600px; margin-bottom: 16px;">
+              {{ featuredSpots()[0].description }}
+            </p>
+            <div class="inline-flex items-center gap-1.5 px-3.5 py-1.5" style="background: rgba(111,191,130,0.15); border: 1px solid rgba(111,191,130,0.2); border-radius: 16px; font-size: 0.8rem; color: #6fbf82;">
+              Best Hour: {{ featuredSpots()[0].openingHours }}
+            </div>
+          </div>
+        </div>
+      }
+
+      <!-- Filter Bar -->
+      <div class="flex gap-2.5 flex-wrap mb-9">
+        <button class="filter-chip active">All Spots</button>
+        <button class="filter-chip"> Scenic View</button>
+        <button class="filter-chip"> Park</button>
+        <button class="filter-chip"> Bridge</button>
+        <button class="filter-chip"> Isolated Road</button>
+        <button class="filter-chip"> Balcony</button>
+        <button class="filter-chip"> Historical</button>
+      </div>
+
+      <!-- Spot Grid -->
+      @if (featuredSpots().length > 0) {
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          @for (spot of featuredSpots(); track spot.id) {
+            <div class="spot-card" (click)="onSpotClick(spot)">
+              <div class="relative overflow-hidden" style="height: 200px;">
+                <div class="absolute inset-0 card-img-bg" style="background: linear-gradient(135deg, #2a3540 0%, #1a2028 100%); transition: transform 0.3s;"></div>
+                <div class="absolute inset-0" style="background: linear-gradient(180deg, transparent 0%, rgba(10,11,13,0.6) 100%);"></div>
+                <span class="absolute top-3 right-3 px-3 py-1" style="background: rgba(255,255,255,0.1); backdrop-filter: blur(8px); border-radius: 12px; font-size: 0.7rem; font-weight: 500; color: #eee8df; border: 1px solid rgba(255,255,255,0.1);">
+                  {{ getSpotIcon(spot.type) }} {{ spot.type }}
+                </span>
+              </div>
+              <div class="p-4">
+                <h4 style="font-family: 'Playfair Display', serif; font-size: 1.1rem; font-weight: 600; color: #eee8df; margin-bottom: 6px;">{{ spot.name }}</h4>
+                <p style="font-size: 0.8rem; color: rgba(238,232,223,0.45); margin-bottom: 12px;">{{ spot.address }}</p>
+                <div class="flex justify-between items-center text-sm">
+                  <span style="color: rgba(238,232,223,0.45);">
+                    <span style="color: #c8a96e;">{{ getStars(spot.rating) }}</span> {{ spot.rating.toFixed(1) }}
+                  </span>
+                  <span style="color: rgba(238,232,223,0.45); font-size: 0.75rem;">{{ spot.openingHours }}</span>
+                </div>
+              </div>
+            </div>
+          }
+        </div>
+      } @else {
+        <div class="text-center py-12">
+          <p style="color: rgba(238,232,223,0.45);">There are no featured spots yet.</p>
+        </div>
+      }
     </section>
+
+    <style>
+      .filter-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 8px 16px;
+        border-radius: 20px;
+        border: 1px solid rgba(255,255,255,0.06);
+        background: rgba(255,255,255,0.05);
+        color: rgba(238,232,223,0.45);
+        font-size: 0.82rem;
+        font-weight: 400;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+      
+      .filter-chip:hover {
+        border-color: #c8a96e;
+        color: #eee8df;
+      }
+      
+      .filter-chip.active {
+        background: rgba(200,169,110,0.15);
+        border-color: rgba(200,169,110,0.35);
+        color: #c8a96e;
+      }
+      
+      .spot-card {
+        position: relative;
+        border-radius: 12px;
+        overflow: hidden;
+        background: #12141a;
+        border: 1px solid rgba(255,255,255,0.06);
+        cursor: pointer;
+        transition: all 0.3s;
+      }
+      
+      .spot-card:hover {
+        background: #181c26;
+        border-color: rgba(200,169,110,0.2);
+        transform: translateY(-2px);
+      }
+      
+      .spot-card:hover .card-img-bg {
+        transform: scale(1.05);
+      }
+    </style>
   `,
   styles: []
 })
@@ -77,6 +149,25 @@ export class FeaturedSpotComponent implements OnInit {
 
   onSpotClick(spot: Spot): void {
     console.log('Spot clicked:', spot);
-    // Navigate to spot detail page
+  }
+
+  getSpotIcon(type: string): string {
+    const icons: Record<string, string> = {
+      'CAFE': '☕',
+      'RESTAURANT': '🍽️',
+      'PARK': '🌳',
+      'MUSEUM': '🏛️',
+      'SHOPPING': '🛍️',
+      'ENTERTAINMENT': '🎭',
+      'NIGHTLIFE': '🌙',
+      'SPORTS': '⚽',
+      'OTHER': '📍'
+    };
+    return icons[type] || '📍';
+  }
+
+  getStars(rating: number): string {
+    const fullStars = Math.floor(rating);
+    return '★'.repeat(fullStars) + '☆'.repeat(5 - fullStars);
   }
 }
