@@ -1,4 +1,4 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit, signal, effect } from '@angular/core';
 import { SpotService } from '@core/services';
 import { Spot } from '@core/models';
 
@@ -16,10 +16,18 @@ import { Spot } from '@core/models';
 
       <!-- Featured Spot (Big Card) -->
       @if (featuredSpots().length > 0) {
-        <div class="relative overflow-hidden mb-12 cursor-pointer" style="border-radius: 16px; height: 420px; background: linear-gradient(135deg, #1c2a35 0%, #162028 50%, #1a1520 100%);">
-          <div class="absolute inset-0" style="background: radial-gradient(ellipse 60% 40% at 30% 50%, rgba(40,60,80,0.3) 0%, transparent 70%), radial-gradient(ellipse 50% 35% at 75% 45%, rgba(60,40,60,0.2) 0%, transparent 70%);"></div>
+        
+        <div class="relative overflow-hidden mb-12 cursor-pointer" style="border-radius: 16px; height: 420px;">
+          <!-- Background Image -->
+          <img 
+            src="https://images.unsplash.com/photo-1770299258205-3d67df947527?w=1920&q=80&auto=format&fit=crop"
+            alt="Featured spot" 
+            class="absolute inset-0 w-full h-full object-cover">
           
-          <div class="absolute top-6 left-6 px-4 py-2" style="background: rgba(200,169,110,0.15); border: 1px solid rgba(200,169,110,0.3); border-radius: 20px; font-size: 0.72rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: #c8a96e;">
+          <!-- Dark Overlay -->
+          <div class="absolute inset-0" style="background: linear-gradient(180deg, rgba(10,11,13,0.3) 0%, rgba(10,11,13,0.7) 60%, rgba(10,11,13,0.95) 100%);"></div>
+          
+          <div class="absolute top-6 left-6 px-4 py-2" style="background: rgba(200,169,110,0.15); backdrop-filter: blur(8px); border: 1px solid rgba(200,169,110,0.3); border-radius: 20px; font-size: 0.72rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: #c8a96e;">
             ★ This week's featured spot
           </div>
           
@@ -45,13 +53,14 @@ import { Spot } from '@core/models';
 
       <!-- Filter Bar -->
       <div class="flex gap-2.5 flex-wrap mb-9">
-        <button class="filter-chip active">All Spots</button>
-        <button class="filter-chip"> Scenic View</button>
-        <button class="filter-chip"> Park</button>
-        <button class="filter-chip"> Bridge</button>
-        <button class="filter-chip"> Isolated Road</button>
-        <button class="filter-chip"> Balcony</button>
-        <button class="filter-chip"> Historical</button>
+        @for (filter of filters; track filter) {
+          <button 
+            class="filter-chip"
+            [class.active]="selectedFilter() === filter"
+            (click)="onFilterClick(filter)">
+            {{ filter }}
+          </button>
+        }
       </div>
 
       <!-- Spot Grid -->
@@ -60,8 +69,20 @@ import { Spot } from '@core/models';
           @for (spot of featuredSpots(); track spot.id) {
             <div class="spot-card" (click)="onSpotClick(spot)">
               <div class="relative overflow-hidden" style="height: 200px;">
-                <div class="absolute inset-0 card-img-bg" style="background: linear-gradient(135deg, #2a3540 0%, #1a2028 100%); transition: transform 0.3s;"></div>
+                <!-- Spot Image -->
+                @if (spot.imageUrl) {
+                  <img 
+                    [src]="spot.imageUrl" 
+                    [alt]="spot.name"
+                    class="absolute inset-0 w-full h-full object-cover card-img-bg"
+                    style="transition: transform 0.3s;">
+                } @else {
+                  <div class="absolute inset-0 card-img-bg" style="background: linear-gradient(135deg, #2a3540 0%, #1a2028 100%); transition: transform 0.3s;"></div>
+                }
+                
+                <!-- Gradient Overlay -->
                 <div class="absolute inset-0" style="background: linear-gradient(180deg, transparent 0%, rgba(10,11,13,0.6) 100%);"></div>
+                
                 <span class="absolute top-3 right-3 px-3 py-1" style="background: rgba(255,255,255,0.1); backdrop-filter: blur(8px); border-radius: 12px; font-size: 0.7rem; font-weight: 500; color: #eee8df; border: 1px solid rgba(255,255,255,0.1);">
                   {{ getSpotIcon(spot.type) }} {{ spot.type }}
                 </span>
@@ -138,6 +159,9 @@ import { Spot } from '@core/models';
 })
 export class FeaturedSpotComponent implements OnInit {
   featuredSpots = signal<Spot[]>([]);
+  selectedFilter = signal<string>('All Spots');
+  
+  filters = ['All Spots', 'Scenic View', 'Park', 'Bridge', 'Isolated Road', 'Balcony', 'Historical'];
 
   constructor(private spotService: SpotService) {}
 
@@ -149,6 +173,11 @@ export class FeaturedSpotComponent implements OnInit {
 
   onSpotClick(spot: Spot): void {
     console.log('Spot clicked:', spot);
+  }
+
+  onFilterClick(filter: string): void {
+    this.selectedFilter.set(filter);
+    console.log('Filter clicked:', filter);
   }
 
   getSpotIcon(type: string): string {

@@ -16,6 +16,7 @@ export interface Spot {
   isFeatured: boolean;
   createdAt: Date;
   updatedAt: Date;
+  imageURL?: string;
 }
 
 export enum SpotType {

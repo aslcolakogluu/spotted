@@ -1,14 +1,20 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 
 @Component({
   selector: 'app-hero',
   standalone: true,
-  imports: [],
   template: `
     <section class="relative flex flex-col justify-end px-12 pb-20 overflow-hidden" style="height: 100vh;">
-      <!-- Background -->
-      <div class="absolute inset-0" style="background: linear-gradient(180deg, rgba(10,11,13,0.15) 0%, rgba(10,11,13,0.7) 60%, #0a0b0d 100%), linear-gradient(135deg, #1a2530 0%, #0d1117 40%, #1a1520 70%, #0d1117 100%); background-size: cover;"></div>
-      <div class="absolute inset-0" style="background: radial-gradient(ellipse 80% 50% at 30% 40%, rgba(40,60,80,0.35) 0%, transparent 70%), radial-gradient(ellipse 60% 40% at 75% 55%, rgba(60,40,60,0.25) 0%, transparent 70%), radial-gradient(ellipse 40% 30% at 60% 25%, rgba(80,100,60,0.2) 0%, transparent 70%);"></div>
+      <!-- Background Image -->
+      <div class="absolute inset-0">
+        <img 
+          src="https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=1920&q=80"
+          alt="Background" 
+          class="w-full h-full object-cover"
+          style="object-position: center;">
+        <!-- Dark Overlay -->
+        <div class="absolute inset-0" style="background: linear-gradient(180deg, rgba(10,11,13,0.4) 0%, rgba(10,11,13,0.75) 60%, rgba(10,11,13,0.95) 100%);"></div>
+      </div>
       
       <!-- Content -->
       <div class="relative z-10" style="max-width: 620px;">
@@ -28,30 +34,24 @@ import { Component } from '@angular/core';
         </p>
 
         <div class="flex gap-3.5 flex-wrap">
-          <button class="btn-hero-primary">Explore →</button>
-          <button class="btn-hero-secondary">Map View</button>
+          <button class="btn-hero-primary" (click)="onExploreClick()">Explore →</button>
+          <button class="btn-hero-secondary" (click)="onMapClick()">Map View</button>
         </div>
       </div>
     </section>
 
     <!-- STATS BAR -->
     <div class="flex gap-12 px-12 py-7" style="background: #12141a; border-top: 1px solid rgba(255,255,255,0.06); border-bottom: 1px solid rgba(255,255,255,0.06);">
-      <div class="flex flex-col gap-1">
-        <span style="font-family: 'Playfair Display', serif; font-size: 1.6rem; font-weight: 600; color: #eee8df;">47</span>
-        <span style="font-size: 0.75rem; font-weight: 400; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(238,232,223,0.45);">Discovered Spots</span>
-      </div>
-      <div class="flex flex-col gap-1">
-        <span style="font-family: 'Playfair Display', serif; font-size: 1.6rem; font-weight: 600; color: #eee8df;">128</span>
-        <span style="font-size: 0.75rem; font-weight: 400; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(238,232,223,0.45);">Reviews</span>
-      </div>
-      <div class="flex flex-col gap-1">
-        <span style="font-family: 'Playfair Display', serif; font-size: 1.6rem; font-weight: 600; color: #eee8df;">23</span>
-        <span style="font-size: 0.75rem; font-weight: 400; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(238,232,223,0.45);">Active Explorers</span>
-      </div>
-      <div class="flex flex-col gap-1">
-        <span style="font-family: 'Playfair Display', serif; font-size: 1.6rem; font-weight: 600; color: #eee8df;">4.6</span>
-        <span style="font-size: 0.75rem; font-weight: 400; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(238,232,223,0.45);">Average Quietness</span>
-      </div>
+      @for (stat of stats(); track stat.label) {
+        <div class="flex flex-col gap-1">
+          <span style="font-family: 'Playfair Display', serif; font-size: 1.6rem; font-weight: 600; color: #eee8df;">
+            {{ stat.value }}
+          </span>
+          <span style="font-size: 0.75rem; font-weight: 400; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(238,232,223,0.45);">
+            {{ stat.label }}
+          </span>
+        </div>
+      }
     </div>
 
     <style>
@@ -104,4 +104,19 @@ import { Component } from '@angular/core';
   `,
   styles: []
 })
-export class HeroComponent {}
+export class HeroComponent {
+  stats = signal([
+    { value: '47', label: 'Discovered Spots' },
+    { value: '128', label: 'Reviews' },
+    { value: '23', label: 'Active Explorers' },
+    { value: '4.6', label: 'Average Quietness' }
+  ]);
+
+  onExploreClick(): void {
+    console.log('Explore clicked');
+  }
+
+  onMapClick(): void {
+    console.log('Map view clicked');
+  }
+}
