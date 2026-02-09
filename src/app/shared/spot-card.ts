@@ -7,6 +7,7 @@ import { SpotTypeIconPipe, SpotTypeLabelPipe } from '@core/pipes';
   selector: 'app-spot-card',
   standalone: true,
   imports: [
+    
     RatingStarsComponent,
     SpotTypeIconPipe,
     SpotTypeLabelPipe
@@ -18,8 +19,8 @@ import { SpotTypeIconPipe, SpotTypeLabelPipe } from '@core/pipes';
       <!-- Image -->
       <div class="relative h-48 overflow-hidden">
         <img 
-          src="https://images.unsplash.com/photo-1770299258205-3d67df947527?w=1920&q=80&auto=format&fit=crop"
-          alt="Featured spot"
+          [src]="spot.imageUrl" 
+          [alt]="spot.name"
           class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300">
         
         <!-- Badges -->

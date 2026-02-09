@@ -175,7 +175,7 @@ export class StatsService {
         {
           userId: 'user1',
           userName: 'Ahmet Yılmaz',
-          userAvatar: '/assets/avatars/user1.jpg',
+          userAvatar: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?q=80&w=1287&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
           contributionScore: 892,
           spotsAdded: 45,
           reviewsCount: 123
@@ -183,7 +183,7 @@ export class StatsService {
         {
           userId: 'user2',
           userName: 'Ayşe Demir',
-          userAvatar: '/assets/avatars/user2.jpg',
+          userAvatar: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?q=80&w=1361&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
           contributionScore: 756,
           spotsAdded: 38,
           reviewsCount: 98
@@ -191,7 +191,7 @@ export class StatsService {
         {
           userId: 'user3',
           userName: 'Mehmet Kaya',
-          userAvatar: '/assets/avatars/user3.jpg',
+          userAvatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=1287&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
           contributionScore: 634,
           spotsAdded: 32,
           reviewsCount: 87

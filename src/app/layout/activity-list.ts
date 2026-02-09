@@ -20,7 +20,8 @@ import { Activity } from '@core/models';
         <div class="flex flex-col gap-3">
           @for (activity of activities(); track activity.id) {
             <div class="activity-item flex items-center gap-3 p-3" style="background: #12141a; border: 1px solid rgba(255,255,255,0.06); border-radius: 8px; transition: all 0.2s;">
-              <div style="width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, #3a4550 0%, #2a3540 100%); flex-shrink: 0;"></div>
+              <img [src]="activity.userAvatar" [alt]="activity.userName" class="w-9 h-9 rounded-full object-cover flex-shrink-0">
+              
               <div class="flex-1" style="font-size: 0.85rem; color: rgba(238,232,223,0.45);">
                 <strong style="color: #eee8df; font-weight: 500;">{{ activity.userName }}</strong> 
                 <span [innerHTML]="getActivityText(activity)"></span>

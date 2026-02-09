@@ -8,7 +8,6 @@ export interface Spot {
   longitude: number;
   rating: number;
   reviewCount: number;
-  imageUrl: string;
   tags: string[];
   openingHours?: string;
   priceRange?: string;
@@ -16,7 +15,7 @@ export interface Spot {
   isFeatured: boolean;
   createdAt: Date;
   updatedAt: Date;
-  imageURL?: string;
+  imageUrl: string;
 }
 
 export enum SpotType {
