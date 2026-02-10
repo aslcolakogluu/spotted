@@ -8,7 +8,7 @@ import { Component, signal } from '@angular/core';
       <!-- Background Image -->
       <div class="absolute inset-0">
         <img 
-          src="https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=1920&q=80"
+          src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?q=80&w=1920&auto=format&fit=crop"
           alt="Background" 
           class="w-full h-full object-cover"
           style="object-position: center;">

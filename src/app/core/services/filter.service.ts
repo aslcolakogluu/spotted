@@ -15,13 +15,12 @@ export class FilterService {
   readonly filterChips = computed(() => this.getFilterChips());
 
   private readonly spotTypeLabels: Record<SpotType, string> = {
-    [SpotType.CAFE]: 'Cafe',
-    [SpotType.RESTAURANT]: 'Restaurant',
+    [SpotType.BRIDGE]: 'Bridge',
+    [SpotType.NATURE]: 'Nature',
+    [SpotType.HISTORICAL]: 'Historical',
     [SpotType.PARK]: 'Park',
     [SpotType.MUSEUM]: 'Museum',
-    [SpotType.SHOPPING]: 'Shopping',
-    [SpotType.ENTERTAINMENT]: 'Entertainment',
-    [SpotType.NIGHTLIFE]: 'Nightlife',
+    [SpotType.BEACH]: 'Beach',
     [SpotType.SPORTS]: 'Sports',
     [SpotType.OTHER]: 'Other'
   };

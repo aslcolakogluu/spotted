@@ -7,15 +7,14 @@ import { SpotType } from '../models';
 })
 export class SpotTypeLabelPipe implements PipeTransform {
   private readonly labelMap: Record<SpotType, string> = {
-    [SpotType.CAFE]: 'Cafe',
-    [SpotType.RESTAURANT]: 'Restaurant',
+    [SpotType.BRIDGE]: 'Bridge',
     [SpotType.PARK]: 'Park',
     [SpotType.MUSEUM]: 'Museum',
-    [SpotType.SHOPPING]: 'Shopping',
-    [SpotType.ENTERTAINMENT]: 'Entertainment',
-    [SpotType.NIGHTLIFE]: 'Nightlife',
+    [SpotType.HISTORICAL]: 'Historical',
+    [SpotType.BEACH]: 'Beach',
     [SpotType.SPORTS]: 'Sports',
-    [SpotType.OTHER]: 'Other'
+    [SpotType.OTHER]: 'Other',
+    [SpotType.NATURE]: ''
   };
 
   transform(type: SpotType): string {

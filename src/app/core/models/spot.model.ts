@@ -19,13 +19,12 @@ export interface Spot {
 }
 
 export enum SpotType {
-  CAFE = 'cafe',
-  RESTAURANT = 'restaurant',
+  BRIDGE = 'bridge',
+  NATURE = 'nature',
+  HISTORICAL = 'historical',
   PARK = 'park',
   MUSEUM = 'museum',
-  SHOPPING = 'shopping',
-  ENTERTAINMENT = 'entertainment',
-  NIGHTLIFE = 'nightlife',
+  BEACH = 'beach',
   SPORTS = 'sports',
   OTHER = 'other'
 }

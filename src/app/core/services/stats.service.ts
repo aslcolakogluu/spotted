@@ -150,14 +150,14 @@ export class StatsService {
       trendingSpots: [
         {
           spotId: '1',
-          spotName: 'Cafe Shop',
+          spotName: 'City Bridge',
           trendScore: 95,
           recentVisits: 234,
           growthRate: 45.5
         },
         {
           spotId: '2',
-          spotName: 'Pizza Restaurant',
+          spotName: 'Tree Park',
           trendScore: 89,
           recentVisits: 198,
           growthRate: 38.2
@@ -170,7 +170,7 @@ export class StatsService {
           growthRate: 32.1
         }
       ],
-      hotCategories: ['Cafe', 'Restaurant', 'Museum'],
+      hotCategories: ['Bridge', 'Park', 'Museum'],
       topContributors: [
         {
           userId: 'user1',

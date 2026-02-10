@@ -20,7 +20,7 @@ import { Spot } from '@core/models';
         <div class="relative overflow-hidden mb-12 cursor-pointer" style="border-radius: 16px; height: 420px;">
           <!-- Background Image -->
           <img 
-            src="https://images.unsplash.com/photo-1770299258205-3d67df947527?w=1920&q=80&auto=format&fit=crop"
+            src="https://images.unsplash.com/photo-1577999315287-51e3261f60db?q=80&w=1631&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
             alt="Featured spot" 
             class="absolute inset-0 w-full h-full object-cover">
           
@@ -182,13 +182,11 @@ export class FeaturedSpotComponent implements OnInit {
 
   getSpotIcon(type: string): string {
     const icons: Record<string, string> = {
-      'CAFE': '☕',
-      'RESTAURANT': '🍽️',
+      'BRIDGE': '🌉',
       'PARK': '🌳',
       'MUSEUM': '🏛️',
-      'SHOPPING': '🛍️',
-      'ENTERTAINMENT': '🎭',
-      'NIGHTLIFE': '🌙',
+      'HISTORICAL': '🏰',
+      'BEACH': '🏖️',
       'SPORTS': '⚽',
       'OTHER': '📍'
     };
