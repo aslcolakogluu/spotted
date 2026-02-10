@@ -1,19 +1,17 @@
 export interface User {
-    id: string;
-    name: string;
+    id:string;
     email: string;
-    profile: string;
-    }
+    name: string;
+    profileUrl?: string;
+}
 
-/** login formunda alıncak blgiler */
-export interface LoginForm {
+export interface LoginForm{
     email: string;
     password: string;
 }
 
-/** localstorage saklanacak session */
-export interface Session {
+export interface Session{
     user: User;
     timestamp: number;
-    expiresIn: number; // ne zaman expire olcak (24)
+    expiresIn: number;
 }

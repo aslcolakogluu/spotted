@@ -1,25 +1,17 @@
 import{Injectable, signal , computed} from '@angular/core';
 import { Router } from '@angular/router';
 import { User, LoginForm, Session } from '../models/user.model';
-import { resolve } from 'path';
+import { Login } from '@features/login/login';
 
 @Injectable({
     providedIn: 'root'
-    })
-    export class AuthService {
-    private session = signal<Session | null>(null);
-
-    private currentUserSignal = signal <User | null>(null);
-    private isAuthenticatedSignal = signal<boolean>(false);
+})
+export class AuthService {
+    private currentUserSignal = signal<User | null>(null); // giriş yapılmayabilir unutma onun için null
+    private isAuthenticatedSignal = signal<boolean>(false); 
 
     readonly currentUser = this.currentUserSignal.asReadonly();
-    readonly isAuthenticated = this.isAuthenticatedSignal.asReadonly();
-
-    readonly userInitials = computed(() => {
-        const user = this.currentUserSignal();
-        return user ? user.email.charAt(0).toUpperCase() : '';
-    });
-
+    readonly isAuthenticated = this.isAuthenticatedSignal.asReadonly(); 
 
     constructor(private router: Router) {
         this.initializeAuth();
@@ -44,14 +36,14 @@ import { resolve } from 'path';
       const session: Session = JSON.parse(sessionData);
       const now = Date.now();
 
-      if (now - session.timestamp > session.expiresIn) {
+      if (now - session.timestamp >= session.expiresIn) { 
         this.clearSession();
         return null;
       }
 
     return session;
     } catch (error) {
-        console.error('Error parsing session data:', error);
+        console.error('Error parsing session data:', error); // hatada oturum sil
         return null;
         }
     }
@@ -60,7 +52,7 @@ import { resolve } from 'path';
     const session: Session = {
         user,
         timestamp: Date.now(),
-        expiresIn: 24 * 60 * 60 * 1000 
+        expiresIn: 24 * 60 * 60 * 1000 // 24 sa
         };
         
     localStorage.setItem('spotted-in-session', JSON.stringify(session));
@@ -70,49 +62,37 @@ import { resolve } from 'path';
         localStorage.removeItem('spotted-in-session');
     }
 
-    @param credentials: any
-    @returns Promise: any
 
     async login(credentials: LoginForm): Promise<void> {
         setTimeout(() => {
-            if (credentials.email && credentials.password.length >= 6) {
+            if (credentials.email && credentials.password.length >= 6) { // 6 dan kücük hata olmalı
 
                 const user: User = {
-                    id: Math.random().toString(36).substr(2, 9),
-                    email: credentials.email,
-                    name: credentials.email.split('@')[0],
-                    profile: credentials.email.charAt(0).toUpperCase()
+                    id: Math.random().toString(36).substr(2, 9),  // random yaptık id
+                    email: credentials.email, 
+                    name: credentials.email.split('@')[0], 
+                    profileUrl: credentials.email.charAt(0).toUpperCase()
                 };
 
-                this.saveSessionToStorage(user);
+                this.saveSessionToStorage(user); // kaydet
 
                 this.currentUserSignal.set(user);
                 this.isAuthenticatedSignal.set(true);
-                }
+                } else {
                 
-                resolve();
-            } else {
-                reject(new Error('Invalid email or password'));
-            }
-            }, 1000);
+                }
+        }, 1000);
+        setTimeout(() => {
+            
+            
         });
     }
 
     logout(): void {
-        this.clearSession();
+        this.clearSession(); 
         this.currentUserSignal.set(null);
         this.isAuthenticatedSignal.set(false);
-        this.router.navigate(['/login']);
+        this.router.navigate(['/index.html']);
     }
 }
-
-
-
-
-            
-
-
-   
-    
-
 

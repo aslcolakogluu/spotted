@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-
+import { Component , inject, output } from '@angular/core';
+import { AuthService } from '../core/services/auth.service';   
 @Component({
   selector: 'app-navbar',
   standalone: true,
@@ -43,4 +43,7 @@ import { Component } from '@angular/core';
   `,
   styles: []
 })
-export class NavbarComponent {}
+export class NavbarComponent {
+  private authService = inject(AuthService);
+  
+}
