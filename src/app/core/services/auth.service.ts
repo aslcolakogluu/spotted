@@ -1,7 +1,7 @@
-import{Injectable, signal , computed} from '@angular/core';
+import{Injectable, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { User, LoginForm, Session } from '../models/user.model';
-import { Login } from '@features/login/login';
+
 
 @Injectable({
     providedIn: 'root'
@@ -28,7 +28,7 @@ export class AuthService {
   }
 
   private getSessionFromStorage(): Session | null {
-    const sessionData = localStorage.getItem('spotted-in-session');
+    const sessionData = sessionStorage.getItem('spotted-in-session');
 
     if (!sessionData) return null;
 
@@ -43,7 +43,7 @@ export class AuthService {
 
     return session;
     } catch (error) {
-        console.error('Error parsing session data:', error); // hatada oturum sil
+        console.error('Error in session data:', error); // hatada oturum sil
         return null;
         }
     }
@@ -55,11 +55,11 @@ export class AuthService {
         expiresIn: 24 * 60 * 60 * 1000 // 24 sa
         };
         
-    localStorage.setItem('spotted-in-session', JSON.stringify(session));
+    sessionStorage.setItem('spotted-in-session', JSON.stringify(session)); // sekme kapatınca tekrar login yapmak için
     }
 
     private clearSession(): void {
-        localStorage.removeItem('spotted-in-session');
+        sessionStorage.removeItem('spotted-in-session');
     }
 
 
@@ -78,21 +78,22 @@ export class AuthService {
 
                 this.currentUserSignal.set(user);
                 this.isAuthenticatedSignal.set(true);
-                } else {
+
                 
+
+                } else {
+                    throw(new Error('Invalid email or password. Password must be at least 6 characters long.')); // hata mesajı
                 }
-        }, 1000);
-        setTimeout(() => {
-            
-            
-        });
+        }, 300); // add spota dönerkenki hızı 
+        
     }
 
     logout(): void {
-        this.clearSession(); 
-        this.currentUserSignal.set(null);
-        this.isAuthenticatedSignal.set(false);
-        this.router.navigate(['/index.html']);
+        this.clearSession(); // oturumu temizler
+        this.currentUserSignal.set(null); 
+        this.isAuthenticatedSignal.set(false); 
+        this.router.navigate(['/index.html']); //anasayfa git
+
     }
 }
 

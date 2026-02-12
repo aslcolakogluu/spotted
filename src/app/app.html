@@ -1,10 +1,14 @@
-<app-navbar></app-navbar>
-
+<app-navbar 
+  (loginClicked)="openLoginModal()"  
+  (addSpotClicked)="handleAddSpotClick()"> 
+</app-navbar> 
+@if (showLoginModal()) { 
+  <app-login (closeModal)="closeLoginModal()"></app-login>
+}
 <main>
   <app-hero></app-hero>
   <app-featured-spot></app-featured-spot>
-  <app-activity-list></app-activity-list>
+  <app-map-activity-section></app-map-activity-section>
   <app-add-spot-cta></app-add-spot-cta>
 </main>
-
 <app-footer></app-footer>

@@ -10,7 +10,7 @@ import { Activity } from '@core/models';
     <section class="px-12 py-18">
       <div class="flex justify-between items-end mb-10">
         <h2 style="font-family: 'Playfair Display', serif; font-size: 1.9rem; font-weight: 600; color: #eee8df;">
-          Last <em style="font-style: italic; color: #c8a96e;">Activities</em>
+           <em style="font-style: italic; color: #c8a96e;"></em>
         </h2>
         <a href="#" style="font-size: 0.78rem; letter-spacing: 0.1em; text-transform: uppercase; color: #c8a96e; text-decoration: none; font-weight: 500; transition: opacity 0.2s;">All</a>
       </div>

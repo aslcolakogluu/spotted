@@ -1,1 +1,92 @@
-<p>login works!</p>
+
+<div class="modal-overlay"> 
+  
+  <div class="login-modal">
+    
+    <button 
+      type="button"
+      (click)="closeModal.emit()"
+      class="modal-close">
+      ×
+    </button>
+
+    <div class="login-header">
+      <h2>
+        Wel <em>Come</em>
+      </h2>
+      <p>Join the Spotted - In</p>
+    </div>
+
+    <form (ngSubmit)="onSubmit()" class="login-form" [formGroup]="loginForm">
+      
+      <div class="form-group"> 
+        <label for="email">E-mail</label>
+        <input 
+          type="email"
+          id="email"
+          name="email"
+          formControlName="email"
+          placeholder="exp@email.com"
+          required
+          class="form-input"
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input 
+          type="password"
+          id="password"
+          name="password"
+         formControlName="password"
+          placeholder="••••••••"
+          required
+          minlength="6"
+          class="form-input"
+        />
+      </div>
+
+      @if (errorMessage()) {
+        <div class="error-message">
+          {{ errorMessage() }}
+        </div>
+      }
+
+      <div class="login-actions">
+        <button 
+          type="submit"
+          [disabled]="loginForm.invalid"
+          class="btn-login">
+          
+          @if (isLoading()) { 
+            <span> Loging in ...</span> 
+          } @else {
+            <span>Log In</span>
+          }
+        </button>
+        <button 
+      type="reset"
+          [disabled]="!loginForm.dirty"
+          class="btn-login"
+          (click)="loginForm.reset(); $event.stopPropagation()"
+          >
+          
+          @if (isLoading()) { 
+            <span> Loging in ...</span> 
+          } @else {
+            <span>Reset</span>
+          }
+        </button>
+      </div>
+      
+    </form>
+
+    <div class="login-footer">
+      <p>
+        Don't have an account?
+        <a href="#" class="register-link">Register</a>
+      </p>
+    </div>
+
+  </div>
+</div>
