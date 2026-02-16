@@ -1,0 +1,192 @@
+
+<div class="page-header">
+  <h1>Explore <em>Spots</em></h1>
+  <p>Filter, sort, and explore the hidden, quiet, and scenic corners of the city.</p>
+</div>
+
+<div class="filter-section">
+  <div class="filter-controls">
+    
+    <div class="search-bar">
+      <input 
+        type="text"
+        [(ngModel)]="searchQuery"
+        (input)="onSearchChange()"
+        placeholder="Spot search...">
+    </div>
+
+    <div class="filter-chips">
+      <button 
+        class="filter-chip"
+        (click)="setCategory(null)"
+        [class.active]="selectedCategory() === null">
+        All Spots
+      </button>
+      
+      @for (item of spotTypes; track item.type) {
+        <button 
+          class="filter-chip"
+          (click)="setCategory(item.type)"
+          [class.active]="selectedCategory() === item.type">
+          {{ item.emoji }} {{ item.label }}
+        </button>
+      }
+    </div>
+
+    <div class="sort-dropdown">
+      <select [ngModel]="sortBy()" (ngModelChange)="sortBy.set($event); onSortChange()">
+        <option [value]="2">Highest Rated</option>
+        <option [value]="4">Most Reviewed</option>
+        <option [value]="3">Newest</option>
+      </select>
+    </div>
+
+  </div>
+</div>
+
+<div class="main-content">
+
+   <aside class="sidebar">
+
+    <div class="sidebar-section">
+      <h3>Filter by Rating</h3>
+      <div class="rating-filter">
+        
+        <div class="rating-option">
+          <input 
+            type="checkbox" 
+            id="5star"
+            [(ngModel)]="filter5Star" 
+            (change)="applyFilters()">
+          <label for="5star">
+            <span class="stars">★★★★★</span> 5 Stars
+          </label>
+        </div>
+        
+        <div class="rating-option">
+          <input 
+            type="checkbox" 
+            id="4star"
+            [(ngModel)]="filter4Star" 
+            (change)="applyFilters()">
+          <label for="4star">
+            <span class="stars">★★★★</span> 4+ Stars
+          </label>
+        </div>
+        
+        <div class="rating-option">
+          <input 
+            type="checkbox" 
+            id="3star"
+            [(ngModel)]="filter3Star" 
+            (change)="applyFilters()">
+          <label for="3star">
+            <span class="stars">★★★</span> 3+ Stars
+          </label>
+        </div>
+        
+      </div>
+    </div>
+
+    <div class="rankings">
+      <h4>🏆 This Week's Most Visited</h4>
+      
+      @for (item of topRankings(); track item.id; let i = $index) {
+        <div class="ranking-item">
+          
+          <div 
+            class="ranking-number"
+            [class.top1]="i === 0"
+            [class.top2]="i === 1"
+            [class.top3]="i === 2"
+            [class.other]="i > 2">
+            {{ i + 1 }}
+          </div>
+          
+          <div class="ranking-info">
+            <h5>{{ item.name }}</h5>
+            <p>★ {{ item.rating }} · {{ item.reviewCount * 5 }} visits</p>
+          </div>
+          
+        </div>
+      }
+      
+    </div>
+
+  </aside>
+
+  <div>
+    
+    <div class="results-header">
+      <div class="results-count">
+        <strong>{{ filteredSpots().length }}</strong> spots found
+      </div>
+    </div>
+
+    <div class="spot-grid">
+      @for (spot of paginatedSpots(); track spot.id; let i = $index) {
+        <a class="spot-card">
+          
+          <div class="card-img">
+            @if (spot.imageUrl) {
+              <img [src]="spot.imageUrl" [alt]="spot.name" class="card-real-img">
+              <div class="card-img-overlay"></div>
+            } @else {
+              <div class="card-img-bg" [style.background]="getGradient(i)"></div>
+              <div class="card-img-overlay"></div>
+            }
+            
+            <span class="card-img-tag">
+              {{ getSpotTypeEmoji(spot.type) }} {{ getSpotTypeLabel(spot.type) }}
+            </span>
+          </div>
+
+          <div class="card-body">
+            <h4>{{ spot.name }}</h4>
+            <p class="card-location">{{ spot.address }}</p>
+            
+            <div class="card-footer">
+              <span class="card-rating">
+                <span class="card-stars">{{ getStars(spot.rating) }}</span> {{ spot.rating }}
+              </span>
+              <span class="card-hour">{{ spot.reviewCount }} reviews</span>
+            </div>
+          </div>
+
+        </a>
+      }
+    </div>
+
+    @if (totalPages() > 1) {
+      <div class="pagination">
+        
+        <button 
+          (click)="prevPage()" 
+          [disabled]="currentPage() === 1">
+          ← Previous
+        </button>
+        
+        @for (p of visiblePages(); track p) {
+          @if (p === -1) {
+            <button disabled>...</button>
+          } @else {
+            <button 
+              (click)="goToPage(p)" 
+              [class.active]="p === currentPage()">
+              {{ p }}
+            </button>
+          }
+        }
+        
+        <button 
+          (click)="nextPage()" 
+          [disabled]="currentPage() === totalPages()">
+          Next →
+        </button>
+        
+      </div>
+    }
+
+  </div>
+
+</div>

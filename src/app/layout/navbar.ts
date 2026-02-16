@@ -1,47 +1,61 @@
 import { Component, inject, output } from '@angular/core';
+import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { AuthService } from '../core/services/auth.service';
 
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [],
+  imports: [RouterLink, RouterLinkActive],
   template: `
     <nav class="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-8 py-5" 
          style="background: linear-gradient(180deg, rgba(10,11,13,0.9) 0%, transparent 100%);">
       
       <!-- Logo -->
-      <div class="cursor-pointer" 
-           style="font-family: 'Playfair Display', serif; 
-                  font-size: 1.25rem; 
-                  letter-spacing: 0.02em; 
-                  color: #eee8df;">
+      <a routerLink="/" 
+         class="cursor-pointer" 
+         style="font-family: 'Playfair Display', serif; 
+                font-size: 1.25rem; 
+                letter-spacing: 0.02em; 
+                color: #eee8df;
+                text-decoration: none;">
         Spotted - <span style="color: #c8a96e;">In</span>
-      </div>
+      </a>
 
       <!-- Desktop Navigation -->
       <div class="hidden md:flex items-center gap-6">
-        <button class="nav-btn">Explore</button>
-        <button class="nav-btn">Map</button>
-        <button class="nav-btn">Spots</button>
-        <button class="nav-btn">About</button>
+        <a routerLink="/" 
+           routerLinkActive="active"
+           [routerLinkActiveOptions]="{exact: true}"
+           class="nav-btn">
+          HOME
+        </a>
+        
+        <a routerLink="/explore" 
+           routerLinkActive="active"
+           class="nav-btn">
+          EXPLORE
+        </a>
+        
+        <a routerLink="/map" 
+           routerLinkActive="active"
+           class="nav-btn">
+          MAP
+        </a>
+        
+        <button class="nav-btn">ABOUT</button>
       </div>
 
       <!-- Actions (Right Side) -->
       <div class="flex items-center gap-4">
-        
-      
-        
         @if (!authService.isAuthenticated()) { 
-         
           <button 
             (click)="loginClicked.emit()" 
             class="nav-btn-primary"> 
             LOGIN
           </button>
         }
-
+        
         @if (authService.isAuthenticated()) { 
-          
           <button 
             (click)="addSpotClicked.emit()" 
             class="nav-btn-primary">
@@ -77,10 +91,17 @@ import { AuthService } from '../core/services/auth.service';
       border: none;
       cursor: pointer;
       transition: color 0.25s;
+      text-decoration: none;
+      display: inline-block;
     }
 
     .nav-btn:hover {
       color: #c8a96e;
+    }
+
+    .nav-btn.active {
+      color: #c8a96e;
+      font-weight: 600;
     }
 
     .nav-btn-primary {
@@ -104,8 +125,7 @@ import { AuthService } from '../core/services/auth.service';
   `]
 })
 export class NavbarComponent {
- 
   authService = inject(AuthService); 
-  loginClicked = output<void>();       // login sayfası açılır 
-  addSpotClicked = output<void>();    // add spot sayfası açılır
+  loginClicked = output<void>();
+  addSpotClicked = output<void>();
 }
