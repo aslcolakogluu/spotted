@@ -1,15 +1,5 @@
-import {
-  Component,
-  OnInit,
-  OnDestroy,
-  AfterViewInit,
-  signal,
-  input,
-  output,
-  ElementRef,
-  ViewChild,
-} from '@angular/core';
-import * as L from 'leaflet';
+import {Component,OnInit,OnDestroy,AfterViewInit,signal,input,output, ElementRef, ViewChild,} from '@angular/core';
+import * as L from 'leaflet'; 
 
 
 export interface MapSpot {
@@ -23,26 +13,24 @@ export interface MapSpot {
 }
 
 @Component({
-  selector: 'app-spot-map',
+  selector: 'app-spot-map', 
   standalone: true,
   imports: [],
   template: `
     <div class="map-wrapper">
-      <!-- Leaflet harita konteyneri -->
-      <div #mapContainer id="spot-map" class="map-container"></div>
+      <div #mapContainer id="spot-map" class="map-container"></div> 
 
-      <!-- Sol alt aktif spot etiketi (mockup'taki gibi) -->
-      @if (activeSpot()) {
+      
+      @if (activeSpot()) { 
         <div class="map-label">
-          <h5>{{ activeSpot()!.name }}</h5>
-          <p>{{ activeSpot()!.type }} · ★ {{ activeSpot()!.rating }}{{ activeSpot()!.bestHour ? ' · ' + activeSpot()!.bestHour : '' }}</p>
-        </div>
+          <h5>{{ activeSpot()!.name }}</h5> 
+          <p>{{ activeSpot()!.type }} · ★ {{ activeSpot()!.rating }}{{ activeSpot()!.bestHour ? ' · ' + activeSpot()!.bestHour : '' }}</p> 
+        </div> 
       }
     </div>
 
     <style>
-      /* ── Leaflet CSS geçersiz kılmaları (dark theme) ── */
-
+      
       .map-wrapper {
         position: relative;
         border-radius: 14px;
@@ -59,7 +47,7 @@ export interface MapSpot {
         z-index: 1;
       }
 
-      /* ── Dark-themed harita (tile katmanı üzerine overlay) ── */
+      
       .map-container::after {
         content: '';
         position: absolute;
@@ -68,7 +56,6 @@ export interface MapSpot {
         z-index: 2;
       }
 
-      /* ── Aktif spot etiketi ── */
       .map-label {
         position: absolute;
         bottom: 20px;
@@ -104,7 +91,6 @@ export interface MapSpot {
         to   { opacity: 1; transform: translateY(0); }
       }
 
-      /* ── Leaflet kontrol / zoom butonları ── */
       :host ::ng-deep .leaflet-control-zoom a {
         background: rgba(10, 11, 13, 0.8) !important;
         color: #c8a96e !important;
@@ -127,7 +113,6 @@ export interface MapSpot {
         color: rgba(200, 169, 110, 0.5) !important;
       }
 
-      /* ── Leaflet popup dark theme ── */
       :host ::ng-deep .leaflet-popup-content-wrapper {
         background: rgba(18, 20, 26, 0.95) !important;
         border: 1px solid rgba(255, 255, 255, 0.08) !important;
@@ -159,9 +144,9 @@ export interface MapSpot {
   `,
   styles: [],
 })
-export class SpotMapComponent implements OnInit, AfterViewInit, OnDestroy {
+export class SpotMapComponent implements OnInit, AfterViewInit, OnDestroy { 
   @ViewChild('mapContainer', { static: true }) mapEl!: ElementRef;
-
+ 
   /** Dışarıdan spot verileri alınabilir */
   spots = input<MapSpot[]>([]);
 

@@ -42,7 +42,11 @@ import { AuthService } from '../core/services/auth.service';
           MAP
         </a>
         
-        <button class="nav-btn">ABOUT</button>
+        <a routerLink="/about" 
+           routerLinkActive="active"
+           class="nav-btn">
+          ABOUT
+        </a>
       </div>
 
       <!-- Actions (Right Side) -->

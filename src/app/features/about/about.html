@@ -1,0 +1,158 @@
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-content">
+    <div class="hero-label">About Us</div>
+    <h1>Rediscovering Quiet Moments</h1>
+    <p class="hero-description">
+      A platform that helps you find, share, and experience the quiet moments lost in the hustle of the city. 
+      Discover the hidden corners of city where silence reigns.
+    </p>
+  </div>
+
+  <div class="hero-stats">
+    @for (stat of stats; track stat.label) {
+      <div class="stat-item">
+        <span class="stat-number">{{ stat.number }}</span>
+        <span class="stat-label">{{ stat.label }}</span>
+      </div>
+    }
+  </div>
+</section>
+
+<!-- PHILOSOPHY -->
+<section class="section">
+  <div class="section-header">
+    <div class="section-label">Our Phıqlosophy</div>
+    <h2 class="section-title">Why We Exist</h2>
+    <p class="section-description">
+      Remembering the value of quiet moments in the noise of modern life, 
+      and making these moments accessible to everyone is what we're here for.
+    </p>
+  </div>
+
+  <div class="philosophy-grid">
+    @for (item of philosophyItems; track item.number) {
+      <div class="philosophy-item">
+        <div class="philosophy-number">{{ item.number }}</div>
+        <h3>{{ item.title }}</h3>
+        <p>{{ item.description }}</p>
+      </div>
+    }
+  </div>
+</section>
+
+<!-- STORY -->
+<section class="section">
+  <div class="section-header">
+    <div class="section-label">Our Story</div>
+    <h2 class="section-title">How It All Started</h2>
+  </div>
+
+  <div class="story-layout">
+    <div class="story-text">
+      @for (paragraph of storyParagraphs; track $index) {
+        <p>{{ paragraph }}</p>
+      }
+    </div>
+
+    <div class="story-images">
+      <div class="story-image"></div>
+      <div class="story-image tall"></div>
+    </div>
+  </div>
+</section>
+
+<!-- VALUES -->
+<section class="section">
+  <div class="section-header">
+    <div class="section-label">Our Values</div>
+    <h2 class="section-title">What We Believe In</h2>
+  </div>
+
+  <div class="values-list">
+    @for (value of values; track value.title) {
+      <div class="value-item">
+        <h3 class="value-title">{{ value.title }}</h3>
+        <p class="value-description">{{ value.description }}</p>
+      </div>
+    }
+  </div>
+</section>
+
+<!-- TEAM -->
+<section class="section">
+  <div class="section-header">
+    <div class="section-label">Our Team</div>
+    <h2 class="section-title">Who We Are</h2>
+    <p class="section-description">
+      Professional backgrounds, passions, and the unique perspectives that each member brings to Spotted In. We are a team united by a shared vision of making quiet moments accessible to everyone.
+    </p>
+  </div>
+
+  <div class="team-grid">
+    @for (member of teamMembers; track member.name) {
+      <div class="team-member">
+        <div class="team-image">
+          <span class="team-initials">{{ member.initials }}</span>
+        </div>
+        <h3 class="team-name">{{ member.name }}</h3>
+        <p class="team-role">{{ member.role }}</p>
+        <p class="team-bio">{{ member.bio }}</p>
+      </div>
+    }
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <div class="cta-content">
+    <h2>Be Part of the Community</h2>
+    <p>
+      Do you know a quiet corner in your city? Share it with our community and help others discover it.
+    </p>
+    <a routerLink="/add-spot" class="cta-button">Add Spot</a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-content">
+    <div class="footer-brand">
+      <h3>Spotted In</h3>
+      <p>
+        Explore the quiet corners of your city with us. Discover, share, and experience the hidden gems that make urban life more peaceful and enjoyable.
+      </p>
+    </div>
+
+    <div class="footer-section">
+      <h4>Platform</h4>
+      <div class="footer-links">
+        @for (link of footerSections.platform; track link.label) {
+          <a [routerLink]="link.link">{{ link.label }}</a>
+        }
+      </div>
+    </div>
+
+    <div class="footer-section">
+      <h4>Support</h4>
+      <div class="footer-links">
+        @for (link of footerSections.support; track link.label) {
+          <a [routerLink]="link.link">{{ link.label }}</a>
+        }
+      </div>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <p class="footer-copyright">
+      © {{ currentYear }} Spotted In. All rights reserved.
+    </p>
+    <div class="footer-social">
+      @for (social of footerSections.social; track social.label) {
+        <a [href]="social.link" target="_blank" rel="noopener">
+          {{ social.label }}
+        </a>
+      }
+    </div>
+  </div>
+</footer>

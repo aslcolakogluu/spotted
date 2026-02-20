@@ -7,17 +7,17 @@ import { ActivityListComponent } from '@layout/activity-list';
   standalone: true,
   imports: [SpotMapComponent, ActivityListComponent],
   template: `
-    <section class="map-activity-section">
-      <div class="section-header">
+    <section class="map-activity-section"> 
+      <div class="section-header"> 
         <h2>
-          Map <em>& Activities</em>
+          Map <em>& Activities</em> 
         </h2>
       </div>
 
-      <div class="two-col">
+      <div class="two-col"> 
         <app-spot-map
-          (spotSelected)="onSpotSelected($event)"
-        />
+          (spotSelected)="onSpotSelected($event)" 
+        /> 
 
         <app-activity-list />
       </div>
@@ -68,8 +68,8 @@ import { ActivityListComponent } from '@layout/activity-list';
     </style>
   `,
 })
-export class MapActivitySectionComponent {
-  onSpotSelected(spot: MapSpot): void {
+export class MapActivitySectionComponent { 
+  onSpotSelected(spot: MapSpot): void {  
     console.log('Selected Spot:', spot.name);
-  }
+  } 
 }
