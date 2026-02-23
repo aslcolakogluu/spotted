@@ -111,9 +111,9 @@ export class ActivityItemComponent {
     return this.activity.userName.substring(0, 2).toUpperCase();
   }
 
-  hasMetadata(): boolean {
+  hasMetadata(): boolean { // Aktivitenin metadata'sının olup olmadığını kontrol eder, böylece sadece rating veya share count içeren aktiviteler için metadata bölümü gösterilir
     return !!(this.activity.metadata && 
-      (this.activity.metadata.rating || this.activity.metadata.shareCount));
+      (this.activity.metadata.rating || this.activity.metadata.shareCount)); // Metadata varsa ve içinde rating veya shareCount varsa true döner, böylece kullanıcılar aktivitelerin detaylarını görebilirler
   }
 
   getTimeAgo(): string {
@@ -149,7 +149,7 @@ export class ActivityItemComponent {
       [ActivityType.USER_JOINED]: 'bg-indigo-100 text-indigo-600'
     };
 
-    return `${baseClass} ${colorClasses[this.activity.type]}`;
+    return `${baseClass} ${colorClasses[this.activity.type]}`; // Aktivite türüne göre farklı renkler atanır, böylece kullanıcılar aktiviteleri türlerine göre hızlıca ayırt edebilirler
   }
 
   

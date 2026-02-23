@@ -5,16 +5,16 @@ import { FilterOptions, FilterChip, FilterChipType, SpotType, PriceRange, SortOp
   providedIn: 'root'
 })
 export class FilterService {
-  private currentFilters = signal<FilterOptions>({
-    types: [],
-    sortBy: SortOption.RELEVANCE
+  private currentFilters = signal<FilterOptions>({ // filteroptions tipinde reactive state var
+    types: [], 
+    sortBy: SortOption.RELEVANCE 
   });
 
-  readonly currentFilters$ = this.currentFilters.asReadonly();
+  readonly currentFilters$ = this.currentFilters.asReadonly(); 
   readonly activeFiltersCount = computed(() => this.getActiveFiltersCount());
   readonly filterChips = computed(() => this.getFilterChips());
 
-  private readonly spotTypeLabels: Record<SpotType, string> = {
+  private readonly spotTypeLabels: Record<SpotType, string> = { //enum değeri uı stringe çevrilir
     [SpotType.BRIDGE]: 'Bridge',
     [SpotType.NATURE]: 'Nature',
     [SpotType.HISTORICAL]: 'Historical',
@@ -34,16 +34,16 @@ export class FilterService {
 
   constructor() {}
 
-  setFilters(filters: Partial<FilterOptions>): void {
+  setFilters(filters: Partial<FilterOptions>): void { // tüm alanları vermek zorunda değilsin 
     this.currentFilters.update(current => ({
       ...current,
       ...filters
     }));
   }
 
-  toggleType(type: SpotType): void {
+  toggleType(type: SpotType): void { 
     this.currentFilters.update(current => {
-      const types = current.types.includes(type)
+      const types = current.types.includes(type) // varsa çıkar yoksa ekle, immutable şekilde array, state güncellenir.
         ? current.types.filter(t => t !== type)
         : [...current.types, type];
 
@@ -74,12 +74,12 @@ export class FilterService {
 
   toggleTag(tag: string): void {
     this.currentFilters.update(current => {
-      const tags = current.tags ?? [];
+      const tags = current.tags ?? []; // tags dizisi yoksa boş array olarak başlatılır null safety var
       const updatedTags = tags.includes(tag)
         ? tags.filter(t => t !== tag)
         : [...tags, tag];
 
-      return { ...current, tags: updatedTags.length > 0 ? updatedTags : undefined };
+      return { ...current, tags: updatedTags.length > 0 ? updatedTags : undefined }; // eğer tags dizisi boşaldıysa undefined yaparak state'i temizleriz
     });
   }
 
@@ -93,7 +93,7 @@ export class FilterService {
   toggleVerifiedOnly(): void {
     this.currentFilters.update(current => ({
       ...current,
-      isVerified: !current.isVerified ? true : undefined
+      isVerified: !current.isVerified ? true : undefined // toggle yaparken true/undefined arasında geçiş yapar, böylece filtreyi tamamen kaldırma imkanı sağlar
     }));
   }
 
@@ -107,12 +107,12 @@ export class FilterService {
   clearFilters(): void {
     this.currentFilters.set({
       types: [],
-      sortBy: SortOption.RELEVANCE
+      sortBy: SortOption.RELEVANCE // tam reset
     });
   }
 
   removeChip(chip: FilterChip): void {
-    switch (chip.type) {
+    switch (chip.type) { // chip türüne göre ilgili filtreyi kaldırır
       case FilterChipType.TYPE:
         this.toggleType(chip.value as SpotType);
         break;
@@ -139,7 +139,7 @@ export class FilterService {
     const filters = this.currentFilters();
     let count = 0;
 
-    count += filters.types.length;
+    count += filters.types.length; // tür sayısı kadar count artar
     if (filters.priceRange) count++;
     if (filters.rating) count++;
     if (filters.distance) count++;
@@ -155,7 +155,7 @@ export class FilterService {
     const chips: FilterChip[] = [];
 
     // Type chips
-    filters.types.forEach(type => {
+    filters.types.forEach(type => { // seçili türler için chip oluşturulur
       chips.push({
         id: `type-${type}`,
         label: this.spotTypeLabels[type],
@@ -166,7 +166,7 @@ export class FilterService {
     });
 
     // Price range chip
-    if (filters.priceRange) {
+    if (filters.priceRange) { // fiyat aralığı seçiliyse chip oluşturulur
       chips.push({
         id: 'price',
         label: this.priceRangeLabels[filters.priceRange],
@@ -180,7 +180,7 @@ export class FilterService {
     if (filters.rating) {
       chips.push({
         id: 'rating',
-        label: `${filters.rating}+ Stars`,
+        label: `${filters.rating}+ Stars`, // örneğin "4+ Stars"
         value: filters.rating,
         type: FilterChipType.RATING,
         isActive: true

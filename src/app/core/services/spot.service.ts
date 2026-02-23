@@ -6,8 +6,8 @@ import { Spot, SpotType, SpotCreateDto, SpotUpdateDto } from '../models';
   providedIn: 'root'
 })
 export class SpotService {
-  private spots = signal<Spot[]>(this.generateMockSpots());
-  readonly spots$ = this.spots.asReadonly();
+  private spots = signal<Spot[]>(this.generateMockSpots()); // spot tipinde bir array tutuyorum başlangıç değeri generateMockSpots fonksiyonundan geliyor.
+  readonly spots$ = this.spots.asReadonly(); 
 
   constructor() {}
 
@@ -16,24 +16,24 @@ export class SpotService {
   }
 
   getSpotById(id: string): Observable<Spot | undefined> {
-    const spot = this.spots().find(s => s.id === id);
+    const spot = this.spots().find(s => s.id === id); // id'ye göre spot bulur, eğer yoksa undefined döner
     return of(spot).pipe(delay(200));
   }
 
   getFeaturedSpots(): Observable<Spot[]> {
-    const featured = this.spots().filter(s => s.isFeatured);
-    return of(featured).pipe(delay(300));
+    const featured = this.spots().filter(s => s.isFeatured); // isFeatured özelliği true olan spotları filtreler
+    return of(featured).pipe(delay(300)); 
   }
 
   getSpotsByType(type: SpotType): Observable<Spot[]> {
-    const filtered = this.spots().filter(s => s.type === type);
-    return of(filtered).pipe(delay(300));
+    const filtered = this.spots().filter(s => s.type === type); // parametre olarak verilen type ile eşleşen spotları filtreler
+    return of(filtered).pipe(delay(300)); 
   }
 
   createSpot(dto: SpotCreateDto): Observable<Spot> {
-    const newSpot: Spot = {
+    const newSpot: Spot = { 
       id: this.generateId(),
-      ...dto,
+      ...dto, // dto'dan gelen alanları spread operatörü ile yeni spot objesine ekler diğerleri manuel veriliyor
       rating: 0,
       reviewCount: 0,
       imageUrl: dto.imageUrl ?? '/assets/placeholder.jpg',
@@ -44,12 +44,12 @@ export class SpotService {
       updatedAt: new Date()
     };
 
-    this.spots.update(spots => [...spots, newSpot]);
+    this.spots.update(spots => [...spots, newSpot]); // mevcut spot listesine yeni spotu ekler, immutable şekilde güncellenir
     return of(newSpot).pipe(delay(500));
   }
 
   updateSpot(dto: SpotUpdateDto): Observable<Spot | null> {
-    const index = this.spots().findIndex(s => s.id === dto.id);
+    const index = this.spots().findIndex(s => s.id === dto.id); // güncellenmek istenen spotun index'ini bulur, eğer yoksa -1 döner
     
     if (index === -1) {
       return of(null).pipe(delay(200));
@@ -57,7 +57,7 @@ export class SpotService {
 
     this.spots.update(spots => {
       const updated = [...spots];
-      updated[index] = {
+      updated[index] = { // mevcut spotun üzerine dto'dan gelen alanları ekler, updatedAt alanını günceller
         ...updated[index],
         ...dto,
         updatedAt: new Date()
@@ -72,7 +72,7 @@ export class SpotService {
     const exists = this.spots().some(s => s.id === id);
     
     if (exists) {
-      this.spots.update(spots => spots.filter(s => s.id !== id));
+      this.spots.update(spots => spots.filter(s => s.id !== id)); // id'si verilen spotu listeden çıkarır, immutable şekilde güncellenir
       return of(true).pipe(delay(300));
     }
 
@@ -90,10 +90,10 @@ export class SpotService {
   }
 
   private generateId(): string {
-    return `spot_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    return `spot_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`; //gerçek backend olmadığı için basit bir id üretme yöntemi kullanıyorum, timestamp ve random string kombinasyonu ile benzersiz id oluşturur
   }
 
-  private generateMockSpots(): Spot[] {
+  private generateMockSpots(): Spot[] { 
     return [
       {
         id: '1',

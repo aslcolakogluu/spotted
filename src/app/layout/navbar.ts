@@ -129,7 +129,7 @@ import { AuthService } from '../core/services/auth.service';
   `]
 })
 export class NavbarComponent {
-  authService = inject(AuthService); 
-  loginClicked = output<void>();
-  addSpotClicked = output<void>();
+  authService = inject(AuthService);  // AuthService, kullanıcının kimlik doğrulama durumunu kontrol etmek için kullanılır, böylece navbar'da kullanıcı giriş yapmışsa + Add Spot butonu gösterilir, giriş yapmamışsa Login butonu gösterilir
+  loginClicked = output<void>(); // Login butonuna tıklandığında tetiklenen EventEmitter, böylece kullanıcı giriş yapmaya çalıştığında gerekli işlemler gerçekleştirilir
+  addSpotClicked = output<void>(); // + Add Spot butonuna tıklandığında tetiklenen EventEmitter, böylece kullanıcı yeni bir spot eklemek istediğinde gerekli işlemler gerçekleştirilir
 }

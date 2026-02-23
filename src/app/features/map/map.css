@@ -480,16 +480,13 @@
     right: 24px;
   }
 }
-/* ═══════════════════════════════════════
-   USER LOCATION MARKER (Özel Pin)
-   ═══════════════════════════════════════ */
+
 :host ::ng-deep .user-location-marker {
   position: relative;
   width: 40px;
   height: 40px;
 }
 
-/* Pulse animasyonu (dalgalanma efekti) */
 :host ::ng-deep .pulse {
   position: absolute;
   top: 50%;
@@ -513,7 +510,6 @@
   }
 }
 
-/* Kullanıcı pin'i (kırmızı, büyük) */
 :host ::ng-deep .user-pin {
   position: absolute;
   top: 50%;
@@ -532,7 +528,6 @@
   z-index: 10;
 }
 
-/* Hover efekti */
 :host ::ng-deep .user-location-marker:hover .user-pin {
   transform: translate(-50%, -50%) scale(1.1);
 }

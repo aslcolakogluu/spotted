@@ -1,7 +1,5 @@
-<!-- FULL SCREEN MAP -->
 <div id="map"></div>
 
-<!-- FLOATING SEARCH (Top Center) -->
 <div class="floating-search">
   <div class="search-container">
     <input 
@@ -12,7 +10,6 @@
   </div>
 </div>
 
-<!-- SIDEBAR (Left, Collapsible) -->
 <aside class="sidebar" [class.collapsed]="sidebarCollapsed()">
   <button class="sidebar-toggle" (click)="toggleSidebar()">
     <span>{{ sidebarCollapsed() ? '▶' : '◀' }}</span>
@@ -22,7 +19,6 @@
     <h3>Nearby Spots</h3>
     <span class="spot-count">{{ filteredSpots().length }} spots found</span>
     
-    <!-- Category Filters (Inside Sidebar) -->
     <div class="category-filters">
       <button 
         class="category-pill"
@@ -69,7 +65,6 @@
   </div>
 </aside>
 
-<!-- MAP CONTROLS (Top Right) -->
 <div class="map-controls">
   <button 
     class="map-control-btn" 

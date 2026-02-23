@@ -34,7 +34,7 @@ interface TeamMember {
 export class AboutComponent {
   
   // Stats data
-  readonly stats: StatItem[] = [
+  readonly stats: StatItem[] = [ // değişmeyecek, sabit veriler
     { number: '150+', label: 'Explored Spots' },
     { number: '2,500+', label: 'Active Users' },
     { number: '8,000+', label: 'Shared Experiences' }
@@ -140,5 +140,5 @@ export class AboutComponent {
     ]
   };
 
-  readonly currentYear = new Date().getFullYear();
+  readonly currentYear = new Date().getFullYear(); // Dinamik olarak güncellenen yıl
 }

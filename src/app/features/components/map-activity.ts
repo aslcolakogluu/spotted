@@ -16,7 +16,7 @@ import { ActivityListComponent } from '@layout/activity-list';
 
       <div class="two-col"> 
         <app-spot-map
-          (spotSelected)="onSpotSelected($event)" 
+          (spotSelected)="onSpotSelected($event)"  
         /> 
 
         <app-activity-list />
@@ -69,7 +69,7 @@ import { ActivityListComponent } from '@layout/activity-list';
   `,
 })
 export class MapActivitySectionComponent { 
-  onSpotSelected(spot: MapSpot): void {  
+  onSpotSelected(spot: MapSpot): void {   
     console.log('Selected Spot:', spot.name);
   } 
 }

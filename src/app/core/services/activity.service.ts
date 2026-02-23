@@ -1,11 +1,11 @@
-import { Injectable, signal } from '@angular/core';
-import { Observable, of, delay } from 'rxjs';
-import { Activity, ActivityType, ActivityFilter } from '../models';
+import { Injectable, signal } from '@angular/core'; 
+import { Observable, of, delay } from 'rxjs'; 
+import { Activity, ActivityType, ActivityFilter } from '../models'; 
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root' 
 })
-export class ActivityService {
+export class ActivityService { 
   private activities = signal<Activity[]>(this.generateMockActivities());
   readonly activities$ = this.activities.asReadonly();
 
@@ -17,46 +17,46 @@ export class ActivityService {
     if (filter) {
       if (filter.type?.length) {
         filtered = filtered.filter(a => filter.type!.includes(a.type));
-      }
+      } // filter by array of types
 
       if (filter.userId) {
         filtered = filtered.filter(a => a.userId === filter.userId);
-      }
+      } // filter by userId
 
       if (filter.spotId) {
         filtered = filtered.filter(a => a.spotId === filter.spotId);
-      }
+      } // filter by spotId
 
       if (filter.startDate) {
         filtered = filtered.filter(a => new Date(a.timestamp) >= filter.startDate!);
-      }
+      } // filter by startDate
 
       if (filter.endDate) {
         filtered = filtered.filter(a => new Date(a.timestamp) <= filter.endDate!);
-      }
+      } // filter by endDate
 
       if (filter.limit) {
         filtered = filtered.slice(0, filter.limit);
-      }
+      } // apply limit after all other filters
     }
 
     return of(filtered).pipe(delay(300));
   }
 
-  getRecentActivities(limit: number = 10): Observable<Activity[]> {
-    const recent = [...this.activities()]
+  getRecentActivities(limit: number = 10): Observable<Activity[]> { 
+    const recent = [...this.activities()] 
       .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
-      .slice(0, limit);
+      .slice(0, limit); // büyük timestamp en üstte yani en yeni en üstte.
     
-    return of(recent).pipe(delay(200));
+    return of(recent).pipe(delay(200)); 
   }
 
-  getUserActivities(userId: string, limit?: number): Observable<Activity[]> {
-    let userActivities = this.activities().filter(a => a.userId === userId);
+  getUserActivities(userId: string, limit?: number): Observable<Activity[]> {   
+    let userActivities = this.activities().filter(a => a.userId === userId);  
     
     if (limit) {
-      userActivities = userActivities.slice(0, limit);
-    }
+      userActivities = userActivities.slice(0, limit); 
+    } 
 
     return of(userActivities).pipe(delay(300));
   }
@@ -78,16 +78,16 @@ export class ActivityService {
       timestamp: new Date()
     };
 
-    this.activities.update(activities => [newActivity, ...activities]);
+    this.activities.update(activities => [newActivity, ...activities]); // yeni aktiviteyi başa ekliyor
     return of(newActivity).pipe(delay(200));
   }
 
   private generateId(): string {
-    return `activity_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-  }
+    return `activity_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`; 
+  } 
 
-  private generateMockActivities(): Activity[] {
-    const now = new Date();
+  private generateMockActivities(): Activity[] { // başlangıç state üretir
+    const now = new Date(); 
     
     return [
       {

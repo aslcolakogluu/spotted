@@ -4,6 +4,6 @@ import { routes } from './app.routes';
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    provideRouter(routes)
+    provideRouter(routes) // Angular uygulamasında yönlendirme (routing) sağlamak için gerekli olan router'ı sağlayan bir provider, böylece uygulama içinde farklı sayfalara geçiş yapılabilir
   ]
 };

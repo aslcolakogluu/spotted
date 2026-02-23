@@ -54,7 +54,7 @@ export class ActivityListComponent implements OnInit {
   activities = signal<Activity[]>([]);
   limit = 10;
 
-  constructor(private activityService: ActivityService) {}
+  constructor(private activityService: ActivityService) {} // ActivityService, aktiviteleri almak ve yönetmek için kullanılır, böylece kullanıcıların yaptığı aktiviteler bu servis üzerinden çekilerek görüntülenebilir
 
   ngOnInit(): void {
     this.loadActivities();
@@ -91,7 +91,7 @@ export class ActivityListComponent implements OnInit {
     const diffInMs = now.getTime() - new Date(timestamp).getTime();
     const diffInMinutes = Math.floor(diffInMs / (1000 * 60));
 
-    if (diffInMinutes < 1) return 'Just now';
+    if (diffInMinutes < 1) return 'Just now'; 
     if (diffInMinutes < 60) return `${diffInMinutes} minutes ago`;
     
     const diffInHours = Math.floor(diffInMinutes / 60);

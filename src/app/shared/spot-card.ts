@@ -125,10 +125,10 @@ import { SpotTypeIconPipe, SpotTypeLabelPipe } from '@core/pipes';
   `]
 })
 export class SpotCardComponent {
-  @Input() spot!: Spot;
-  @Output() spotClick = new EventEmitter<Spot>();
+  @Input() spot!: Spot; // Spot nesnesi, bu bileşenin görüntüleyeceği mekan bilgisini içerir, böylece her bir SpotCard farklı bir mekanı temsil eder
+  @Output() spotClick = new EventEmitter<Spot>(); // Spot kartına tıklandığında tetiklenen EventEmitter, böylece kullanıcı bir spot kartına tıkladığında bu olay yakalanarak gerekli işlemler yapılabilir, örneğin detay sayfasına yönlendirme veya modal açma gibi işlemler gerçekleştirilebilir
 
-  handleClick(): void {
+  handleClick(): void { // Spot kartına tıklandığında spotClick EventEmitter'ı tetiklenir, böylece kullanıcı bir spot kartına tıkladığında bu olay yakalanarak gerekli işlemler yapılabilir, örneğin detay sayfasına yönlendirme veya modal açma gibi işlemler gerçekleştirilebilir
     this.spotClick.emit(this.spot);
   }
 }

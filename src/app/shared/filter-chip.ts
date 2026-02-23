@@ -24,14 +24,14 @@ import { FilterChip } from '@core/models';
   styles: []
 })
 export class FilterChipComponent {
-  @Input() chip!: FilterChip;
-  @Input() removable: boolean = true;
-  @Output() removed = new EventEmitter<FilterChip>();
-  @Output() clicked = new EventEmitter<FilterChip>();
+  @Input() chip!: FilterChip; // FilterChip nesnesi, bu bileşenin görüntüleyeceği filtre bilgisini içerir, böylece her bir chip farklı bir filtreyi temsil eder
+  @Input() removable: boolean = true; // Chip'in silinebilir olup olmadığını belirten bir boolean, böylece bazı chip'ler sadece tıklanabilir olabilirken bazıları silinebilir olarak ayarlanabilir
+  @Output() removed = new EventEmitter<FilterChip>(); // Chip silindiğinde tetiklenen EventEmitter, böylece kullanıcı bir chip'i kaldırmak istediğinde bu olay yakalanarak gerekli işlemler yapılabilir
+  @Output() clicked = new EventEmitter<FilterChip>(); // Chip tıklandığında tetiklenen EventEmitter, böylece kullanıcı bir chip'e tıkladığında bu olay yakalanarak gerekli işlemler yapılabilir, örneğin filtre uygulanabilir veya detay gösterilebilir
 
   handleClick(): void {
-    if (this.removable) {
-      this.removed.emit(this.chip);
+    if (this.removable) { // Eğer chip silinebilir ise, removed EventEmitter'ı tetiklenir, böylece kullanıcı bir chip'i kaldırmak istediğinde bu olay yakalanarak gerekli işlemler yapılabilir
+      this.removed.emit(this.chip); // Eğer chip silinebilir değilse, clicked EventEmitter'ı tetiklenir, böylece kullanıcı bir chip'e tıkladığında bu olay yakalanarak gerekli işlemler yapılabilir, örneğin filtre uygulanabilir veya detay gösterilebilir
     } else {
       this.clicked.emit(this.chip);
     }

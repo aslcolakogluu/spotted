@@ -16,7 +16,7 @@ export class StatsService {
   }
 
   getUserStats(userId: string): Observable<UserStats> {
-    return of(this.generateMockUserStats(userId)).pipe(delay(300));
+    return of(this.generateMockUserStats(userId)).pipe(delay(300)); // yeniden generateMockUserStats fonksiyonu çağırarak kullanıcıya özel istatistikler döner
   }
 
   getTrendingStats(): Observable<TrendingStats> {
@@ -24,11 +24,11 @@ export class StatsService {
   }
 
   getCategoryStats(): Observable<CategoryStat[]> {
-    return of(this.stats().popularCategories).pipe(delay(200));
+    return of(this.stats().popularCategories).pipe(delay(200)); // overall stats içindeki popularCategories'ı döner
   }
 
   updateStats(): void {
-    this.stats.set(this.generateMockStats());
+    this.stats.set(this.generateMockStats()); // gerçek bir backend olmadığı için stats'u güncellemek istediğimizde yeni rastgele verilerle güncellenmiş bir stats objesi oluşturup state'i güncelliyoruz
   }
 
   private generateMockStats(): Stats {
@@ -91,9 +91,9 @@ export class StatsService {
     const stats = [];
     const today = new Date();
 
-    for (let i = days - 1; i >= 0; i--) {
+    for (let i = days - 1; i >= 0; i--) { // son 7 günün istatistiklerini oluşturur, her gün için rastgele sayılar üretir
       const date = new Date(today);
-      date.setDate(date.getDate() - i);
+      date.setDate(date.getDate() - i); // gün sayısı kadar bugünün tarihinden geriye gidilir
       
       stats.push({
         date: date.toISOString().split('T')[0],
