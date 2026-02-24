@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-add-spot-cta',
@@ -6,8 +7,11 @@ import { Component } from '@angular/core';
   imports: [],
   templateUrl: './added-spot-cta.html',
   styleUrl: './added-spot-cta.css',
-    
-
-    
 })
-export class AddSpotCtaComponent {}
+export class AddSpotCtaComponent {
+  private router = inject(Router);
+
+  navigateToAddSpot(): void {
+    this.router.navigate(['/add-spot']);
+  }
+}
