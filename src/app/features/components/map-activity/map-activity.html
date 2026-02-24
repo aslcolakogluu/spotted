@@ -1,0 +1,11 @@
+<section class="map-activity-section">
+      <div class="section-header">
+        <h2>Map <em>& Activities</em></h2>
+      </div>
+
+      <div class="two-col">
+        <app-spot-map (spotSelected)="onSpotSelected($event)" />
+
+        <app-activity-list />
+      </div>
+    </section>

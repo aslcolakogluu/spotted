@@ -1,14 +1,5 @@
-import { Component, OnInit, signal, effect } from '@angular/core';
-import { SpotService } from '@core/services';
-import { Spot } from '@core/models';
-
-@Component({
-  selector: 'app-featured-spot',
-  standalone: true,
-  imports: [],
-  template: `
-    <section class="px-12 py-18">
-      <div class="flex justify-between items-end mb-10">
+ <section class="px-12 py-18">
+    <div class="flex justify-between items-end mb-10">
         <h2 style="font-family: 'Playfair Display', serif; font-size: 1.9rem; font-weight: 600; color: #eee8df;">
           This week's <em style="font-style: italic; color: #c8a96e;">Featured Spot</em>
         </h2>
@@ -105,96 +96,6 @@ import { Spot } from '@core/models';
           <p style="color: rgba(238,232,223,0.45);">There are no featured spots yet.</p>
         </div>
       }
-    </section>
-
-    <style>
-      .filter-chip {
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        padding: 8px 16px;
-        border-radius: 20px;
-        border: 1px solid rgba(255,255,255,0.06);
-        background: rgba(255,255,255,0.05);
-        color: rgba(238,232,223,0.45);
-        font-size: 0.82rem;
-        font-weight: 400;
-        cursor: pointer;
-        transition: all 0.2s;
-      }
-      
-      .filter-chip:hover {
-        border-color: #c8a96e;
-        color: #eee8df;
-      }
-      
-      .filter-chip.active {
-        background: rgba(200,169,110,0.15);
-        border-color: rgba(200,169,110,0.35);
-        color: #c8a96e;
-      }
-      
-      .spot-card {
-        position: relative;
-        border-radius: 12px;
-        overflow: hidden;
-        background: #12141a;
-        border: 1px solid rgba(255,255,255,0.06);
-        cursor: pointer;
-        transition: all 0.3s;
-      }
-      
-      .spot-card:hover {
-        background: #181c26;
-        border-color: rgba(200,169,110,0.2);
-        transform: translateY(-2px);
-      }
-      
-      .spot-card:hover .card-img-bg {
-        transform: scale(1.05);
-      }
-    </style>
-  `,
-  styles: []
-})
-export class FeaturedSpotComponent implements OnInit {
-  featuredSpots = signal<Spot[]>([]);
-  selectedFilter = signal<string>('All Spots');
-  
-  filters = ['All Spots', 'Scenic View', 'Park', 'Bridge', 'Isolated Road', 'Balcony', 'Historical'];
-
-  constructor(private spotService: SpotService) {}
-
-  ngOnInit(): void {
-    this.spotService.getFeaturedSpots().subscribe((spots: Spot[]) => {
-      this.featuredSpots.set(spots);
-    });
-  }
-
-  onSpotClick(spot: Spot): void {
-    console.log('Spot clicked:', spot);
-  }
-
-  onFilterClick(filter: string): void {
-    this.selectedFilter.set(filter);
-    console.log('Filter clicked:', filter);
-  }
-
-  getSpotIcon(type: string): string {
-    const icons: Record<string, string> = {
-      'BRIDGE': '🌉',
-      'PARK': '🌳',
-      'MUSEUM': '🏛️',
-      'HISTORICAL': '🏰',
-      'BEACH': '🏖️',
-      'SPORTS': '⚽',
-      'OTHER': '📍'
-    };
-    return icons[type] || '📍';
-  }
-
-  getStars(rating: number): string {
-    const fullStars = Math.floor(rating);
-    return '★'.repeat(fullStars) + '☆'.repeat(5 - fullStars);
-  }
-}
+ </section>
+ 
+ 

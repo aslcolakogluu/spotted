@@ -1,0 +1,41 @@
+ .nav-btn {
+      font-size: 0.82rem;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: rgba(238, 232, 223, 0.45);
+      background: none;
+      border: none;
+      cursor: pointer;
+      transition: color 0.25s;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    .nav-btn:hover {
+      color: #c8a96e;
+    }
+
+    .nav-btn.active {
+      color: #c8a96e;
+      font-weight: 600;
+    }
+
+    .nav-btn-primary {
+      background: #c8a96e;
+      color: #0a0b0d;
+      padding: 8px 18px;
+      border-radius: 6px;
+      font-weight: 600;
+      font-size: 0.82rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      border: none;
+      cursor: pointer;
+      transition: all 0.25s;
+    }
+
+    .nav-btn-primary:hover {
+      background: #d9bf84;
+      transform: translateY(-1px);
+    }

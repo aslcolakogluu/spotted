@@ -1,0 +1,46 @@
+    
+      .filter-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 8px 16px;
+        border-radius: 20px;
+        border: 1px solid rgba(255,255,255,0.06);
+        background: rgba(255,255,255,0.05);
+        color: rgba(238,232,223,0.45);
+        font-size: 0.82rem;
+        font-weight: 400;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+      
+      .filter-chip:hover {
+        border-color: #c8a96e;
+        color: #eee8df;
+      }
+      
+      .filter-chip.active {
+        background: rgba(200,169,110,0.15);
+        border-color: rgba(200,169,110,0.35);
+        color: #c8a96e;
+      }
+      
+      .spot-card {
+        position: relative;
+        border-radius: 12px;
+        overflow: hidden;
+        background: #12141a;
+        border: 1px solid rgba(255,255,255,0.06);
+        cursor: pointer;
+        transition: all 0.3s;
+      }
+      
+      .spot-card:hover {
+        background: #181c26;
+        border-color: rgba(200,169,110,0.2);
+        transform: translateY(-2px);
+      }
+      
+      .spot-card:hover .card-img-bg {
+        transform: scale(1.05);
+      }

@@ -1,12 +1,12 @@
 import { Component, signal } from '@angular/core';
 import { Router, NavigationEnd, RouterOutlet } from '@angular/router';
 import { filter } from 'rxjs';
-import { NavbarComponent } from './layout/navbar';
-import { FooterComponent } from './layout/footer';
-import { HeroComponent } from './layout/hero';
-import { FeaturedSpotComponent } from './layout/featured-spots';
-import { MapActivitySectionComponent} from './features/components/map-activity';
-import { AddSpotCtaComponent } from './layout/added-spot-cta';
+import { NavbarComponent } from './layout/navbar/navbar';
+import { FooterComponent } from './layout/footer/footer';
+import { HeroComponent } from './layout/hero/hero';
+import { FeaturedSpotComponent } from './layout/featured-spots/featured-spots';
+import { MapActivitySectionComponent } from './features/components/map-activity/map-activity';
+import { AddSpotCtaComponent } from './layout/added-spot-cta/added-spot-cta';
 import { Login } from './features/login/login';
 
 @Component({
@@ -20,21 +20,25 @@ import { Login } from './features/login/login';
     FeaturedSpotComponent,
     MapActivitySectionComponent,
     AddSpotCtaComponent,
-    Login
+    Login,
   ],
   templateUrl: './app.html',
-  styleUrl: './app.css'
+  styleUrl: './app.css',
 })
 export class AppComponent {
   showLoginModal = signal(false);
   currentRoute = signal('/');
 
-  constructor(private router: Router) { // Router, Angular'ın yönlendirme işlemlerini yönetmek için kullanılan bir servis, böylece uygulama içinde farklı sayfalara geçiş yapılabilir
-    this.router.events.pipe(
-      filter(event => event instanceof NavigationEnd) // Router'ın NavigationEnd olaylarını filtreler, böylece sadece sayfa geçişi tamamlandığında currentRoute güncellenir, bu sayede uygulamanın hangi sayfada olduğunu doğru bir şekilde takip edebiliriz
-    ).subscribe((event: any) => { // NavigationEnd olayları gerçekleştiğinde currentRoute sinyalini günceller, böylece uygulamanın hangi sayfada olduğunu doğru bir şekilde takip edebiliriz
-      this.currentRoute.set(event.url); // Router'ın NavigationEnd olayları gerçekleştiğinde currentRoute sinyalini günceller, böylece uygulamanın hangi sayfada olduğunu doğru bir şekilde takip edebiliriz
-    });
+  constructor(private router: Router) {
+    // Router, Angular'ın yönlendirme işlemlerini yönetmek için kullanılan bir servis, böylece uygulama içinde farklı sayfalara geçiş yapılabilir
+    this.router.events
+      .pipe(
+        filter((event) => event instanceof NavigationEnd), // Router'ın NavigationEnd olaylarını filtreler, böylece sadece sayfa geçişi tamamlandığında currentRoute güncellenir, bu sayede uygulamanın hangi sayfada olduğunu doğru bir şekilde takip edebiliriz
+      )
+      .subscribe((event: any) => {
+        // NavigationEnd olayları gerçekleştiğinde currentRoute sinyalini günceller, böylece uygulamanın hangi sayfada olduğunu doğru bir şekilde takip edebiliriz
+        this.currentRoute.set(event.url); // Router'ın NavigationEnd olayları gerçekleştiğinde currentRoute sinyalini günceller, böylece uygulamanın hangi sayfada olduğunu doğru bir şekilde takip edebiliriz
+      });
   }
 
   isHomePage(): boolean {

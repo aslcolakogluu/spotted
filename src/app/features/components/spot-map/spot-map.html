@@ -1,0 +1,11 @@
+<div class="map-wrapper">
+      <div #mapContainer id="spot-map" class="map-container"></div> 
+
+      
+      @if (activeSpot()) { 
+        <div class="map-label">
+          <h5>{{ activeSpot()!.name }}</h5> 
+          <p>{{ activeSpot()!.type }} · ★ {{ activeSpot()!.rating }}{{ activeSpot()!.bestHour ? ' · ' + activeSpot()!.bestHour : '' }}</p> 
+        </div> 
+      }
+    </div>

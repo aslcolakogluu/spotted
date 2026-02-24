@@ -5,23 +5,8 @@ import { FilterChip } from '@core/models';
   selector: 'app-filter-chip',
   standalone: true,
   imports: [],
-  template: `
-    <button
-      [class]="getChipClasses()"
-      (click)="handleClick()">
-      <span>{{ chip.label }}</span>
-      @if (removable) {
-        <svg 
-          class="w-4 h-4 ml-1.5"
-          fill="none" 
-          stroke="currentColor" 
-          viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-        </svg>
-      }
-    </button>
-  `,
-  styles: []
+  templateUrl: './filter-chip.html',
+  styleUrl: './filter-chip.css',
 })
 export class FilterChipComponent {
   @Input() chip!: FilterChip; // FilterChip nesnesi, bu bileşenin görüntüleyeceği filtre bilgisini içerir, böylece her bir chip farklı bir filtreyi temsil eder

@@ -1,10 +1,4 @@
-import { Component, signal } from '@angular/core';
-
-@Component({
-  selector: 'app-hero',
-  standalone: true,
-  template: `
-    <section class="relative flex flex-col justify-end px-12 pb-20 overflow-hidden" style="height: 100vh;">
+<section class="relative flex flex-col justify-end px-12 pb-20 overflow-hidden" style="height: 100vh;">
       <!-- Background Image -->
       <div class="absolute inset-0">
         <img 
@@ -53,70 +47,3 @@ import { Component, signal } from '@angular/core';
         </div>
       }
     </div>
-
-    <style>
-      @keyframes pulse {
-        0%, 100% { opacity: 1; }
-        50% { opacity: 0.3; }
-      }
-      
-      .btn-hero-primary {
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        padding: 14px 30px;
-        border-radius: 8px;
-        font-size: 0.88rem;
-        font-weight: 500;
-        letter-spacing: 0.04em;
-        background: #c8a96e;
-        color: #0a0b0d;
-        border: none;
-        cursor: pointer;
-        transition: all 0.3s;
-      }
-      
-      .btn-hero-primary:hover {
-        background: #d9bf84;
-        transform: translateY(-1px);
-      }
-      
-      .btn-hero-secondary {
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        padding: 14px 30px;
-        border-radius: 8px;
-        font-size: 0.88rem;
-        font-weight: 500;
-        letter-spacing: 0.04em;
-        background: rgba(255,255,255,0.06);
-        color: #eee8df;
-        border: 1px solid rgba(255,255,255,0.06);
-        cursor: pointer;
-        transition: all 0.3s;
-      }
-      
-      .btn-hero-secondary:hover {
-        background: rgba(255,255,255,0.1);
-      }
-    </style>
-  `,
-  styles: []
-})
-export class HeroComponent {
-  stats = signal([
-    { value: '47', label: 'Discovered Spots' },
-    { value: '128', label: 'Reviews' },
-    { value: '23', label: 'Active Explorers' },
-    { value: '4.6', label: 'Average Quietness' }
-  ]);
-
-  onExploreClick(): void {
-    console.log('Explore clicked');
-  }
-
-  onMapClick(): void {
-    console.log('Map view clicked');
-  }
-}

@@ -1,0 +1,9 @@
+
+      .activity-item:hover {
+        background: #181c26;
+        border-color: rgba(200,169,110,0.15);
+      }
+      
+      .activity-item :global(.spot-name) {
+        color: #c8a96e;
+      }
