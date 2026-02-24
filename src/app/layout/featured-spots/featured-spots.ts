@@ -8,16 +8,20 @@ import { Spot } from '@core/models';
   imports: [],
   templateUrl: './featured-spots.html',
   styleUrl: './featured-spots.css',
-    
-    
-
-
 })
 export class FeaturedSpotComponent implements OnInit {
   featuredSpots = signal<Spot[]>([]);
   selectedFilter = signal<string>('All Spots');
-  
-  filters = ['All Spots', 'Scenic View', 'Park', 'Bridge', 'Isolated Road', 'Balcony', 'Historical'];
+
+  filters = [
+    'All Spots',
+    'Scenic View',
+    'Park',
+    'Bridge',
+    'Isolated Road',
+    'Balcony',
+    'Historical',
+  ];
 
   constructor(private spotService: SpotService) {}
 
@@ -37,16 +41,8 @@ export class FeaturedSpotComponent implements OnInit {
   }
 
   getSpotIcon(type: string): string {
-    const icons: Record<string, string> = {
-      'BRIDGE': '🌉',
-      'PARK': '🌳',
-      'MUSEUM': '🏛️',
-      'HISTORICAL': '🏰',
-      'BEACH': '🏖️',
-      'SPORTS': '⚽',
-      'OTHER': '📍'
-    };
-    return icons[type] || '📍';
+    // Emoji'ler SVG ikonlara dönüştürüldü, bu method artık kullanılmıyor
+    return '';
   }
 
   getStars(rating: number): string {

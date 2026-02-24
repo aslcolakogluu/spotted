@@ -1,8 +1,16 @@
-import {Component,inject,computed,signal,OnInit,AfterViewInit,OnDestroy,effect,} from '@angular/core';
+import {
+  Component,
+  inject,
+  computed,
+  signal,
+  OnInit,
+  AfterViewInit,
+  OnDestroy,
+  effect,
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { SpotService } from '@core/services';
 import { Spot, SpotType } from '@core/models';
-
 
 declare const L: any; // Leaflet global variable, böylece TypeScript derleyicisi L'nin var olduğunu bilir ve hata vermez
 
@@ -13,14 +21,14 @@ declare const L: any; // Leaflet global variable, böylece TypeScript derleyicis
   templateUrl: './map.html',
   styleUrl: './map.css',
 })
-export class MapComponent implements OnInit, AfterViewInit, OnDestroy{
+export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
   private spotService = inject(SpotService);
 
   searchQuery = '';
   selectedCategory = signal<SpotType | null>(null); // Seçilen kategori, başlangıçta null olarak ayarlanır, böylece tüm kategoriler gösterilir, kullanıcı bir kategori seçtiğinde bu sinyal güncellenir ve harita buna göre filtrelenir
-  selectedSpot = signal<Spot | null>(null);  // Seçilen spot, başlangıçta null olarak ayarlanır, böylece hiçbir spot seçili olmaz, kullanıcı bir marker'a tıkladığında bu sinyal güncellenir ve detay kartı gösterilir, kullanıcı kartı kapattığında tekrar null yapılır ve detay kartı gizlenir
+  selectedSpot = signal<Spot | null>(null); // Seçilen spot, başlangıçta null olarak ayarlanır, böylece hiçbir spot seçili olmaz, kullanıcı bir marker'a tıkladığında bu sinyal güncellenir ve detay kartı gösterilir, kullanıcı kartı kapattığında tekrar null yapılır ve detay kartı gizlenir
   sidebarCollapsed = signal(false); // Kenar çubuğunun açık mı kapalı mı olduğunu tutan sinyal, başlangıçta false olarak ayarlanır yani kenar çubuğu açık olur, kullanıcı toggleSidebar fonksiyonunu çağırdığında bu sinyal güncellenir ve kenar çubuğu açılıp kapanır
- 
+
   private allSpots = signal<Spot[]>([]); // Tüm spot'ları tutan sinyal, başlangıçta boş bir dizi olarak ayarlanır, ngOnInit'de SpotService üzerinden spot'lar yüklendiğinde bu sinyal güncellenir ve harita ile liste buna göre güncellenir
   private map: any; // Leaflet haritasını tutan değişken, böylece harita üzerinde işlemler yaparken bu değişkene erişilir, örneğin marker eklemek veya harita merkezini değiştirmek gibi işlemler için kullanılır
   private markers: any[] = []; // Harita üzerinde gösterilen marker'ları tutan dizi, böylece marker'lar güncellenirken önce eski marker'lar kaldırılır ve yeni marker'lar eklenir, böylece harita her zaman güncel spot'ları gösterir
@@ -35,7 +43,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy{
     { type: SpotType.MUSEUM, label: 'Museum', emoji: '' },
     { type: SpotType.BEACH, label: 'Beach', emoji: '' },
     { type: SpotType.SPORTS, label: 'Sports', emoji: '' },
-    { type: SpotType.OTHER, label: 'Other', emoji: '📍' },
+    { type: SpotType.OTHER, label: 'Other', emoji: '' },
   ];
 
   filteredSpots = computed(() => {
@@ -55,12 +63,14 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy{
 
     return spots;
   });
-getBestTime: any;
-calculateDistance: any;
+  getBestTime: any;
+  calculateDistance: any;
 
-  constructor() { // Harita hazır olduğunda ve filtrelenmiş spot'lar değiştiğinde marker'ları güncellemek için bir effect oluşturulur, böylece kullanıcı filtreleri değiştirdiğinde veya harita yüklendiğinde harita her zaman güncel spot'ları gösterir
+  constructor() {
+    // Harita hazır olduğunda ve filtrelenmiş spot'lar değiştiğinde marker'ları güncellemek için bir effect oluşturulur, böylece kullanıcı filtreleri değiştirdiğinde veya harita yüklendiğinde harita her zaman güncel spot'ları gösterir
     effect(() => {
-      if (this.mapReady() && this.filteredSpots().length > 0) { // Harita hazırsa ve filtrelenmiş spot'lar varsa, marker'lar güncellenir, böylece kullanıcı filtreleri değiştirdiğinde veya harita yüklendiğinde harita her zaman güncel spot'ları gösterir
+      if (this.mapReady() && this.filteredSpots().length > 0) {
+        // Harita hazırsa ve filtrelenmiş spot'lar varsa, marker'lar güncellenir, böylece kullanıcı filtreleri değiştirdiğinde veya harita yüklendiğinde harita her zaman güncel spot'ları gösterir
         this.updateMarkers();
       }
     });
@@ -86,8 +96,9 @@ calculateDistance: any;
   }
 
   private loadLeaflet(): void {
-    if (typeof window !== 'undefined' && !(window as any).L) { // Leaflet zaten yüklenmişse tekrar yüklenmez, böylece gereksiz ağ isteklerinin önüne geçilir ve uygulamanın performansı korunur
-      const link = document.createElement('link'); 
+    if (typeof window !== 'undefined' && !(window as any).L) {
+      // Leaflet zaten yüklenmişse tekrar yüklenmez, böylece gereksiz ağ isteklerinin önüne geçilir ve uygulamanın performansı korunur
+      const link = document.createElement('link');
       link.rel = 'stylesheet';
       link.href = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css';
       document.head.appendChild(link); //
@@ -139,7 +150,8 @@ calculateDistance: any;
     console.log('Updating markers for spots:', spots.length);
 
     spots.forEach((spot, index) => {
-      const customIcon = L.divIcon({ // Her spot için özel bir divIcon oluşturulur, böylece marker'lar sırayla farklı renklerde gösterilir ve kullanıcıların harita üzerinde spot'ları kolayca ayırt etmeleri sağlanır
+      const customIcon = L.divIcon({
+        // Her spot için özel bir divIcon oluşturulur, böylece marker'lar sırayla farklı renklerde gösterilir ve kullanıcıların harita üzerinde spot'ları kolayca ayırt etmeleri sağlanır
         className: 'leaflet-div-icon',
         html: `<div class="marker-pin">${index + 1}</div>`,
         iconSize: [36, 36],
@@ -158,7 +170,8 @@ calculateDistance: any;
       this.markers.push(marker);
     });
 
-    if (spots.length > 0 && this.markers.length > 0) { // Eğer filtrelenmiş spot'lar varsa ve marker'lar oluşturulmuşsa, harita marker'ların bulunduğu bölgeye odaklanır, böylece kullanıcı filtreleri değiştirdiğinde veya harita yüklendiğinde harita her zaman güncel spot'ları gösterir ve kullanıcıların ilgilendikleri bölgeyi kolayca görmeleri sağlanır
+    if (spots.length > 0 && this.markers.length > 0) {
+      // Eğer filtrelenmiş spot'lar varsa ve marker'lar oluşturulmuşsa, harita marker'ların bulunduğu bölgeye odaklanır, böylece kullanıcı filtreleri değiştirdiğinde veya harita yüklendiğinde harita her zaman güncel spot'ları gösterir ve kullanıcıların ilgilendikleri bölgeyi kolayca görmeleri sağlanır
       const group = L.featureGroup(this.markers);
       this.map.fitBounds(group.getBounds().pad(0.1)); // Harita, marker'ların bulunduğu bölgeye sığacak şekilde zoom ve konumlandırılır, böylece kullanıcı filtreleri değiştirdiğinde veya harita yüklendiğinde harita her zaman güncel spot'ları gösterir ve kullanıcıların ilgilendikleri bölgeyi kolayca görmeleri sağlanır
     }
@@ -175,29 +188,34 @@ calculateDistance: any;
   selectSpot(spot: Spot): void {
     this.selectedSpot.set(spot);
     if (this.map) {
-      this.map.setView([spot.latitude, spot.longitude], 15, { // Seçilen spot'un konumuna odaklanır, böylece kullanıcı listeye tıkladığında harita otomatik olarak o spot'un konumuna gider ve kullanıcıların ilgilendikleri bölgeyi kolayca görmeleri sağlanır
+      this.map.setView([spot.latitude, spot.longitude], 15, {
+        // Seçilen spot'un konumuna odaklanır, böylece kullanıcı listeye tıkladığında harita otomatik olarak o spot'un konumuna gider ve kullanıcıların ilgilendikleri bölgeyi kolayca görmeleri sağlanır
         animate: true,
         duration: 0.5,
       });
     }
   }
 
-  selectSpotByClick(spot: Spot): void { // Marker'a tıklandığında spot seçilir, böylece kullanıcı harita üzerindeki marker'lara tıklayarak spot detaylarını görebilir ve etkileşimde bulunabilir
+  selectSpotByClick(spot: Spot): void {
+    // Marker'a tıklandığında spot seçilir, böylece kullanıcı harita üzerindeki marker'lara tıklayarak spot detaylarını görebilir ve etkileşimde bulunabilir
     this.selectedSpot.set(spot);
   }
 
-  closeCard(): void { // Detay kartını kapatır, böylece kullanıcı detay kartını kapatmak istediğinde spot seçimi kaldırılır ve detay kartı gizlenir
+  closeCard(): void {
+    // Detay kartını kapatır, böylece kullanıcı detay kartını kapatmak istediğinde spot seçimi kaldırılır ve detay kartı gizlenir
     this.selectedSpot.set(null);
   }
 
-  toggleSidebar(): void { // Kenar çubuğunu açıp kapatır, böylece kullanıcı kenar çubuğunu gizleyerek haritaya daha fazla alan açabilir veya kenar çubuğunu göstererek filtrelere ve spot listesine erişebilir
+  toggleSidebar(): void {
+    // Kenar çubuğunu açıp kapatır, böylece kullanıcı kenar çubuğunu gizleyerek haritaya daha fazla alan açabilir veya kenar çubuğunu göstererek filtrelere ve spot listesine erişebilir
     this.sidebarCollapsed.update((val) => !val);
   }
 
-  myLocation(): void {  // Kullanıcının konumunu gösterir, böylece kullanıcı konumunu paylaşmayı kabul ettiğinde harita otomatik olarak kullanıcının bulunduğu konuma gider ve kullanıcıların kendi konumlarını harita üzerinde görmeleri sağlanır
+  myLocation(): void {
+    // Kullanıcının konumunu gösterir, böylece kullanıcı konumunu paylaşmayı kabul ettiğinde harita otomatik olarak kullanıcının bulunduğu konuma gider ve kullanıcıların kendi konumlarını harita üzerinde görmeleri sağlanır
     if (!navigator.geolocation || !this.map) return;
 
-    navigator.geolocation.getCurrentPosition( 
+    navigator.geolocation.getCurrentPosition(
       (position) => {
         const { latitude, longitude } = position.coords;
         const L = (window as any).L;
@@ -211,7 +229,12 @@ calculateDistance: any;
           html: `
             <div class="user-location-marker">
               <div class="pulse"></div>
-              <div class="user-pin">📍</div>
+              <div class="user-pin">
+                <svg fill="none" stroke="#c8a96e" viewBox="0 0 24 24" style="width: 100%; height: 100%;">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+              </div>
             </div>
           `,
           iconSize: [40, 40],
@@ -239,22 +262,25 @@ calculateDistance: any;
     );
   }
 
-  clearFilters(): void { // Arama sorgusunu ve seçilen kategoriyi sıfırlar, böylece kullanıcı filtreleri temizleyerek tüm spot'ları tekrar görebilir ve yeni bir arama yapabilir
+  clearFilters(): void {
+    // Arama sorgusunu ve seçilen kategoriyi sıfırlar, böylece kullanıcı filtreleri temizleyerek tüm spot'ları tekrar görebilir ve yeni bir arama yapabilir
     this.searchQuery = '';
     this.selectedCategory.set(null);
     this.selectedSpot.set(null);
   }
 
-  getStars(rating: number): string { // Rating'e göre yıldız sayısı hesaplanır, örneğin 4.2 rating'i 4 yıldız olarak gösterilir, böylece kullanıcılar spot'un genel değerlendirmesini hızlıca görebilirler
+  getStars(rating: number): string {
+    // Rating'e göre yıldız sayısı hesaplanır, örneğin 4.2 rating'i 4 yıldız olarak gösterilir, böylece kullanıcılar spot'un genel değerlendirmesini hızlıca görebilirler
     return '★'.repeat(Math.round(rating));
   }
 
-  getSpotTypeEmoji(type: SpotType): string { // Spot type'a göre emoji döndürür, böylece kullanıcılar spot'ların türünü hızlıca görsel olarak ayırt edebilirler, eğer tanımlı bir emoji yoksa varsayılan olarak 📍 emojisi döndürülür
-    const found = this.spotTypes.find((t) => t.type === type);
-    return found?.emoji || '📍';
+  getSpotTypeEmoji(type: SpotType): string {
+    // Emoji'ler SVG ikonlara migrated, bu method boş string döndürür
+    return '';
   }
 
-  getSpotTypeLabel(type: SpotType): string { // Spot type'a göre label döndürür, böylece kullanıcılar spot'ların türünü hızlıca görebilirler, eğer tanımlı bir label yoksa varsayılan olarak 'Other' döndürülür
+  getSpotTypeLabel(type: SpotType): string {
+    // Spot type'a göre label döndürür, böylece kullanıcılar spot'ların türünü hızlıca görebilirler, eğer tanımlı bir label yoksa varsayılan olarak 'Other' döndürülür
     const found = this.spotTypes.find((t) => t.type === type);
     return found?.label || 'Other';
   }

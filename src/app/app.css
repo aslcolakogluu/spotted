@@ -3,23 +3,23 @@ html {
   scroll-behavior: smooth;
 }
 
-/* Custom scrollbar */
+/* Custom scrollbar - theme aligned */
 ::-webkit-scrollbar {
   width: 10px;
   height: 10px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #f1f1f1;
+  background: #0a0b0d;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #888;
+  background: #c8a96e;
   border-radius: 5px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #555;
+  background: #e8c887;
 }
 
 /* Animations */
@@ -34,12 +34,51 @@ html {
   }
 }
 
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
 .fade-in {
   animation: fadeIn 0.6s ease-out;
 }
 
+.slide-in {
+  animation: slideIn 0.6s ease-out;
+}
+
 /* Focus visible */
 :focus-visible {
-  outline: 2px solid #6366f1;
+  outline: 2px solid #c8a96e;
   outline-offset: 2px;
+}
+
+/* Global link styles */
+a {
+  transition: all 0.4s;
+}
+
+/* Button reset */
+button {
+  transition: all 0.4s;
+}
+
+/* Footer links smooth transition */
+footer a,
+.footer-link {
+  transition:
+    color 0.4s,
+    transform 0.4s;
+}
+
+footer a:hover,
+.footer-link:hover {
+  color: #c8a96e;
+  transform: translateY(-2px);
 }

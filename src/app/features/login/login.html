@@ -1,27 +1,16 @@
-
-<div class="modal-overlay"> 
-  
-  <div class="login-modal">
-    
-    <button 
-      type="button"
-      (click)="closeModal.emit()"
-      class="modal-close">
-      ×
-    </button>
+<div class="modal-overlay" (click)="closeLogin()">
+  <div class="login-modal" (click)="$event.stopPropagation()">
+    <button type="button" (click)="closeLogin()" class="modal-close">×</button>
 
     <div class="login-header">
-      <h2>
-        Wel <em>Come</em>
-      </h2>
+      <h2>Wel <em>Come</em></h2>
       <p>Join the Spotted - In</p>
     </div>
 
     <form (ngSubmit)="onSubmit()" class="login-form" [formGroup]="loginForm">
-      
-      <div class="form-group"> 
+      <div class="form-group">
         <label for="email">E-mail</label>
-        <input 
+        <input
           type="email"
           id="email"
           name="email"
@@ -34,11 +23,11 @@
 
       <div class="form-group">
         <label for="password">Password</label>
-        <input 
+        <input
           type="password"
           id="password"
           name="password"
-         formControlName="password"
+          formControlName="password"
           placeholder="••••••••"
           required
           minlength="6"
@@ -47,38 +36,30 @@
       </div>
 
       @if (errorMessage()) {
-        <div class="error-message">
-          {{ errorMessage() }}
-        </div>
+      <div class="error-message">{{ errorMessage() }}</div>
       }
 
       <div class="login-actions">
-        <button 
-          type="submit"
-          [disabled]="loginForm.invalid"
-          class="btn-login">
-          
-          @if (isLoading()) { 
-            <span> Loging in ...</span> 
+        <button type="submit" [disabled]="loginForm.invalid" class="btn-login">
+          @if (isLoading()) {
+          <span> Loging in ...</span>
           } @else {
-            <span>Log In</span>
+          <span>Log In</span>
           }
         </button>
-        <button 
-      type="reset"
+        <button
+          type="reset"
           [disabled]="!loginForm.dirty"
           class="btn-login"
           (click)="loginForm.reset(); $event.stopPropagation()"
-          >
-          
-          @if (isLoading()) { 
-            <span> Loging in ...</span> 
+        >
+          @if (isLoading()) {
+          <span> Loging in ...</span>
           } @else {
-            <span>Reset</span>
+          <span>Reset</span>
           }
         </button>
       </div>
-      
     </form>
 
     <div class="login-footer">
@@ -87,6 +68,5 @@
         <a href="#" class="register-link">Register</a>
       </p>
     </div>
-
   </div>
 </div>

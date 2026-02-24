@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { Component, signal, inject } from '@angular/core';
 import { Router, NavigationEnd, RouterOutlet } from '@angular/router';
 import { filter } from 'rxjs';
 import { NavbarComponent } from './layout/navbar/navbar';
@@ -8,6 +8,7 @@ import { FeaturedSpotComponent } from './layout/featured-spots/featured-spots';
 import { MapActivitySectionComponent } from './features/components/map-activity/map-activity';
 import { AddSpotCtaComponent } from './layout/added-spot-cta/added-spot-cta';
 import { Login } from './features/login/login';
+import { AuthService } from '@core/services/auth.service';
 
 @Component({
   selector: 'app-root',
@@ -26,6 +27,7 @@ import { Login } from './features/login/login';
   styleUrl: './app.css',
 })
 export class AppComponent {
+  private authService = inject(AuthService);
   showLoginModal = signal(false);
   currentRoute = signal('/');
 
@@ -43,6 +45,10 @@ export class AppComponent {
 
   isHomePage(): boolean {
     return this.currentRoute() === '/' || this.currentRoute() === ''; // currentRoute sinyalinin değeri '/' veya '' ise true döner, böylece uygulamanın ana sayfada olup olmadığını kontrol edebiliriz
+  }
+
+  isAuthenticated(): boolean {
+    return this.authService.isAuthenticated();
   }
 
   openLoginModal(): void {

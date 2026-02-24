@@ -2,11 +2,12 @@
 
 <div class="floating-search">
   <div class="search-container">
-    <input 
-      type="text" 
+    <input
+      type="text"
       [(ngModel)]="searchQuery"
       (input)="onSearchChange()"
-      placeholder="Search spots...">
+      placeholder="Search spots..."
+    />
   </div>
 </div>
 
@@ -14,108 +15,127 @@
   <button class="sidebar-toggle" (click)="toggleSidebar()">
     <span>{{ sidebarCollapsed() ? '▶' : '◀' }}</span>
   </button>
-  
+
   <div class="sidebar-header">
     <h3>Nearby Spots</h3>
     <span class="spot-count">{{ filteredSpots().length }} spots found</span>
-    
+
     <div class="category-filters">
-      <button 
+      <button
         class="category-pill"
         [class.active]="selectedCategory() === null"
-        (click)="setCategory(null)">
+        (click)="setCategory(null)"
+      >
         All Spots
       </button>
-      
+
       @for (item of spotTypes; track item.type) {
-        <button 
-          class="category-pill"
-          [class.active]="selectedCategory() === item.type"
-          (click)="setCategory(item.type)">
-          {{ item.emoji }} {{ item.label }}
-        </button>
+      <button
+        class="category-pill"
+        [class.active]="selectedCategory() === item.type"
+        (click)="setCategory(item.type)"
+      >
+        {{ item.label }}
+      </button>
       }
     </div>
   </div>
-  
+
   <div class="spot-list">
     @for (spot of filteredSpots(); track spot.id; let i = $index) {
-      <div 
-        class="spot-item"
-        [class.active]="selectedSpot()?.id === spot.id"
-        (click)="selectSpot(spot)">
-        
-        <div class="spot-number">{{ i + 1 }}</div>
-        
-        <div class="spot-info">
-          <h4>{{ spot.name }}</h4>
-          <p class="spot-address">{{ spot.address }}</p>
-          <div class="spot-meta">
-            <span class="spot-type">
-              {{ getSpotTypeEmoji(spot.type) }} {{ getSpotTypeLabel(spot.type) }}
-            </span>
-            <span class="spot-rating">
-              {{ getStars(spot.rating) }} {{ spot.rating }}
-            </span>
-          </div>
+    <div
+      class="spot-item"
+      [class.active]="selectedSpot()?.id === spot.id"
+      (click)="selectSpot(spot)"
+    >
+      <div class="spot-number">{{ i + 1 }}</div>
+
+      <div class="spot-info">
+        <h4>{{ spot.name }}</h4>
+        <p class="spot-address">{{ spot.address }}</p>
+        <div class="spot-meta">
+          <span class="spot-type">
+            {{ getSpotTypeEmoji(spot.type) }} {{ getSpotTypeLabel(spot.type) }}
+          </span>
+          <span class="spot-rating">
+            {{ getStars(spot.rating) }} {{ spot.rating }}
+          </span>
         </div>
-        
       </div>
+    </div>
     }
   </div>
 </aside>
 
 <div class="map-controls">
-  <button 
-    class="map-control-btn" 
-    title="My Location"
-    (click)="myLocation()">
-    📍
+  <button class="map-control-btn" title="My Location" (click)="myLocation()">
+    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
+        d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+      />
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
+        d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+      />
+    </svg>
   </button>
-  <button 
-    class="map-control-btn" 
+  <button
+    class="map-control-btn"
     title="Clean Filters"
-    (click)="clearFilters()">
-    🔄
+    (click)="clearFilters()"
+  >
+    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
+        d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+      />
+    </svg>
   </button>
 </div>
 
 @if (selectedSpot()) {
-  <div class="info-card show">
-    <button class="close-btn" (click)="closeCard()">×</button>
-    
-    <div class="card-header">
-      <h4>{{ selectedSpot()!.name }}</h4>
-      <span class="card-type">
-        {{ getSpotTypeEmoji(selectedSpot()!.type) }} 
-        {{ getSpotTypeLabel(selectedSpot()!.type) }}
+<div class="info-card show">
+  <button class="close-btn" (click)="closeCard()">×</button>
+
+  <div class="card-header">
+    <h4>{{ selectedSpot()!.name }}</h4>
+    <span class="card-type">
+      {{ getSpotTypeEmoji(selectedSpot()!.type) }} {{
+      getSpotTypeLabel(selectedSpot()!.type) }}
+    </span>
+  </div>
+
+  <p class="card-address">{{ selectedSpot()!.address }}</p>
+
+  <div class="card-stats">
+    <div>
+      <span class="stat-label">Rating</span>
+      <span class="stat-value">
+        <span class="stars">{{ getStars(selectedSpot()!.rating) }}</span>
+        {{ selectedSpot()!.rating }}
       </span>
     </div>
-
-    <p class="card-address">{{ selectedSpot()!.address }}</p>
-
-    <div class="card-stats">
-      <div>
-        <span class="stat-label">Rating</span>
-        <span class="stat-value">
-          <span class="stars">{{ getStars(selectedSpot()!.rating) }}</span> 
-          {{ selectedSpot()!.rating }}
-        </span>
-      </div>
-      <div>
-        <span class="stat-label">Review Count</span>
-        <span class="stat-value">{{ selectedSpot()!.reviewCount }}</span>
-      </div>
-      <div>
-        <span class="stat-label">Distance</span>
-        <span class="stat-value">{{ calculateDistance(selectedSpot()!) }}</span>
-      </div>
-      <div>
-        <span class="stat-label">Best Hour</span>
-        <span class="stat-value">{{ getBestTime(selectedSpot()!) }}</span>
-      </div>
+    <div>
+      <span class="stat-label">Review Count</span>
+      <span class="stat-value">{{ selectedSpot()!.reviewCount }}</span>
     </div>
-
-    <button class="view-btn">Show Details →</button>
+    <div>
+      <span class="stat-label">Distance</span>
+      <span class="stat-value">{{ calculateDistance(selectedSpot()!) }}</span>
+    </div>
+    <div>
+      <span class="stat-label">Best Hour</span>
+      <span class="stat-value">{{ getBestTime(selectedSpot()!) }}</span>
+    </div>
   </div>
+
+  <button class="view-btn">Show Details →</button>
+</div>
 }

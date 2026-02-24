@@ -1,26 +1,22 @@
-<app-navbar 
-  (loginClicked)="openLoginModal()"  
-  (addSpotClicked)="handleAddSpotClick()"> 
+<app-navbar
+  (loginClicked)="openLoginModal()"
+  (addSpotClicked)="handleAddSpotClick()"
+>
 </app-navbar>
 
-@if (showLoginModal()) { 
-  <app-login (closeModal)="closeLoginModal()"></app-login>
+@if (showLoginModal()) {
+<app-login (closeModal)="closeLoginModal()"></app-login>
+} @if (isHomePage()) {
+<main>
+  <app-hero></app-hero>
+  <app-featured-spot></app-featured-spot>
+  @if (isAuthenticated()) {
+  <app-map-activity-section></app-map-activity-section>
+  }
+  <app-add-spot-cta></app-add-spot-cta>
+</main>
+} @if (!isHomePage()) {
+<router-outlet />
 }
 
-
-@if (isHomePage()) {
-  <main>
-    <app-hero></app-hero>
-    <app-featured-spot></app-featured-spot>
-    <app-map-activity-section></app-map-activity-section>
-    <app-add-spot-cta></app-add-spot-cta>
-    
-  </main>
-  <app-footer></app-footer>
-}
-
-
-@if (!isHomePage()) {
-  <router-outlet />
-
-}
+<app-footer></app-footer>
