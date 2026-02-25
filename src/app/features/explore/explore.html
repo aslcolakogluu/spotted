@@ -1,28 +1,30 @@
+<!-- PAGE HEADER -->
 <div class="page-header">
   <h1>Explore <em>Spots</em></h1>
-  <p>
-    Filter, sort, and explore the hidden, quiet, and scenic corners of the city.
-  </p>
+  <p>City's hidden, quiet and scenic corners. Filter, sort and discover.</p>
 </div>
 
+<!-- FILTER SECTION (Sticky) -->
 <div class="filter-section">
   <div class="filter-controls">
+    <!-- Search Bar - ✅ Enter ile arama -->
     <div class="search-bar">
       <input
         type="text"
         [(ngModel)]="searchQuery"
-        (input)="onSearchChange()"
-        placeholder="Spot search..."
+        (keyup.enter)="onSearchSubmit()"
+        placeholder="Spot ara..."
       />
     </div>
 
+    <!-- Category Chips -->
     <div class="filter-chips">
       <button
         class="filter-chip"
         (click)="setCategory(null)"
         [class.active]="selectedCategory() === null"
       >
-        All Spots
+        All
       </button>
 
       @for (item of spotTypes; track item.type) {
@@ -31,11 +33,12 @@
         (click)="setCategory(item.type)"
         [class.active]="selectedCategory() === item.type"
       >
-        {{ item.label }}
+        {{ item.emoji }} {{ item.label }}
       </button>
       }
     </div>
 
+    <!-- Sort Dropdown -->
     <div class="sort-dropdown">
       <select
         [ngModel]="sortBy()"
@@ -49,10 +52,13 @@
   </div>
 </div>
 
+<!-- MAIN CONTENT -->
 <div class="main-content">
+  <!-- LEFT SIDEBAR -->
   <aside class="sidebar">
+    <!-- Rating Filter -->
     <div class="sidebar-section">
-      <h3>Filter by Rating</h3>
+      <h3>Puan</h3>
       <div class="rating-filter">
         <div class="rating-option">
           <input
@@ -86,32 +92,11 @@
       </div>
     </div>
 
+    <!-- Weekly Rankings -->
     <div class="rankings">
-      <h4>
-        <svg
-          style="
-            width: 20px;
-            height: 20px;
-            display: inline-block;
-            margin-right: 8px;
-            vertical-align: middle;
-            color: #c8a96e;
-          "
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-          />
-        </svg>
-        This Week's Most Visited
-      </h4>
+      <h4>🏆 This Week's Most Visited</h4>
 
-      @for (item of topRankings(); track item.id; let i = $index) {
+      @for (item of topRankings; track item.id; let i = $index) {
       <div class="ranking-item">
         <div
           class="ranking-number"
@@ -125,23 +110,27 @@
 
         <div class="ranking-info">
           <h5>{{ item.name }}</h5>
-          <p>★ {{ item.rating }} · {{ item.reviewCount * 5 }} visits</p>
+          <p>★ {{ item.rating }} · {{ item.reviewCount }} reviews</p>
         </div>
       </div>
       }
     </div>
   </aside>
 
+  <!-- RIGHT: Results Grid -->
   <div>
+    <!-- Results Count - ✅ Parantez yok -->
     <div class="results-header">
       <div class="results-count">
-        <strong>{{ filteredSpots().length }}</strong> spots found
+        <strong>{{ filteredSpots.length }}</strong> spots found
       </div>
     </div>
 
+    <!-- Spot Grid - ✅ Parantez yok -->
     <div class="spot-grid">
-      @for (spot of paginatedSpots(); track spot.id; let i = $index) {
+      @for (spot of paginatedSpots; track spot.id; let i = $index) {
       <a class="spot-card">
+        <!-- Card Image -->
         <div class="card-img">
           @if (spot.imageUrl) {
           <img [src]="spot.imageUrl" [alt]="spot.name" class="card-real-img" />
@@ -156,6 +145,7 @@
           </span>
         </div>
 
+        <!-- Card Body -->
         <div class="card-body">
           <h4>{{ spot.name }}</h4>
           <p class="card-location">{{ spot.address }}</p>
@@ -172,13 +162,14 @@
       }
     </div>
 
-    @if (totalPages() > 1) {
+    <!-- Pagination - ✅ Parantez yok -->
+    @if (totalPages > 1) {
     <div class="pagination">
       <button (click)="prevPage()" [disabled]="currentPage() === 1">
         ← Previous
       </button>
 
-      @for (p of visiblePages(); track p) { @if (p === -1) {
+      @for (p of visiblePages; track p) { @if (p === -1) {
       <button disabled>...</button>
       } @else {
       <button (click)="goToPage(p)" [class.active]="p === currentPage()">
@@ -186,7 +177,7 @@
       </button>
       } }
 
-      <button (click)="nextPage()" [disabled]="currentPage() === totalPages()">
+      <button (click)="nextPage()" [disabled]="currentPage() === totalPages">
         Next →
       </button>
     </div>
