@@ -1,16 +1,18 @@
 <div id="map"></div>
 
+<!-- FLOATING SEARCH -->
 <div class="floating-search">
   <div class="search-container">
     <input
       type="text"
       [(ngModel)]="searchQuery"
-      (input)="onSearchChange()"
-      placeholder="Search spots..."
+      (keyup.enter)="onSearchSubmit()"
+      placeholder="Spot ara..."
     />
   </div>
 </div>
 
+<!-- SIDEBAR -->
 <aside class="sidebar" [class.collapsed]="sidebarCollapsed()">
   <button class="sidebar-toggle" (click)="toggleSidebar()">
     <span>{{ sidebarCollapsed() ? '▶' : '◀' }}</span>
@@ -18,15 +20,16 @@
 
   <div class="sidebar-header">
     <h3>Nearby Spots</h3>
-    <span class="spot-count">{{ filteredSpots().length }} spots found</span>
+    <span class="spot-count">{{ filteredSpots.length }} spots found</span>
 
+    <!-- Category Filters -->
     <div class="category-filters">
       <button
         class="category-pill"
         [class.active]="selectedCategory() === null"
         (click)="setCategory(null)"
       >
-        All Spots
+        All
       </button>
 
       @for (item of spotTypes; track item.type) {
@@ -35,14 +38,15 @@
         [class.active]="selectedCategory() === item.type"
         (click)="setCategory(item.type)"
       >
-        {{ item.label }}
+        {{ item.emoji }} {{ item.label }}
       </button>
       }
     </div>
   </div>
 
+  <!-- Spot List -->
   <div class="spot-list">
-    @for (spot of filteredSpots(); track spot.id; let i = $index) {
+    @for (spot of filteredSpots; track spot.id; let i = $index) {
     <div
       class="spot-item"
       [class.active]="selectedSpot()?.id === spot.id"
@@ -67,8 +71,9 @@
   </div>
 </aside>
 
+<!-- MAP CONTROLS -->
 <div class="map-controls">
-  <button class="map-control-btn" title="My Location" (click)="myLocation()">
+  <button class="map-control-btn" title="Konumum" (click)="myLocation()">
     <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
       <path
         stroke-linecap="round"
@@ -84,9 +89,10 @@
       />
     </svg>
   </button>
+
   <button
     class="map-control-btn"
-    title="Clean Filters"
+    title="Filtreleri Temizle"
     (click)="clearFilters()"
   >
     <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -100,6 +106,7 @@
   </button>
 </div>
 
+<!-- FLOATING INFO CARD -->
 @if (selectedSpot()) {
 <div class="info-card show">
   <button class="close-btn" (click)="closeCard()">×</button>
@@ -116,14 +123,14 @@
 
   <div class="card-stats">
     <div>
-      <span class="stat-label">Rating</span>
+      <span class="stat-label">Puan</span>
       <span class="stat-value">
         <span class="stars">{{ getStars(selectedSpot()!.rating) }}</span>
         {{ selectedSpot()!.rating }}
       </span>
     </div>
     <div>
-      <span class="stat-label">Review Count</span>
+      <span class="stat-label">Reviews</span>
       <span class="stat-value">{{ selectedSpot()!.reviewCount }}</span>
     </div>
     <div>
@@ -131,11 +138,11 @@
       <span class="stat-value">{{ calculateDistance(selectedSpot()!) }}</span>
     </div>
     <div>
-      <span class="stat-label">Best Hour</span>
+      <span class="stat-label">Best Time</span>
       <span class="stat-value">{{ getBestTime(selectedSpot()!) }}</span>
     </div>
   </div>
 
-  <button class="view-btn">Show Details →</button>
+  <button class="view-btn">View Details →</button>
 </div>
 }

@@ -529,3 +529,13 @@
 :host ::ng-deep .user-location-marker:hover .user-pin {
   transform: translate(-50%, -50%) scale(1.1);
 }
+/* ═══════════════════════════════════════
+   LEAFLET ZOOM CONTROLS - GİZLE
+   ═══════════════════════════════════════ */
+:host ::ng-deep .leaflet-control-zoom {
+  display: none !important;
+}
+
+:host ::ng-deep .leaflet-bottom.leaflet-right {
+  display: none !important;
+}
