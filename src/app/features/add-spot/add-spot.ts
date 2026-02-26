@@ -110,6 +110,11 @@ export class AddSpotComponent implements OnInit, AfterViewInit, OnDestroy {
   });
 
   ngOnInit(): void {
+    // Giriş yapılmamışsa login'e yönlendir
+    if (!this.authService.isAuthenticated()) {
+      this.router.navigate(['/login']);
+      return;
+    }
     this.loadLeaflet();
   }
 

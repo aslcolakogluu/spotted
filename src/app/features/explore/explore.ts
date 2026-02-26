@@ -1,4 +1,4 @@
-import { Component, inject, signal, OnInit } from '@angular/core';
+import { Component, inject, signal, OnInit, OnDestroy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { SpotService } from '@core/services';
 import { Spot, SpotType, SortOption } from '@core/models';
@@ -19,7 +19,7 @@ const GRADS = [
   templateUrl: './explore.html',
   styleUrl: './explore.css',
 })
-export class ExploreComponent implements OnInit {
+export class ExploreComponent implements OnInit, OnDestroy {
   private spotService = inject(SpotService);
 
   searchQuery = '';
@@ -126,11 +126,17 @@ export class ExploreComponent implements OnInit {
     return pages;
   }
 
+  private spotsSubscription: any;
+
   ngOnInit(): void {
-    this.spotService.getSpots().subscribe((spots) => {
-      console.log('Explore: Spots loaded', spots.length);
+    // BehaviorSubject'e subscribe — yeni spot eklenince otomatik güncellenir
+    this.spotsSubscription = this.spotService.getSpots().subscribe((spots) => {
       this.allSpots.set(spots);
     });
+  }
+
+  ngOnDestroy(): void {
+    this.spotsSubscription?.unsubscribe();
   }
 
   setCategory(type: SpotType | null): void {
@@ -207,7 +213,7 @@ export class ExploreComponent implements OnInit {
     const found = this.spotTypes.find((t) => t.type === type);
     return found?.label || 'Other';
   }
-  
+
   clearSearch(): void {
     this.searchQuery = '';
     this.activeSearchQuery.set('');

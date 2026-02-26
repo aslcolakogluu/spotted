@@ -1,18 +1,21 @@
 import { Injectable, signal } from '@angular/core';
-import { Observable, of, delay } from 'rxjs';
+import { Observable, of, delay, BehaviorSubject } from 'rxjs';
 import { Spot, SpotType, SpotCreateDto, SpotUpdateDto } from '../models';
 
 @Injectable({
   providedIn: 'root',
 })
 export class SpotService {
-  private spots = signal<Spot[]>(this.generateMockSpots()); // spot tipinde bir array tutuyorum başlangıç değeri generateMockSpots fonksiyonundan geliyor.
+  private spots = signal<Spot[]>(this.generateMockSpots());
   readonly spots$ = this.spots.asReadonly();
+
+  // Reactive stream — her spot eklenince/silinince tüm subscriber'lar güncellenir
+  private spotsSubject = new BehaviorSubject<Spot[]>(this.spots());
 
   constructor() {}
 
   getSpots(): Observable<Spot[]> {
-    return of(this.spots()).pipe(delay(300));
+    return this.spotsSubject.asObservable();
   }
 
   getSpotById(id: string): Observable<Spot | undefined> {
@@ -44,7 +47,8 @@ export class SpotService {
       updatedAt: new Date(),
     };
 
-    this.spots.update((spots) => [...spots, newSpot]); // mevcut spot listesine yeni spotu ekler, immutable şekilde güncellenir
+    this.spots.update((spots) => [...spots, newSpot]);
+    this.spotsSubject.next(this.spots()); // tüm subscriber'lara bildir
     return of(newSpot).pipe(delay(500));
   }
 
@@ -73,7 +77,8 @@ export class SpotService {
     const exists = this.spots().some((s) => s.id === id);
 
     if (exists) {
-      this.spots.update((spots) => spots.filter((s) => s.id !== id)); // id'si verilen spotu listeden çıkarır, immutable şekilde güncellenir
+      this.spots.update((spots) => spots.filter((s) => s.id !== id));
+      this.spotsSubject.next(this.spots());
       return of(true).pipe(delay(300));
     }
 
