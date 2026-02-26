@@ -47,7 +47,6 @@ export class ExploreComponent implements OnInit {
     { type: SpotType.OTHER, label: 'Other', emoji: '' },
   ];
 
-  // ✅ Filtered spots getter
   get filteredSpots(): Spot[] {
     let spots = this.allSpots();
 
@@ -55,26 +54,28 @@ export class ExploreComponent implements OnInit {
     const cat = this.selectedCategory();
     if (cat) spots = spots.filter((s) => s.type === cat);
 
-    // Rating filter
-    const ratings: number[] = [];
-    if (this.filter5Star) ratings.push(5);
-    if (this.filter4Star) ratings.push(4);
-    if (this.filter3Star) ratings.push(3);
+    // Rating filter - ✅ DÜZELTME
+    spots = spots.filter((s) => {
+      const rating = Math.round(s.rating);
 
-    if (ratings.length > 0) {
-      spots = spots.filter((s) => {
-        const r = Math.round(s.rating);
-        // 5★ seçili: sadece 5
-        // 4★ seçili: 4 ve üzeri
-        // 3★ seçili: 3 ve üzeri
-        if (this.filter5Star && r === 5) return true;
-        if (this.filter4Star && r >= 4) return true;
-        if (this.filter3Star && r >= 3) return true;
-        return false;
-      });
-    }
+      // Hiçbir filtre seçili değilse hepsini göster
+      if (!this.filter5Star && !this.filter4Star && !this.filter3Star) {
+        return true;
+      }
 
-    // Search filter - ✅ activeSearchQuery kullan
+      // 5★ seçili ve rating 5 ise
+      if (this.filter5Star && rating === 5) return true;
+
+      // 4★ seçili ve rating 4 ise
+      if (this.filter4Star && rating === 4) return true;
+
+      // 3★ seçili ve rating 3 veya altı ise
+      if (this.filter3Star && rating <= 3) return true;
+
+      return false;
+    });
+
+    // Search filter
     const query = this.activeSearchQuery().trim().toLowerCase();
     if (query) {
       spots = spots.filter(
@@ -205,5 +206,11 @@ export class ExploreComponent implements OnInit {
   getSpotTypeLabel(type: SpotType): string {
     const found = this.spotTypes.find((t) => t.type === type);
     return found?.label || 'Other';
+  }
+  
+  clearSearch(): void {
+    this.searchQuery = '';
+    this.activeSearchQuery.set('');
+    this.currentPage.set(1);
   }
 }

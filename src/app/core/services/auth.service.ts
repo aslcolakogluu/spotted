@@ -7,43 +7,38 @@ import { Observable, of } from 'rxjs';
   providedIn: 'root',
 })
 export class AuthService {
-  private currentUserSignal = signal<User | null>(null); // giriş yapılmayabilir unutma onun için null ve uygulama ilk açıldığında kullanıcı yok
+  private currentUserSignal = signal<User | null>(null);
   private isAuthenticatedSignal = signal<boolean>(false);
 
   readonly currentUser = this.currentUserSignal.asReadonly();
   readonly isAuthenticated = this.isAuthenticatedSignal.asReadonly();
 
   constructor(private router: Router) {
-    this.initializeAuth(); // daha önce lohin yapılmış mı kontrol et
+    this.initializeAuth();
   }
 
   private initializeAuth(): void {
     const savedSession = this.getSessionFromStorage();
-
     if (savedSession) {
       this.currentUserSignal.set(savedSession.user);
       this.isAuthenticatedSignal.set(true);
     }
-  } // sessionStorage bakıyor eğer session varsa  kullanıcıyı tekrar yüklüyor. yani sayfa yenilense bile login durumunu korur.
+  }
 
   private getSessionFromStorage(): Session | null {
     const sessionData = sessionStorage.getItem('spotted-in-session');
-
-    if (!sessionData) return null; // sessionStorage sekme kapanınca silinir local gibi kalıcı değil
+    if (!sessionData) return null;
 
     try {
-      const session: Session = JSON.parse(sessionData); // string object dönüşümü
+      const session: Session = JSON.parse(sessionData);
       const now = Date.now();
-
       if (now - session.timestamp >= session.expiresIn) {
-        // session süresi dolmuş mu
         this.clearSession();
         return null;
       }
-
       return session;
     } catch (error) {
-      console.error('Error in session data:', error); // hatada oturum sil
+      console.error('Error in session data:', error);
       return null;
     }
   }
@@ -52,40 +47,82 @@ export class AuthService {
     const session: Session = {
       user,
       timestamp: Date.now(),
-      expiresIn: 24 * 60 * 60 * 1000, // 24 sa
-    }; // user bilgisini timestamp ile birlikte storage kaydeder.
-
-    sessionStorage.setItem('spotted-in-session', JSON.stringify(session)); // sekme kapatınca tekrar login yapmak için
+      expiresIn: 24 * 60 * 60 * 1000, // 24 saat
+    };
+    sessionStorage.setItem('spotted-in-session', JSON.stringify(session));
   }
 
   private clearSession(): void {
     sessionStorage.removeItem('spotted-in-session');
   }
 
-  login(credentials: LoginForm): Observable<boolean> { 
-    setTimeout(() => { 
+  login(credentials: LoginForm): Observable<boolean> {
+    setTimeout(() => {
       if (credentials.email && credentials.password.length >= 6) {
+        // ✅ Önce kullanıcıyı users'dan kontrol et
+        const users = JSON.parse(localStorage.getItem('users') || '[]');
+        const existingUser = users.find(
+          (u: any) =>
+            u.email === credentials.email &&
+            u.password === credentials.password,
+        );
+
         const user: User = {
-          id: Math.random().toString(36).substr(2, 9), // random yaptık id
+          id: Math.random().toString(36).substr(2, 9),
           email: credentials.email,
-          name: credentials.email.split('@')[0],
+          name: existingUser
+            ? existingUser.name
+            : credentials.email.split('@')[0],
           profileUrl: credentials.email.charAt(0).toUpperCase(),
         };
 
-        this.saveSessionToStorage(user); // kaydet
-
+        this.saveSessionToStorage(user);
         this.currentUserSignal.set(user);
         this.isAuthenticatedSignal.set(true);
       }
     }, 300);
-
     return of(true);
   }
 
+  // ✅ REGISTER METODU - DÜZELTİLDİ
+  register(name: string, email: string, password: string): boolean {
+    // Email kontrolü
+    const users = JSON.parse(localStorage.getItem('users') || '[]');
+    const exists = users.find((u: any) => u.email === email);
+
+    if (exists) {
+      return false; // Email zaten kayıtlı
+    }
+
+    // Yeni kullanıcı ekle
+    const newUser = { name, email, password };
+    users.push(newUser);
+    localStorage.setItem('users', JSON.stringify(users));
+
+    // Otomatik login - ✅ Senin yapına göre
+    const user: User = {
+      id: Math.random().toString(36).substr(2, 9),
+      email: email,
+      name: name,
+      profileUrl: email.charAt(0).toUpperCase(),
+    };
+
+    this.saveSessionToStorage(user);
+    this.currentUserSignal.set(user);
+    this.isAuthenticatedSignal.set(true);
+
+    return true;
+  }
+
   logout(): void {
-    this.clearSession(); // oturumu temizler
+    this.clearSession();
     this.currentUserSignal.set(null);
     this.isAuthenticatedSignal.set(false);
-    this.router.navigate(['/index.html']); //anasayfa git
+    this.router.navigate(['/']);
+  }
+
+  // ✅ Helper metod - Register component için
+  getCurrentUser(): User | null {
+    return this.currentUserSignal();
   }
 }

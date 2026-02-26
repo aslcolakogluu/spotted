@@ -39,3 +39,33 @@
   background: #d9bf84;
   transform: translateY(-1px);
 }
+
+
+.navbar {
+  background: none;
+  box-shadow: none;
+  transition:
+    background-color 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+    backdrop-filter 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+    box-shadow 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.navbar::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(180deg, rgba(10,11,13,0.75) 0%, transparent 100%);
+  backdrop-filter: blur(1px);
+  -webkit-backdrop-filter: blur(1px);
+  opacity: 0;
+  transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.navbar.scrolled::before {
+  opacity: 1;
+}
+
+.navbar.scrolled {
+  box-shadow: 0 0px 0 rgba(255,255,255,0.00), 0 0px 0px rgba(0,0,0,0);
+}

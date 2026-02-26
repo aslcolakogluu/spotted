@@ -1,6 +1,16 @@
-import { Component, inject, output } from '@angular/core';
+import {
+  Component,
+  inject,
+  output,
+  signal,
+  AfterViewInit,
+  DestroyRef,
+} from '@angular/core';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { AuthService } from '@core/services/auth.service';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { fromEvent } from 'rxjs';
+import { throttleTime, map, distinctUntilChanged } from 'rxjs/operators';
 
 @Component({
   selector: 'app-navbar',
@@ -9,8 +19,28 @@ import { AuthService } from '@core/services/auth.service';
   templateUrl: './navbar.html',
   styleUrl: './navbar.css',
 })
-export class NavbarComponent {
-  authService = inject(AuthService);  // AuthService, kullanıcının kimlik doğrulama durumunu kontrol etmek için kullanılır, böylece navbar'da kullanıcı giriş yapmışsa + Add Spot butonu gösterilir, giriş yapmamışsa Login butonu gösterilir
-  loginClicked = output<void>(); // Login butonuna tıklandığında tetiklenen EventEmitter, böylece kullanıcı giriş yapmaya çalıştığında gerekli işlemler gerçekleştirilir
-  addSpotClicked = output<void>(); // + Add Spot butonuna tıklandığında tetiklenen EventEmitter, böylece kullanıcı yeni bir spot eklemek istediğinde gerekli işlemler gerçekleştirilir
+export class NavbarComponent implements AfterViewInit {
+  authService = inject(AuthService);
+  private destroyRef = inject(DestroyRef);
+
+  loginClicked = output<void>();
+  addSpotClicked = output<void>();
+
+  isScrolled = signal(false); 
+
+  ngAfterViewInit(): void {
+    fromEvent(window, 'scroll')
+      .pipe(
+        throttleTime(16, undefined, { leading: true, trailing: true }),
+        map(() => window.scrollY > 100),
+        distinctUntilChanged(),
+        takeUntilDestroyed(this.destroyRef),
+      )
+      .subscribe((scrolled) => this.isScrolled.set(scrolled));
+  }
+
+  /*@EventListener('window:scroll', [])
+  onWindowScroll(): void {
+    this.isScrolled.set(window.scrollY > 100);
+  }*/
 }

@@ -134,6 +134,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
     const L = (window as any).L;
     if (!L) return;
 
+    // Eski marker'ları temizle
     this.markers.forEach((marker) => this.map.removeLayer(marker));
     this.markers = [];
 
@@ -141,9 +142,16 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
     console.log('Updating markers for spots:', spots.length);
 
     spots.forEach((spot, index) => {
+      // ✅ Aktif spot ise yeşil, değilse sarı
+      const isActive = this.selectedSpot()?.id === spot.id;
+
       const customIcon = L.divIcon({
-        className: 'leaflet-div-icon',
-        html: `<div class="marker-pin">${index + 1}</div>`,
+        className: 'custom-leaflet-marker', // ✅ Unique class
+        html: `
+        <div class="marker-pin ${isActive ? 'active' : ''}">
+          ${index + 1}
+        </div>
+      `,
         iconSize: [36, 36],
         iconAnchor: [18, 36],
       });
@@ -155,17 +163,19 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
         .on('click', () => {
           console.log('Marker clicked:', spot.name);
           this.selectSpotByClick(spot);
+          // Marker'ları yeniden çiz (renk değişimi için)
+          this.updateMarkers();
         });
 
       this.markers.push(marker);
     });
 
+    // Tüm marker'ları gösterecek şekilde zoom
     if (spots.length > 0 && this.markers.length > 0) {
       const group = L.featureGroup(this.markers);
       this.map.fitBounds(group.getBounds().pad(0.1));
     }
   }
-
   setCategory(type: SpotType | null): void {
     this.selectedCategory.set(type);
     this.updateMarkers(); // ✅ Marker'ları güncelle
@@ -265,12 +275,35 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
     return found?.label || 'Other';
   }
 
-  calculateDistance(spot: Spot): string {
-    return (Math.random() * 5 + 0.5).toFixed(1) + ' km';
+  // ✅ Component class'ın içine ekle
+  private spotBestTimes = new Map<string, string>();
+
+  // ✅ getBestTime metodunu değiştir
+  getBestTime(spot: Spot): string {
+    // Eğer daha önce bu spot için saat oluşturulmuşsa, aynısını döndür
+    if (this.spotBestTimes.has(spot.id)) {
+      return this.spotBestTimes.get(spot.id)!;
+    }
+
+    // İlk kez oluşturuluyor, kaydet
+    const times = ['07:00-09:00', '12:00-14:00', '17:00-19:00', '20:00-22:00'];
+    const randomTime = times[Math.floor(Math.random() * times.length)];
+    this.spotBestTimes.set(spot.id, randomTime);
+
+    return randomTime;
   }
 
-  getBestTime(spot: Spot): string {
-    const times = ['07:00-09:00', '12:00-14:00', '17:00-19:00', '20:00-22:00'];
-    return times[Math.floor(Math.random() * times.length)];
+  // ✅ Aynı şekilde distance için de
+  private spotDistances = new Map<string, string>();
+
+  calculateDistance(spot: Spot): string {
+    if (this.spotDistances.has(spot.id)) {
+      return this.spotDistances.get(spot.id)!;
+    }
+
+    const distance = (Math.random() * 5 + 0.5).toFixed(1) + ' km';
+    this.spotDistances.set(spot.id, distance);
+
+    return distance;
   }
 }

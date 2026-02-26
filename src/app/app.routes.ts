@@ -38,4 +38,9 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./features/terms/terms').then((m) => m.TermsComponent),
   },
+  {
+    path: 'register',
+    loadComponent: () =>
+      import('./features/register/register').then((m) => m.RegisterComponent),
+  },
 ];

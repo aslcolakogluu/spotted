@@ -21,6 +21,64 @@
   background-size: 200px 200px;
 }
 
+/* ═══════════════════════════════════════
+   CUSTOM LEAFLET MARKERS
+   ═══════════════════════════════════════ */
+:host ::ng-deep .custom-leaflet-marker {
+  background: none !important;
+  border: none !important;
+}
+
+:host ::ng-deep .marker-pin {
+  width: 36px;
+  height: 36px;
+  background: #c8a96e;
+  border: 3px solid #0a0b0d;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #0a0b0d;
+  font-weight: 700;
+  font-size: 0.9rem;
+  box-shadow: 0 6px 20px rgba(200,169,110,0.5);
+  cursor: pointer;
+  transition: all 0.3s;
+  position: relative;
+}
+
+:host ::ng-deep .marker-pin::after {
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-top: 10px solid #0a0b0d;
+}
+
+:host ::ng-deep .marker-pin:hover {
+  transform: scale(1.15);
+  box-shadow: 0 8px 28px rgba(200,169,110,0.7);
+}
+
+/* Aktif marker (yeşil) */
+:host ::ng-deep .marker-pin.active {
+  background: #6fbf82;
+  box-shadow: 0 6px 20px rgba(111,191,130,0.5);
+}
+
+:host ::ng-deep .marker-pin.active::after {
+  border-top-color: #0a0b0d;
+}
+
+:host ::ng-deep .marker-pin.active:hover {
+  box-shadow: 0 8px 28px rgba(111,191,130,0.7);
+}
+
 #map {
   position: fixed;
   top: 0;
