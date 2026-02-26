@@ -60,4 +60,8 @@ export class RegisterComponent {
   goToLogin(): void {
     this.router.navigate(['/login']);
   }
+
+  closeRegister(): void {
+    this.router.navigate(['/']);
+  }
 }

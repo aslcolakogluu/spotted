@@ -33,6 +33,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
   private markers: any[] = [];
   private mapReady = signal(false);
   private userLocationMarker: any = null;
+  private markersInitialized = false;
 
   readonly spotTypes = [
     { type: SpotType.NATURE, label: 'Nature', emoji: '' },
@@ -45,7 +46,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
     { type: SpotType.OTHER, label: 'Other', emoji: '' },
   ];
 
-  // ✅ Filtered spots getter
+  // Template için her zaman güncel liste (Angular change detection ile uyumlu)
   get filteredSpots(): Spot[] {
     let spots = this.allSpots();
 
@@ -65,11 +66,22 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
     return spots;
   }
 
+  // Marker'lar için sabit snapshot — updateMarkers içinde set edilir
+  private _markerSpots: Spot[] = [];
+
+  private refreshFilteredSpots(): void {
+    this._markerSpots = this.filteredSpots;
+  }
+
   ngOnInit(): void {
     this.loadLeaflet();
     this.spotService.getSpots().subscribe((spots) => {
       console.log('Spots loaded:', spots);
       this.allSpots.set(spots);
+      // Map zaten hazırsa hemen marker'ları ekle
+      if (this.map) {
+        this.updateMarkers();
+      }
     });
   }
 
@@ -120,40 +132,37 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
     setTimeout(() => {
       this.map.invalidateSize();
       this.mapReady.set(true);
-      console.log('Map initialized');
-      this.updateMarkers(); // ✅ İlk marker'ları ekle
+      console.log('Map initialized, spots count:', this.allSpots().length);
+      this.updateMarkers(); // Spotlar zaten yüklüyse hemen ekle
     }, 100);
   }
 
   private updateMarkers(): void {
-    if (!this.map) {
-      console.log('Map not ready yet');
-      return;
-    }
+    if (!this.map) return;
 
     const L = (window as any).L;
     if (!L) return;
 
-    // Eski marker'ları temizle
+    // Snapshot'ı kilitle — marker numaraları liste ile eşleşir
+    this.refreshFilteredSpots();
+    const spots = this._markerSpots;
+
+    if (spots.length === 0 && this.allSpots().length === 0) {
+      setTimeout(() => this.updateMarkers(), 500);
+      return;
+    }
+
     this.markers.forEach((marker) => this.map.removeLayer(marker));
     this.markers = [];
 
-    const spots = this.filteredSpots;
-    console.log('Updating markers for spots:', spots.length);
-
     spots.forEach((spot, index) => {
-      // ✅ Aktif spot ise yeşil, değilse sarı
       const isActive = this.selectedSpot()?.id === spot.id;
 
       const customIcon = L.divIcon({
-        className: 'custom-leaflet-marker', // ✅ Unique class
-        html: `
-        <div class="marker-pin ${isActive ? 'active' : ''}">
-          ${index + 1}
-        </div>
-      `,
+        className: 'custom-leaflet-marker',
+        html: `<div class="marker-pin ${isActive ? 'active' : ''}">${index + 1}</div>`,
         iconSize: [36, 36],
-        iconAnchor: [18, 36],
+        iconAnchor: [18, 18],
       });
 
       const marker = L.marker([spot.latitude, spot.longitude], {
@@ -161,19 +170,16 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
       })
         .addTo(this.map)
         .on('click', () => {
-          console.log('Marker clicked:', spot.name);
           this.selectSpotByClick(spot);
-          // Marker'ları yeniden çiz (renk değişimi için)
-          this.updateMarkers();
         });
 
       this.markers.push(marker);
     });
 
-    // Tüm marker'ları gösterecek şekilde zoom
-    if (spots.length > 0 && this.markers.length > 0) {
+    if (!this.markersInitialized && spots.length > 0) {
       const group = L.featureGroup(this.markers);
       this.map.fitBounds(group.getBounds().pad(0.1));
+      this.markersInitialized = true;
     }
   }
   setCategory(type: SpotType | null): void {
@@ -190,16 +196,31 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
 
   selectSpot(spot: Spot): void {
     this.selectedSpot.set(spot);
+    this.updateMarkers(); // renk güncelle
     if (this.map) {
       this.map.setView([spot.latitude, spot.longitude], 15, {
         animate: true,
-        duration: 0.5,
+        duration: 0.6,
       });
+      // Sidebar offset: görünür alanın ortasına almak için sağa kaydır
+      if (!this.sidebarCollapsed()) {
+        setTimeout(() => this.map.panBy([-202, 0], { animate: false }), 50);
+      }
     }
   }
 
   selectSpotByClick(spot: Spot): void {
     this.selectedSpot.set(spot);
+    this.updateMarkers(); // renk güncelle
+    if (this.map) {
+      this.map.setView([spot.latitude, spot.longitude], 15, {
+        animate: true,
+        duration: 0.6,
+      });
+      if (!this.sidebarCollapsed()) {
+        setTimeout(() => this.map.panBy([-202, 0], { animate: false }), 50);
+      }
+    }
   }
 
   closeCard(): void {
@@ -255,10 +276,11 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
 
   clearFilters(): void {
     this.searchQuery = '';
-    this.activeSearchQuery.set(''); // ✅ Aktif query'yi temizle
+    this.activeSearchQuery.set('');
     this.selectedCategory.set(null);
     this.selectedSpot.set(null);
-    this.updateMarkers(); // ✅ Marker'ları güncelle
+    this.markersInitialized = false; // fitBounds tekrar çalışsın
+    this.updateMarkers();
   }
 
   getStars(rating: number): string {

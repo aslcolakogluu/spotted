@@ -1,9 +1,10 @@
-<div class="register-container">
-  <div class="register-card">
+<div class="modal-overlay" (click)="closeRegister()">
+  <div class="register-card" (click)="$event.stopPropagation()">
+    <button type="button" (click)="closeRegister()" class="modal-close">×</button>
     
     <div class="register-header">
-      <h2>Register</h2>
-      <p>Join Spotted In and discover quiet hours</p>
+      <h2>Join <em>Spotted</em></h2>
+      <p>Discover and share quiet hours</p>
     </div>
 
     <form (ngSubmit)="onSubmit()">

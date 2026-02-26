@@ -1,29 +1,36 @@
-import {Component,OnInit,OnDestroy,AfterViewInit,signal,input,output, ElementRef, ViewChild,} from '@angular/core';
-import * as L from 'leaflet'; 
-
+import {
+  Component,
+  OnInit,
+  OnDestroy,
+  AfterViewInit,
+  signal,
+  input,
+  output,
+  ElementRef,
+  ViewChild,
+} from '@angular/core';
+import * as L from 'leaflet';
 
 export interface MapSpot {
   id: string;
   name: string;
   lat: number;
   lng: number;
-  type: string;       
+  type: string;
   rating: number;
   bestHour?: string;
 }
 
 @Component({
-  selector: 'app-spot-map', 
+  selector: 'app-spot-map',
   standalone: true,
   imports: [],
   templateUrl: './spot-map.html',
   styleUrl: './spot-map.css',
-
 })
-  
-export class SpotMapComponent implements OnInit, AfterViewInit, OnDestroy {  
+export class SpotMapComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('mapContainer', { static: true }) mapEl!: ElementRef; // Harita konteyneri referansı
- 
+
   /** Dışarıdan spot verileri alınabilir */
   spots = input<MapSpot[]>([]);
 
@@ -33,9 +40,9 @@ export class SpotMapComponent implements OnInit, AfterViewInit, OnDestroy {
   /** Aktif (seçili) spot */
   activeSpot = signal<MapSpot | null>(null); // null olabilir çünkü başlangıçta hiçbir spot seçili değil
 
-  private map!: L.Map;  
+  private map!: L.Map;
   private markers: L.Marker[] = []; // Haritadaki marker'lar (güncellemeler için referans)
- 
+
   private readonly defaultSpots: MapSpot[] = [
     {
       id: '1',
@@ -92,22 +99,22 @@ export class SpotMapComponent implements OnInit, AfterViewInit, OnDestroy {
       bestHour: 'Evening 17–19',
     },
   ];
- 
-  ngOnInit(): void { } //void olarak bırakıldı, çünkü ngOnInit'te henüz harita başlatılmıyor. Harita ve marker'lar ngAfterViewInit'te başlatılıyor.
 
-  ngAfterViewInit(): void { 
-    this.initMap(); 
-    this.addMarkers(); 
+  ngOnInit(): void {} //void olarak bırakıldı, çünkü ngOnInit'te henüz harita başlatılmıyor. Harita ve marker'lar ngAfterViewInit'te başlatılıyor.
+
+  ngAfterViewInit(): void {
+    this.initMap();
+    this.addMarkers();
   }
 
   ngOnDestroy(): void {
     this.map?.remove();
   }
 
-  
   private initMap(): void {
-    this.map = L.map(this.mapEl.nativeElement, { // Haritayı oluştururken başlangıç konumu ve zoom seviyesi belirlenir
-      center: [39.925, 32.855],   // Ankara merkez
+    this.map = L.map(this.mapEl.nativeElement, {
+      // Haritayı oluştururken başlangıç konumu ve zoom seviyesi belirlenir
+      center: [39.925, 32.855], // Ankara merkez
       zoom: 13,
       zoomControl: true,
       attributionControl: true,
@@ -121,26 +128,24 @@ export class SpotMapComponent implements OnInit, AfterViewInit, OnDestroy {
           '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> &copy; <a href="https://carto.com/">CARTO</a>',
         subdomains: 'abcd',
         maxZoom: 19,
-      }
+      },
     ).addTo(this.map);
   }
 
- 
   private addMarkers(): void {
     const spotsToRender =
-      this.spots().length > 0 ? this.spots() : this.defaultSpots; // Eğer dışarıdan spot gelmişse onları kullan, yoksa default'ları göster  
+      this.spots().length > 0 ? this.spots() : this.defaultSpots;
 
-    if (spotsToRender.length > 0) {
-      this.activeSpot.set(spotsToRender[0]); // render edilen ilk spot'u aktif olarak set et
-    }
+    // Başlangıçta hiçbir spot aktif değil - hepsi sarı
+    // activeSpot null olarak başlar
 
-    spotsToRender.forEach((spot, index) => { // Her spot için bir marker oluşturulur
-      const isActive = index === 0; // İlk spot aktif olarak kabul edilir
-      const icon = this.createCustomIcon(index + 1, isActive); // Özel ikon oluşturulur (numaralandırılmış ve aktif spot farklı renkte)
-      const marker = L.marker([spot.lat, spot.lng], { icon }).addTo(this.map); // Marker haritaya eklenir
+    spotsToRender.forEach((spot, index) => {
+      const isActive = false; // Başlangıçta hepsi sarı
+      const icon = this.createCustomIcon(index + 1, isActive);
+      const marker = L.marker([spot.lat, spot.lng], { icon }).addTo(this.map);
 
       // Popup
-      marker.bindPopup( 
+      marker.bindPopup(
         `<div style="text-align:center;">
           <strong style="font-size:0.9rem;">${spot.name}</strong><br/>
           <span style="color:rgba(238,232,223,0.5); font-size:0.75rem;">
@@ -148,15 +153,15 @@ export class SpotMapComponent implements OnInit, AfterViewInit, OnDestroy {
           </span>
           ${spot.bestHour ? `<br/><span style="color:#6fbf82; font-size:0.72rem;"> ${spot.bestHour}</span>` : ''}
         </div>`,
-        { className: 'dark-popup' }
+        { className: 'dark-popup' },
       );
 
       // Tıklama → aktif spot değiştir
       marker.on('click', () => {
-        this.setActiveSpot(spot, index); // Tıklanan spot'u aktif olarak set eder ve ikonları günceller
+        this.setActiveSpot(spot, index);
       });
 
-      this.markers.push(marker); // Marker referansı saklanır, böylece gerektiğinde ikon güncellenebilir
+      this.markers.push(marker);
     });
   }
 
@@ -227,15 +232,13 @@ export class SpotMapComponent implements OnInit, AfterViewInit, OnDestroy {
     });
   }
 
-
-
   /** Programatik olarak haritayı bir spot'a odaklar */
-  flyToSpot(spot: MapSpot): void { // Dışarıdan bir spot seçildiğinde haritayı o noktaya odaklar
+  flyToSpot(spot: MapSpot): void {
+    // Dışarıdan bir spot seçildiğinde haritayı o noktaya odaklar
     this.map.flyTo([spot.lat, spot.lng], 15, { duration: 0.8 });
-    const idx =
-      (this.spots().length > 0 ? this.spots() : this.defaultSpots).findIndex(
-        (s) => s.id === spot.id
-      );
+    const idx = (
+      this.spots().length > 0 ? this.spots() : this.defaultSpots
+    ).findIndex((s) => s.id === spot.id);
     if (idx !== -1) {
       this.setActiveSpot(spot, idx);
       this.markers[idx].openPopup();
@@ -244,7 +247,8 @@ export class SpotMapComponent implements OnInit, AfterViewInit, OnDestroy {
 
   /** Haritayı tüm spotları gösterecek şekilde yeniden boyutlandırır */
   fitAllSpots(): void {
-    if (this.markers.length > 0) { // Eğer marker'lar varsa, haritayı tüm marker'ları gösterecek şekilde ayarlar
+    if (this.markers.length > 0) {
+      // Eğer marker'lar varsa, haritayı tüm marker'ları gösterecek şekilde ayarlar
       const group = L.featureGroup(this.markers); // Marker'ları bir feature group olarak gruplar, böylece tüm marker'ların kapsandığı sınırları kolayca alabiliriz
       this.map.fitBounds(group.getBounds().pad(0.15)); // Harita sınırlarını marker'ların etrafında biraz boşluk bırakarak ayarlar
     }

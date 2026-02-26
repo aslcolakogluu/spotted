@@ -1,9 +1,18 @@
-import {Component,inject,signal,computed,OnInit,AfterViewInit,OnDestroy,} from '@angular/core';
+import {
+  Component,
+  inject,
+  signal,
+  computed,
+  OnInit,
+  AfterViewInit,
+  OnDestroy,
+} from '@angular/core';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { SpotService } from '@core/services';
 import { SpotType } from '@core/models';
 import { CommonModule } from '@angular/common';
+import { AuthService } from '@core/services/auth.service';
 
 declare const L: any;
 
@@ -36,6 +45,7 @@ interface ValidationErrors {
 export class AddSpotComponent implements OnInit, AfterViewInit, OnDestroy {
   private router = inject(Router);
   private spotService = inject(SpotService);
+  private authService = inject(AuthService);
 
   private map: any;
   private marker: any;
@@ -185,7 +195,7 @@ export class AddSpotComponent implements OnInit, AfterViewInit, OnDestroy {
 
       // Validate file size (5MB)
       if (file.size > 5 * 1024 * 1024) {
-        alert("File size must be less than 5MB.");
+        alert('File size must be less than 5MB.');
         return;
       }
 
@@ -238,6 +248,12 @@ export class AddSpotComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   onSubmit(): void {
+    // Auth guard: kullanıcı giriş yapmamışsa login sayfasına yönlendir
+    if (!this.authService.isAuthenticated()) {
+      this.router.navigate(['/login']);
+      return;
+    }
+
     if (!this.validateForm()) {
       return;
     }
@@ -259,9 +275,7 @@ export class AddSpotComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   onCancel(): void {
-    if (
-      confirm('Are you sure you want to cancel? All changes will be lost.')
-    ) {
+    if (confirm('Are you sure you want to cancel? All changes will be lost.')) {
       this.router.navigate(['/']);
     }
   }
