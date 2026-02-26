@@ -37,7 +37,7 @@
    PAGE HEADER
    ═══════════════════════════════════════ */
 .page-header {
-  padding: 140px 48px 60px;
+  padding: 60px 48px 60px;
   max-width: 1600px;
   margin: 0 auto;
 }
@@ -613,8 +613,17 @@
   }
 
   .filter-section {
-    padding: 16px 24px;
-  }
+  position: sticky;
+  top: 72px;        /* 80px → 72px (navbar yüksekliği) */
+  z-index: 40;      /* 50 → 40 (navbar'ın altında kalır) */
+  background: rgba(10,11,13,0.95);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  padding: 20px 48px;
+  margin-bottom: 40px;
+  transition: box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
 
   .filter-controls {
     flex-direction: column;

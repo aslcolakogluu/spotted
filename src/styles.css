@@ -131,3 +131,25 @@ body::after {
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
+/* Navbar offset for all pages */
+body > app-root > div,
+router-outlet + * {
+  padding-top: 72px;
+}
+.leaflet-container {
+  z-index: 0 !important;
+}
+
+.leaflet-pane,
+.leaflet-top,
+.leaflet-bottom {
+  z-index: 0 !important;
+}
+/* Router outlet'ten render edilen tüm page component'leri */
+app-explore,
+app-add-spot,
+app-map,
+app-about {
+  display: block;
+  padding-top: 72px;
+}

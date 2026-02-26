@@ -6,17 +6,21 @@
 
 @if (showLoginModal()) {
 <app-login (closeModal)="closeLoginModal()"></app-login>
-} @if (isHomePage()) {
-<main>
-  <app-hero></app-hero>
-  <app-featured-spot></app-featured-spot>
-  @if (isAuthenticated()) {
-  <app-map-activity-section></app-map-activity-section>
-  }
-  <app-add-spot-cta></app-add-spot-cta>
-</main>
-} @if (!isHomePage()) {
-<router-outlet />
 }
+
+<div class="page-content">
+  @if (isHomePage()) {
+  <main>
+    <app-hero></app-hero>
+    <app-featured-spot></app-featured-spot>
+    @if (isAuthenticated()) {
+    <app-map-activity-section></app-map-activity-section>
+    }
+    <app-add-spot-cta></app-add-spot-cta>
+  </main>
+  } @if (!isHomePage()) {
+  <router-outlet />
+  }
+</div>
 
 <app-footer></app-footer>
