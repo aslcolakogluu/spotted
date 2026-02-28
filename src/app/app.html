@@ -1,11 +1,11 @@
 <app-navbar
-  (loginClicked)="openLoginModal()"
+  (loginClicked)="authService.openLoginModal()"
   (addSpotClicked)="handleAddSpotClick()"
 >
 </app-navbar>
 
-@if (showLoginModal()) {
-<app-login (closeModal)="closeLoginModal()"></app-login>
+@if (authService.showLoginModal()) {
+<app-login (closeModal)="authService.closeLoginModal()"></app-login>
 }
 
 <div class="page-content">

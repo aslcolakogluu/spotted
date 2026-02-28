@@ -12,28 +12,59 @@
 <div class="form-container">
   <div class="form-layout">
     <!-- MAIN FORM -->
+
     <div class="form-section">
       <h2 class="form-section-title">Spot Information</h2>
 
-      <!-- Spot Name -->
-      <div class="form-group">
-        <label class="form-label form-label-required">Spot Name</label>
-        <input
-          type="text"
-          class="form-input"
-          [class.error]="errors().name"
-          placeholder="E.g. Çankaya Castle Hill"
-          [ngModel]="formData().name"
-          (ngModelChange)="updateField('name', $event)"
-        />
-        @if (errors().name) {
-        <div class="form-error">{{ errors().name }}</div>
-        } @else {
-        <div class="form-hint">An explanatory name for your spot</div>
-        }
+      
+      <button class="step-btn" [class.active]="currentStep() === 1" (click)="goToStep(1)">1</button> 
+      <button class="step-btn" [class.active]="currentStep() === 2" (click)="goToStep(2)">2</button>
+      <button class="step-btn" [class.active]="currentStep() === 3" (click)="goToStep(3)">3</button>
+      
+
+      @if (currentStep() === 1) {
+
+        <div class="form-group">
+          <label class="form-label form-label-required">Spot Name</label>
+          <input
+            type="text"
+           class="form-input"
+            [class.error]="errors().name"
+            placeholder="E.g. Çankaya Castle Hill"
+            [ngModel]="formData().name"
+            (ngModelChange)="updateField('name', $event)"
+          />
+           @if (errors().name) {
+            <div class="form-error">{{ errors().name }}</div>
+          } @else {
+            <div class="form-hint">An explanatory name for your spot</div>
+           }
+        </div>
+
+      <!-- Map Location Picker -->
+        <div class="map-picker">
+          <label class="form-label form-label-required">Location</label>
+          <div class="form-hint" style="margin-bottom: 10px">
+           Click on the map to set the location
+          </div>
+        <div class="map-container">
+          <div id="location-map"></div>
+        </div>
+        <div class="coordinates-display">
+          <div class="coordinate-item">
+            <strong>Lat:</strong>
+            <span>{{ formData().latitude.toFixed(6) }}</span>
+          </div>
+          <div class="coordinate-item">
+            <strong>Lng:</strong>
+            <span>{{ formData().longitude.toFixed(6) }}</span>
+          </div>
+        </div>
       </div>
 
-      <!-- Category -->
+      } @else if(currentStep() === 2) {
+
+        <!-- Category -->
       <div class="form-group">
         <label class="form-label form-label-required">Category</label>
         <select
@@ -51,25 +82,11 @@
         </select>
         @if (errors().type) {
         <div class="form-error">{{ errors().type }}</div>
-        }
-      </div>
+        } 
+    
 
-      <!-- Address -->
-      <div class="form-group">
-        <label class="form-label form-label-required">Address</label>
-        <input
-          type="text"
-          class="form-input"
-          [class.error]="errors().address"
-          placeholder="E.g. Çankaya, Ankara"
-          [ngModel]="formData().address"
-          (ngModelChange)="updateField('address', $event)"
-        />
-        @if (errors().address) {
-        <div class="form-error">{{ errors().address }}</div>
-        } @else {
-        <div class="form-hint">General location of your spot</div>
-        }
+
+        
       </div>
 
       <!-- Description -->
@@ -89,28 +106,10 @@
         }
       </div>
 
-      <!-- Map Location Picker -->
-      <div class="map-picker">
-        <label class="form-label form-label-required">Location</label>
-        <div class="form-hint" style="margin-bottom: 10px">
-          Click on the map to set the location
-        </div>
-        <div class="map-container">
-          <div id="location-map"></div>
-        </div>
-        <div class="coordinates-display">
-          <div class="coordinate-item">
-            <strong>Lat:</strong>
-            <span>{{ formData().latitude.toFixed(6) }}</span>
-          </div>
-          <div class="coordinate-item">
-            <strong>Lng:</strong>
-            <span>{{ formData().longitude.toFixed(6) }}</span>
-          </div>
-        </div>
-      </div>
+    } @else if (currentStep() === 3) {
 
-      <!-- Image Upload -->
+
+        <!-- Image Upload -->
       <div class="image-upload">
         <label class="form-label">Image</label>
 
@@ -154,7 +153,25 @@
         />
       </div>
 
-      <!-- Best Time -->
+       <!-- Address -->
+      <div class="form-group">
+        <label class="form-label form-label-required">Address</label>
+        <input
+          type="text"
+          class="form-input"
+          [class.error]="errors().address"
+          placeholder="E.g. Çankaya, Ankara"
+          [ngModel]="formData().address"
+          (ngModelChange)="updateField('address', $event)"
+        />
+        @if (errors().address) {
+        <div class="form-error">{{ errors().address }}</div>
+        } @else {
+        <div class="form-hint">General location of your spot</div>
+        }
+      </div>
+
+       <!-- Best Time -->
       <div class="form-group">
         <label class="form-label">Best Time</label>
         <input
@@ -169,15 +186,38 @@
         </div>
       </div>
 
+
+    } 
+
       <!-- Form Actions -->
+      
       <div class="form-actions">
-        <button
-          class="btn-submit"
-          [disabled]="isSubmitting()"
-          (click)="onSubmit()"
-        >
-          @if (isSubmitting()) { Adding... } @else { Add Spot }
-        </button>
+        
+        @if (currentStep() < 3) {
+          <button
+            class="btn-submit"
+            (click)="nextStep()"
+          >
+            Next
+          </button>
+        } @else if(currentStep() > 1 && currentStep() < 3) {
+          <button
+            class="btn-previous"
+            (click)="prevStep()"
+          >
+          Back
+          </button>
+        
+      }
+        @else {
+          <button
+            class="btn-submit"
+            [disabled]="isSubmitting()"
+            (click)="onSubmit()"
+          >
+            @if (isSubmitting()) { Adding... } @else { Submıt }
+          </button>
+        }
         <button
           class="btn-cancel"
           [disabled]="isSubmitting()"

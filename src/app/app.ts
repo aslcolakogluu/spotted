@@ -27,7 +27,7 @@ import { AuthService } from '@core/services/auth.service';
   styleUrl: './app.css',
 })
 export class AppComponent {
-  private authService = inject(AuthService);
+  public authService = inject(AuthService);
   showLoginModal = signal(false);
   currentRoute = signal('/');
 
@@ -49,14 +49,6 @@ export class AppComponent {
 
   isAuthenticated(): boolean {
     return this.authService.isAuthenticated();
-  }
-
-  openLoginModal(): void {
-    this.showLoginModal.set(true); // showLoginModal sinyalini true yaparak login modal'ını açar, böylece kullanıcı giriş yapmak istediğinde modal görünür hale gelir
-  }
-
-  closeLoginModal(): void {
-    this.showLoginModal.set(false); // showLoginModal sinyalini false yaparak login modal'ını kapatır, böylece kullanıcı giriş yaptıktan sonra modal kapanır veya kullanıcı modal'ı kapatmak istediğinde modal görünmez hale gelir
   }
 
   handleAddSpotClick(): void {

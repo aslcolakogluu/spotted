@@ -79,6 +79,8 @@ export class AuthService {
         this.saveSessionToStorage(user);
         this.currentUserSignal.set(user);
         this.isAuthenticatedSignal.set(true);
+        this.closeLoginModal();
+        this.router.navigateByUrl('/');
       }
     }, 300);
     return of(true);
@@ -124,5 +126,15 @@ export class AuthService {
   // ✅ Helper metod - Register component için
   getCurrentUser(): User | null {
     return this.currentUserSignal();
+  }
+
+  showLoginModal = signal(false);
+
+  openLoginModal(): void {
+    this.showLoginModal.set(true); // showLoginModal sinyalini true yaparak login modal'ını açar, böylece kullanıcı giriş yapmak istediğinde modal görünür hale gelir
+  }
+
+  closeLoginModal(): void {
+    this.showLoginModal.set(false); // showLoginModal sinyalini false yaparak login modal'ını kapatır, böylece kullanıcı giriş yaptıktan sonra modal kapanır veya kullanıcı modal'ı kapatmak istediğinde modal görünmez hale gelir
   }
 }

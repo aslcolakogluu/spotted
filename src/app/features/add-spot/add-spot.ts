@@ -33,6 +33,8 @@ interface ValidationErrors {
   address?: string;
   description?: string;
   location?: string;
+  imageUrl?: string;
+  bestTime?: string;
 }
 
 @Component({
@@ -49,6 +51,16 @@ export class AddSpotComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private map: any;
   private marker: any;
+  
+
+  currentStep = signal<number>(1);
+  readonly totalSteps = 3;
+
+  readonly steps = [
+    { number: 1, title: 'Location' },
+    { number: 2, title: 'Details' },
+    { number: 3, title: 'Media' },
+  ];
 
   // Form data
   formData = signal<SpotForm>({
@@ -109,6 +121,21 @@ export class AddSpotComponent implements OnInit, AfterViewInit, OnDestroy {
     return this.formData().bestTime || '-';
   });
 
+  
+  step1 = computed(() => !!this.formData().name.trim() && !!this.formData().latitude && !!this.formData().longitude );
+
+  step2 = computed(() => { !!this.formData(). type && !!this.formData().address.trim() && this.formData().description.trim().length >= 50 });  
+
+  
+  step3 = computed(() => !!this.formData().imageUrl.trim() && !!this.formData().bestTime.trim());
+  
+  
+  goToStep(step: number): void {
+  this.currentStep.set(step);
+}
+
+  
+  
   ngOnInit(): void {
     // Giriş yapılmamışsa login'e yönlendir
     if (!this.authService.isAuthenticated()) {
@@ -226,7 +253,7 @@ export class AddSpotComponent implements OnInit, AfterViewInit, OnDestroy {
     this.imagePreview.set(null);
   }
 
-  validateForm(): boolean {
+  validateStep1(): boolean {
     const newErrors: ValidationErrors = {};
     const data = this.formData();
 
@@ -234,9 +261,21 @@ export class AddSpotComponent implements OnInit, AfterViewInit, OnDestroy {
       newErrors.name = 'Spot name is required';
     }
 
+    if (!data.latitude || !data.longitude) {
+      newErrors.location = 'Please select a location on the map';
+    }
+
+    this.errors.set(newErrors);
+    return Object.keys(newErrors).length === 0;
+  }
+
+  validateStep2(): boolean {
+    const newErrors: ValidationErrors = {};
+    const data = this.formData();
+
     if (!data.type) {
       newErrors.type = 'Please select a category';
-    }
+    } 
 
     if (!data.address.trim()) {
       newErrors.address = 'Address is required';
@@ -251,6 +290,53 @@ export class AddSpotComponent implements OnInit, AfterViewInit, OnDestroy {
     this.errors.set(newErrors);
     return Object.keys(newErrors).length === 0;
   }
+
+  validateStep3(): boolean {
+    const newErrors: ValidationErrors = {};
+    const data = this.formData();
+
+    if (!data.imageUrl.trim()) {
+      newErrors.imageUrl = 'Please provide an image URL';
+    }
+
+    if (!data.bestTime.trim()) {
+      newErrors.bestTime = 'Please provide the best time to visit';
+    }
+
+    this.errors.set(newErrors);
+    return Object.keys(newErrors).length === 0;
+  }
+
+
+  
+  validateForm(): boolean {
+    return this.validateStep1() && this.validateStep2() && this.validateStep3();
+  }
+
+  nextStep(): void {
+    if (this.currentStep() === 1 && !this.validateStep1()) {
+      return;
+    }
+    if (this.currentStep() === 2 && !this.validateStep2()) {
+      return;
+    }
+    if (this.currentStep() === 3 && !this.validateStep3()) {
+      return;
+    }
+
+    if (this.currentStep() < this.totalSteps) {
+      this.currentStep.update((n) => n + 1);
+    }
+  }
+
+  prevStep(): void {
+    if (this.currentStep() > 1) {
+      this.currentStep.update((n) => n - 1);
+    }
+  }
+  
+
+  
 
   onSubmit(): void {
     // Auth guard: kullanıcı giriş yapmamışsa login sayfasına yönlendir

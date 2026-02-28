@@ -3,14 +3,11 @@ import {
   inject,
   output,
   signal,
-  AfterViewInit,
   DestroyRef,
+  HostListener,
 } from '@angular/core';
-import { Router, RouterLink, RouterLinkActive } from '@angular/router';
+import { RouterLink, RouterLinkActive } from '@angular/router';
 import { AuthService } from '@core/services/auth.service';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { fromEvent } from 'rxjs';
-import { throttleTime, map, distinctUntilChanged } from 'rxjs/operators';
 
 @Component({
   selector: 'app-navbar',
@@ -18,29 +15,21 @@ import { throttleTime, map, distinctUntilChanged } from 'rxjs/operators';
   imports: [RouterLink, RouterLinkActive],
   templateUrl: './navbar.html',
   styleUrl: './navbar.css',
+  host: {
+    'body:scroll': 'onWindowScroll()',
+  },
 })
-export class NavbarComponent implements AfterViewInit {
+export class NavbarComponent {
   authService = inject(AuthService);
-  private destroyRef = inject(DestroyRef);
 
   loginClicked = output<void>();
   addSpotClicked = output<void>();
 
-  isScrolled = signal(false); 
+  isScrolled = signal(false);
 
-  ngAfterViewInit(): void {
-    fromEvent(window, 'scroll')
-      .pipe(
-        throttleTime(16, undefined, { leading: true, trailing: true }),
-        map(() => window.scrollY > 100),
-        distinctUntilChanged(),
-        takeUntilDestroyed(this.destroyRef),
-      )
-      .subscribe((scrolled) => this.isScrolled.set(scrolled));
+  @HostListener('window:scroll', [])
+  onWindowScroll() {
+    console.log('Window scrolled:', window.scrollY);
+    this.isScrolled.set(window.scrollY > 50);
   }
-
-  /*@EventListener('window:scroll', [])
-  onWindowScroll(): void {
-    this.isScrolled.set(window.scrollY > 100);
-  }*/
 }

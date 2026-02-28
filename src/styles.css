@@ -8,18 +8,20 @@
   --bg-deep: #0a0b0d;
   --bg-card: #12141a;
   --bg-card-hover: #181c26;
-  --border: rgba(255,255,255,0.06);
+  --border: rgba(255, 255, 255, 0.06);
   --text-primary: #eee8df;
-  --text-muted: rgba(238,232,223,0.45);
+  --text-muted: rgba(238, 232, 223, 0.45);
   --accent: #c8a96e;
-  --accent-dim: rgba(200,169,110,0.15);
+  --accent-dim: rgba(200, 169, 110, 0.15);
   --green: #6fbf82;
-  --green-dim: rgba(111,191,130,0.15);
-  --tag-bg: rgba(255,255,255,0.05);
+  --green-dim: rgba(111, 191, 130, 0.15);
+  --tag-bg: rgba(255, 255, 255, 0.05);
 }
 
 /* Global Resets */
-*, *::before, *::after {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
@@ -30,7 +32,11 @@ html {
 }
 
 body {
-  font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family:
+    "DM Sans",
+    -apple-system,
+    BlinkMacSystemFont,
+    sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background: var(--bg-deep);
@@ -41,7 +47,7 @@ body {
 
 /* Grain Overlay Effect */
 body::after {
-  content: '';
+  content: "";
   position: fixed;
   inset: 0;
   pointer-events: none;
@@ -62,18 +68,23 @@ body::after {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(200,169,110,0.3);
+  background: rgba(200, 169, 110, 0.3);
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(200,169,110,0.5);
+  background: rgba(200, 169, 110, 0.5);
 }
 
 /* Animations */
 @keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.3; }
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.3;
+  }
 }
 
 @keyframes fadeIn {

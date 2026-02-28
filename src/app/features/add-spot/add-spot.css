@@ -412,11 +412,12 @@
   margin-top: 40px;
   padding-top: 32px;
   border-top: 1px solid rgba(255, 255, 255, 0.06);
+
 }
 
 .btn-submit {
   flex: 1;
-  padding: 16px 32px;
+  padding: 16px 30px;
   background: #c8a96e;
   color: #0a0b0d;
   border: none;
@@ -497,4 +498,34 @@
   .form-actions {
     flex-direction: column;
   }
+}
+.step-btn {
+  padding: 10px 16px;
+  background: transparent;
+  color: rgba(238, 232, 223, 0.45);
+  border: 5px solid rgba(255, 255, 255, 0.06);
+  border-radius: 100px;
+  font-weight: 500;
+  font-size: 0.85rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.3s;
+  margin: 0 60px;
+  margin-bottom: 60px;
+}
+
+.step-btn.active {
+  background: #c8a96e;
+  color: #0a0b0d;
+  border-color: #c8a96e;
+}
+.btn-previous {
+  background: transparent;
+  color: rgba(238, 232, 223, 0.45);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+.btn-previous:hover:not(:disabled) {
+  border-color: rgba(238, 232, 223, 0.45);
+  color: #eee8df;
 }
