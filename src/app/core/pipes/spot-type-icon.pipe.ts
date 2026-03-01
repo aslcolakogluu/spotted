@@ -3,10 +3,10 @@ import { SpotType } from '../models';
 
 @Pipe({
   name: 'spotTypeIcon',
-  standalone: true
+  standalone: true // Bu pipe'ı standalone olarak tanımlıyoruz, böylece herhangi bir modüle eklemeden doğrudan kullanabiliriz
 })
-export class SpotTypeIconPipe implements PipeTransform {
-  private readonly iconMap: Record<SpotType, string> = {
+export class SpotTypeIconPipe implements PipeTransform { //PipeTransform arayüzünü implement ediyoruz çünkü bu pipe'ı bir dönüşüm işlemi için kullanacağız
+  private readonly iconMap: Record<SpotType, string> = { // Record türünde bir nesne oluşturuyoruz çünkü her bir SpotType türü için bir string değeri (SVG ikonu) saklayacağız
     [SpotType.BRIDGE]: this.createSvg('M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z'),
     [SpotType.NATURE]: this.createSvg('M12 6v6m0 0v6m0-6h6m-6 0H6'),
     [SpotType.HISTORICAL]: this.createSvg('M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z'),
@@ -17,13 +17,13 @@ export class SpotTypeIconPipe implements PipeTransform {
     [SpotType.PARK]: ''
   };
 
-  private createSvg(path: string): string {
+  private createSvg(path: string): string { // SVG ikonu oluşturmak için bir yardımcı fonksiyon tanımlıyoruz, bu fonksiyon verilen path değerini kullanarak bir SVG string'i döndürüyor
     return `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="${path}"></path>
     </svg>`;
   }
 
-  transform(type: SpotType): string {
-    return this.iconMap[type] ?? this.iconMap[SpotType.OTHER];
+  transform(type: SpotType): string { //PipeTransform arayüzündeki transform metodunu implement ediyoruz, bu metodun amacı verilen SpotType türüne karşılık gelen SVG ikonunu döndürmek
+    return this.iconMap[type] ?? this.iconMap[SpotType.OTHER]; //Eğer verilen SpotType türü iconMap içinde tanımlı değilse, OTHER türüne karşılık gelen ikonu döndürüyoruz
   }
 }

@@ -5,8 +5,8 @@ import { SpotType } from '../models';
   name: 'spotTypeLabel',
   standalone: true
 })
-export class SpotTypeLabelPipe implements PipeTransform {
-  private readonly labelMap: Record<SpotType, string> = {
+export class SpotTypeLabelPipe implements PipeTransform { //PipeTransform arayüzünü implement ediyoruz çünkü bu pipe'ı bir dönüşüm işlemi için kullanacağız
+  private readonly labelMap: Record<SpotType, string> = { // Record türünde bir nesne oluşturuyoruz çünkü her bir SpotType türü için bir string değeri (etiket) saklayacağız
     [SpotType.BRIDGE]: 'Bridge',
     [SpotType.PARK]: 'Park',
     [SpotType.MUSEUM]: 'Museum',
@@ -17,7 +17,7 @@ export class SpotTypeLabelPipe implements PipeTransform {
     [SpotType.NATURE]: ''
   };
 
-  transform(type: SpotType): string {
+  transform(type: SpotType): string { //PipeTransform arayüzündeki transform metodunu implement ediyoruz, bu metodun amacı verilen SpotType türüne karşılık gelen etiketi döndürmek
     return this.labelMap[type] ?? 'Unknown';
   }
 }

@@ -42,6 +42,6 @@ export interface SpotCreateDto {
   priceRange?: string;
 }
 
-export interface SpotUpdateDto extends Partial<SpotCreateDto> {
+export interface SpotUpdateDto extends Partial<SpotCreateDto> { // Partial kullandık çünkü güncelleme sırasında tüm alanların gönderilmesi zorunlu değil, sadece güncellenmek istenen alanlar gönderilebilir
   id: string;
 }

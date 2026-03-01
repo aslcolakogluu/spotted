@@ -5,76 +5,76 @@ import { Activity, ActivityType, ActivityFilter } from '../models';
 @Injectable({
   providedIn: 'root' 
 })
-export class ActivityService { 
-  private activities = signal<Activity[]>(this.generateMockActivities());
-  readonly activities$ = this.activities.asReadonly();
+export class ActivityService {  // aktivite yönetimi için servis
+  private activities = signal<Activity[]>(this.generateMockActivities()); // başlangıçta mock aktivitelerle doldurulmuş sinyal
+  readonly activities$ = this.activities.asReadonly(); // aktiviteleri dışarıya salt okunur olarak sunar
 
-  constructor() {}
+  constructor() {} // constructor boş çünkü şu anda herhangi bir bağımlılık yok
 
-  getActivities(filter?: ActivityFilter): Observable<Activity[]> {
-    let filtered = this.activities();
+  getActivities(filter?: ActivityFilter): Observable<Activity[]> { // aktiviteleri filtreleyerek getiren metod
+    let filtered = this.activities(); // mevcut aktiviteleri alır
 
     if (filter) {
-      if (filter.type?.length) {
-        filtered = filtered.filter(a => filter.type!.includes(a.type));
+      if (filter.type?.length) { // eğer tür filtresi varsa ve boş değilse
+        filtered = filtered.filter(a => filter.type!.includes(a.type)); // filter by type array, includes ile türü kontrol eder
       } // filter by array of types
 
-      if (filter.userId) {
-        filtered = filtered.filter(a => a.userId === filter.userId);
+      if (filter.userId) { // eğer userId filtresi varsa
+        filtered = filtered.filter(a => a.userId === filter.userId); //userId'ye göre filtreler, sadece belirtilen userId'ye sahip aktiviteleri döndürür
       } // filter by userId
 
-      if (filter.spotId) {
-        filtered = filtered.filter(a => a.spotId === filter.spotId);
+      if (filter.spotId) { // eğer spotId filtresi varsa
+        filtered = filtered.filter(a => a.spotId === filter.spotId); // spotId'ye göre filtreler, sadece belirtilen spotId'ye sahip aktiviteleri döndürür
       } // filter by spotId
 
-      if (filter.startDate) {
-        filtered = filtered.filter(a => new Date(a.timestamp) >= filter.startDate!);
+      if (filter.startDate) { // eğer startDate filtresi varsa
+        filtered = filtered.filter(a => new Date(a.timestamp) >= filter.startDate!); // timestamp'ı startDate ile karşılaştırır, sadece belirtilen startDate'den sonra veya eşit olan aktiviteleri döndürür
       } // filter by startDate
 
-      if (filter.endDate) {
-        filtered = filtered.filter(a => new Date(a.timestamp) <= filter.endDate!);
+      if (filter.endDate) { // eğer endDate filtresi varsa
+        filtered = filtered.filter(a => new Date(a.timestamp) <= filter.endDate!); // timestamp'ı endDate ile karşılaştırır, sadece belirtilen endDate'den önce veya eşit olan aktiviteleri döndürür
       } // filter by endDate
 
-      if (filter.limit) {
-        filtered = filtered.slice(0, filter.limit);
+      if (filter.limit) { // eğer limit filtresi varsa
+        filtered = filtered.slice(0, filter.limit); // slice ile belirtilen limit kadar aktivite döndürür, ancak bu filtre diğer tüm filtrelerden sonra uygulanır, böylece önce tüm filtreler uygulanır ve ardından sonuçlar limitlenir
       } // apply limit after all other filters
     }
+ 
+    return of(filtered).pipe(delay(300)); // filtrelenmiş aktiviteleri Observable olarak döndürür, delay ile simüle edilmiş gecikme ekler, böylece gerçek bir API çağrısı gibi davranır
+  }  
 
-    return of(filtered).pipe(delay(300));
-  }
-
-  getRecentActivities(limit: number = 10): Observable<Activity[]> { 
-    const recent = [...this.activities()] 
-      .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
-      .slice(0, limit); // büyük timestamp en üstte yani en yeni en üstte.
+  getRecentActivities(limit: number = 10): Observable<Activity[]> {  // en yeni aktiviteleri getiren metod, varsayılan limit 10
+    const recent = [...this.activities()]  // mevcut aktiviteleri kopyalar, böylece orijinal array'i değiştirmez
+      .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()) // aktiviteleri timestamp'lerine göre büyükten küçüğe sıralar, böylece en yeni aktiviteler en üstte olur
+      .slice(0, limit); // slice ile belirtilen limit kadar aktivite döndürür, böylece sadece en yeni aktiviteler alınır
     
     return of(recent).pipe(delay(200)); 
   }
 
-  getUserActivities(userId: string, limit?: number): Observable<Activity[]> {   
-    let userActivities = this.activities().filter(a => a.userId === userId);  
+  getUserActivities(userId: string, limit?: number): Observable<Activity[]> {    // belirli bir kullanıcıya ait aktiviteleri getiren metod, opsiyonel limit parametresi ile döndürülecek aktivite sayısını sınırlayabilir
+    let userActivities = this.activities().filter(a => a.userId === userId);   // 
     
     if (limit) {
-      userActivities = userActivities.slice(0, limit); 
+      userActivities = userActivities.slice(0, limit);  // slice ile belirtilen limit kadar aktivite döndürür, ancak bu filtre diğer tüm filtrelerden sonra uygulanır, böylece önce tüm filtreler uygulanır ve ardından sonuçlar limitlenir
     } 
 
     return of(userActivities).pipe(delay(300));
   }
 
-  getSpotActivities(spotId: string, limit?: number): Observable<Activity[]> {
-    let spotActivities = this.activities().filter(a => a.spotId === spotId);
+  getSpotActivities(spotId: string, limit?: number): Observable<Activity[]> { // belirli bir mekana ait aktiviteleri getiren metod, opsiyonel limit parametresi ile döndürülecek aktivite sayısını sınırlayabilir
+    let spotActivities = this.activities().filter(a => a.spotId === spotId); // mevcut aktiviteleri spotId'ye göre filtreler, sadece belirtilen spotId'ye sahip aktiviteleri döndürür
     
     if (limit) {
-      spotActivities = spotActivities.slice(0, limit);
+      spotActivities = spotActivities.slice(0, limit); // slice ile belirtilen limit kadar aktivite döndürür, ancak bu filtre diğer tüm filtrelerden sonra uygulanır, böylece önce tüm filtreler uygulanır ve ardından sonuçlar limitlenir
     }
 
     return of(spotActivities).pipe(delay(300));
   }
 
-  addActivity(activity: Omit<Activity, 'id' | 'timestamp'>): Observable<Activity> {
-    const newActivity: Activity = {
-      ...activity,
-      id: this.generateId(),
+  addActivity(activity: Omit<Activity, 'id' | 'timestamp'>): Observable<Activity> { // yeni bir aktivite ekleyen metod, id ve timestamp otomatik olarak oluşturulur, bu nedenle parametre olarak alınmaz
+    const newActivity: Activity = { 
+      ...activity, // spread operator ile gelen aktivite verilerini alır
+      id: this.generateId(), 
       timestamp: new Date()
     };
 

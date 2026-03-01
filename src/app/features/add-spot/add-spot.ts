@@ -9,10 +9,10 @@ import {
 } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { SpotService } from '@core/services';
-import { SpotType } from '@core/models';
 import { CommonModule } from '@angular/common';
+import { SpotService } from '@core/services';
 import { AuthService } from '@core/services/auth.service';
+import { SpotType } from '@core/models';
 
 declare const L: any;
 
@@ -51,7 +51,6 @@ export class AddSpotComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private map: any;
   private marker: any;
-  
 
   currentStep = signal<number>(1);
   readonly totalSteps = 3;
@@ -86,7 +85,7 @@ export class AddSpotComponent implements OnInit, AfterViewInit, OnDestroy {
   readonly spotTypes = [
     { value: SpotType.NATURE, label: 'Nature', emoji: '' },
     { value: SpotType.PARK, label: 'Park', emoji: '' },
-    { value: SpotType.BRIDGE, label: 'Bridge', emoji: '' },
+    { value: SpotType.BRIDGE, label: 'Bridge', emoji: '🌉' },
     { value: SpotType.HISTORICAL, label: 'Historical', emoji: '' },
     { value: SpotType.MUSEUM, label: 'Museum', emoji: '' },
     { value: SpotType.BEACH, label: 'Beach', emoji: '' },
@@ -121,21 +120,31 @@ export class AddSpotComponent implements OnInit, AfterViewInit, OnDestroy {
     return this.formData().bestTime || '-';
   });
 
-  
-  step1 = computed(() => !!this.formData().name.trim() && !!this.formData().latitude && !!this.formData().longitude );
+  step1 = computed(
+    () =>
+      !!this.formData().name.trim() &&
+      !!this.formData().latitude &&
+      !!this.formData().longitude,
+  );
 
-  step2 = computed(() => { !!this.formData(). type && !!this.formData().address.trim() && this.formData().description.trim().length >= 50 });  
+  step2 = computed(
+    () =>
+      !!this.formData().type &&
+      !!this.formData().address.trim() &&
+      this.formData().description.trim().length >= 50,
+  );
 
-  
-  step3 = computed(() => !!this.formData().imageUrl.trim() && !!this.formData().bestTime.trim());
-  
-  
+  step3 = computed(
+    () => !!this.imagePreview() && !!this.formData().bestTime.trim(),
+  );
+
   goToStep(step: number): void {
-  this.currentStep.set(step);
-}
+    this.currentStep.set(step);
+    if (step === 1) {
+      setTimeout(() => this.reinitializeMap(), 100);
+    }
+  }
 
-  
-  
   ngOnInit(): void {
     // Giriş yapılmamışsa login'e yönlendir
     if (!this.authService.isAuthenticated()) {
@@ -194,11 +203,17 @@ export class AddSpotComponent implements OnInit, AfterViewInit, OnDestroy {
     setTimeout(() => this.map.invalidateSize(), 100);
   }
 
+  private reinitializeMap(): void {
+    if (this.map) {
+      setTimeout(() => this.map.invalidateSize(), 100);
+    }
+  }
+
   onMapClick(lat: number, lng: number): void {
     const L = (window as any).L;
 
     // Update form data
-    this.formData.update((data) => ({
+    this.formData.update((data: SpotForm) => ({
       ...data,
       latitude: lat,
       longitude: lng,
@@ -273,12 +288,8 @@ export class AddSpotComponent implements OnInit, AfterViewInit, OnDestroy {
     const newErrors: ValidationErrors = {};
     const data = this.formData();
 
-    if (!data.type) {
+    if (!data.type || data.type === ('null' as any)) {
       newErrors.type = 'Please select a category';
-    } 
-
-    if (!data.address.trim()) {
-      newErrors.address = 'Address is required';
     }
 
     if (!data.description.trim()) {
@@ -295,22 +306,40 @@ export class AddSpotComponent implements OnInit, AfterViewInit, OnDestroy {
     const newErrors: ValidationErrors = {};
     const data = this.formData();
 
-    if (!data.imageUrl.trim()) {
-      newErrors.imageUrl = 'Please provide an image URL';
+    if (!data.address.trim()) {
+      newErrors.address = 'Address is required';
     }
 
     if (!data.bestTime.trim()) {
-      newErrors.bestTime = 'Please provide the best time to visit';
+      newErrors.bestTime = 'Best time is required';
     }
+
+    // Image is optional — fallback URL is used if no image is uploaded
 
     this.errors.set(newErrors);
     return Object.keys(newErrors).length === 0;
   }
 
-
-  
   validateForm(): boolean {
-    return this.validateStep1() && this.validateStep2() && this.validateStep3();
+    const step1Valid = this.validateStep1();
+    const step2Valid = this.validateStep2();
+    const step3Valid = this.validateStep3();
+
+    // Navigate to the first failing step so the user can see errors
+    if (!step1Valid) {
+      this.goToStep(1);
+      return false;
+    }
+    if (!step2Valid) {
+      this.goToStep(2);
+      return false;
+    }
+    if (!step3Valid) {
+      this.goToStep(3);
+      return false;
+    }
+
+    return true;
   }
 
   nextStep(): void {
@@ -325,18 +354,15 @@ export class AddSpotComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     if (this.currentStep() < this.totalSteps) {
-      this.currentStep.update((n) => n + 1);
+      this.currentStep.update((n: number) => n + 1);
     }
   }
 
   prevStep(): void {
     if (this.currentStep() > 1) {
-      this.currentStep.update((n) => n - 1);
+      this.currentStep.update((n: number) => n - 1);
     }
   }
-  
-
-  
 
   onSubmit(): void {
     // Auth guard: kullanıcı giriş yapmamışsa login sayfasına yönlendir
@@ -351,18 +377,39 @@ export class AddSpotComponent implements OnInit, AfterViewInit, OnDestroy {
 
     this.isSubmitting.set(true);
 
-    // TODO: Upload image first if exists
-    // TODO: Create spot via API
+    const currentUser = this.authService.getCurrentUser();
+    if (!currentUser) {
+      alert('Please login first.');
+      this.router.navigate(['/login']);
+      return;
+    }
 
-    // Mock submission
-    setTimeout(() => {
-      console.log('Spot data:', this.formData());
-      console.log('Selected file:', this.selectedFile());
+    const data = this.formData();
 
-      alert('Spot successfully added!');
-      this.router.navigate(['/explore']);
-      this.isSubmitting.set(false);
-    }, 1500);
+    this.spotService
+      .createSpot({
+        name: data.name,
+        type: data.type!,
+        address: data.address,
+        description: data.description,
+        latitude: data.latitude,
+        longitude: data.longitude,
+        imageUrl:
+          this.imagePreview() ||
+          'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800',
+      })
+      .subscribe({
+        next: (spot: any) => {
+          console.log('Spot added:', spot);
+          alert('Spot successfully added!');
+          this.router.navigate(['/explore']);
+        },
+        error: (error: any) => {
+          console.error('Error adding spot:', error);
+          alert('An error occurred while adding the spot.');
+          this.isSubmitting.set(false);
+        },
+      });
   }
 
   onCancel(): void {
@@ -372,7 +419,7 @@ export class AddSpotComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   updateField<K extends keyof SpotForm>(field: K, value: SpotForm[K]): void {
-    this.formData.update((data) => ({
+    this.formData.update((data: SpotForm) => ({
       ...data,
       [field]: value,
     }));

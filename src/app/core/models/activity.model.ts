@@ -1,4 +1,4 @@
-import { Spot } from './spot.model';
+import { Spot } from './spot.model'; //Spot modelini import ediyoruz çünkü Activity modelinde Spot ile ilgili bilgiler de olacak
 
 export interface Activity {
   id: string;
@@ -28,11 +28,11 @@ export interface ActivityMetadata {
   reviewText?: string;
   photoUrls?: string[];
   shareCount?: number;
-  [key: string]: any;
+  [key: string]: any;  // key değeri string, value ise herhangi bir tür olabilir
 }
 
 export interface ActivityFilter {
-  type?: ActivityType[];
+  type?: ActivityType[]; 
   userId?: string;
   spotId?: string;
   startDate?: Date;
