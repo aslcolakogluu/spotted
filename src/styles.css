@@ -78,10 +78,12 @@ body::after {
 
 /* Animations */
 @keyframes pulse {
+
   0%,
   100% {
     opacity: 1;
   }
+
   50% {
     opacity: 0.3;
   }
@@ -92,6 +94,7 @@ body::after {
     opacity: 0;
     transform: translateY(20px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -102,6 +105,7 @@ body::after {
   from {
     transform: translateX(-100%);
   }
+
   to {
     transform: translateX(0);
   }
@@ -142,11 +146,13 @@ body::after {
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
+
 /* Navbar offset for all pages */
-body > app-root > div,
-router-outlet + * {
+body>app-root>div,
+router-outlet+* {
   padding-top: 72px;
 }
+
 .leaflet-container {
   z-index: 0 !important;
 }
@@ -156,11 +162,27 @@ router-outlet + * {
 .leaflet-bottom {
   z-index: 0 !important;
 }
+
 /* Router outlet'ten render edilen tüm page component'leri */
 app-explore,
-app-add-spot,
 app-map,
 app-about {
   display: block;
   padding-top: 72px;
+}
+
+app-add-spot {
+  display: block;
+  padding-top: 0 !important;
+  overflow: hidden;
+}
+
+/* Add Spot sayfasında scroll ve footer'ı engelle */
+body:has(app-add-spot) {
+  overflow: hidden;
+  height: 100vh;
+}
+
+body:has(app-add-spot) app-footer {
+  display: none;
 }

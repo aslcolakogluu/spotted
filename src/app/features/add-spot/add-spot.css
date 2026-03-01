@@ -6,9 +6,8 @@
   font-family: "DM Sans", sans-serif;
   background: #0a0b0d;
   color: #eee8df;
-  height: 100vh;
+  height: calc(100vh - 72px);
   overflow: hidden;
-  padding-top: 72px;
   box-sizing: border-box;
 }
 
@@ -121,7 +120,7 @@
   flex-direction: column;
   align-items: center;
   gap: 4px;
-  cursor: pointer;
+  cursor: default;
   transition: all 0.3s;
 }
 

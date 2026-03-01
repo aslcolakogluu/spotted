@@ -85,7 +85,7 @@ export class AddSpotComponent implements OnInit, AfterViewInit, OnDestroy {
   readonly spotTypes = [
     { value: SpotType.NATURE, label: 'Nature', emoji: '' },
     { value: SpotType.PARK, label: 'Park', emoji: '' },
-    { value: SpotType.BRIDGE, label: 'Bridge', emoji: '🌉' },
+    { value: SpotType.BRIDGE, label: 'Bridge', emoji: '' },
     { value: SpotType.HISTORICAL, label: 'Historical', emoji: '' },
     { value: SpotType.MUSEUM, label: 'Museum', emoji: '' },
     { value: SpotType.BEACH, label: 'Beach', emoji: '' },
