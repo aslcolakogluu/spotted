@@ -9,6 +9,7 @@ import {
 import { FormsModule } from '@angular/forms';
 import { SpotService } from '@core/services';
 import { Spot, SpotType } from '@core/models';
+import { SPOT_TYPES, getSpotTypeIcon, getSpotTypeLabel as getLabel } from '@shared/constants/spot-type-icons';
 
 declare const L: any;
 
@@ -35,16 +36,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
   private userLocationMarker: any = null;
   private markersInitialized = false;
 
-  readonly spotTypes = [
-    { type: SpotType.NATURE, label: 'Nature', emoji: '' },
-    { type: SpotType.PARK, label: 'Park', emoji: '' },
-    { type: SpotType.BRIDGE, label: 'Bridge', emoji: '' },
-    { type: SpotType.HISTORICAL, label: 'Historical', emoji: '' },
-    { type: SpotType.MUSEUM, label: 'Museum', emoji: '' },
-    { type: SpotType.BEACH, label: 'Beach', emoji: '' },
-    { type: SpotType.SPORTS, label: 'Sports', emoji: '' },
-    { type: SpotType.OTHER, label: 'Other', emoji: '' },
-  ];
+  readonly spotTypes = SPOT_TYPES;
 
   // Template için her zaman güncel liste (Angular change detection ile uyumlu)
   get filteredSpots(): Spot[] {
@@ -76,7 +68,6 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
   ngOnInit(): void {
     this.loadLeaflet();
     this.spotService.getSpots().subscribe((spots) => {
-      console.log('Spots loaded:', spots);
       this.allSpots.set(spots);
       // Map zaten hazırsa hemen marker'ları ekle
       if (this.map) {
@@ -132,7 +123,6 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
     setTimeout(() => {
       this.map.invalidateSize();
       this.mapReady.set(true);
-      console.log('Map initialized, spots count:', this.allSpots().length);
       this.updateMarkers(); // Spotlar zaten yüklüyse hemen ekle
     }, 100);
   }
@@ -189,7 +179,6 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
 
   // ✅ Enter'a basınca çağrılır
   onSearchSubmit(): void {
-    console.log('Search submitted:', this.searchQuery);
     this.activeSearchQuery.set(this.searchQuery);
     this.updateMarkers();
   }
@@ -287,14 +276,12 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
     return '★'.repeat(Math.round(rating));
   }
 
-  getSpotTypeEmoji(type: SpotType): string {
-    const found = this.spotTypes.find((t) => t.type === type);
-    return found?.emoji || '';
+  getSpotTypeIcon(type: SpotType): string {
+    return getSpotTypeIcon(type);
   }
 
   getSpotTypeLabel(type: SpotType): string {
-    const found = this.spotTypes.find((t) => t.type === type);
-    return found?.label || 'Other';
+    return getLabel(type);
   }
 
   // ✅ Component class'ın içine ekle

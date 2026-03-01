@@ -2,6 +2,7 @@ import { Component, inject, signal, OnInit, OnDestroy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { SpotService } from '@core/services';
 import { Spot, SpotType, SortOption } from '@core/models';
+import { SPOT_TYPES, getSpotTypeIcon, getSpotTypeLabel as getLabel } from '@shared/constants/spot-type-icons';
 
 const GRADS = [
   'linear-gradient(145deg, #1e3a3a 0%, #2a4a3a 40%, #1a2a2a 100%)',
@@ -36,16 +37,7 @@ export class ExploreComponent implements OnInit, OnDestroy {
 
   private allSpots = signal<Spot[]>([]);
 
-  readonly spotTypes = [
-    { type: SpotType.NATURE, label: 'Nature', emoji: '' },
-    { type: SpotType.PARK, label: 'Park', emoji: '' },
-    { type: SpotType.BRIDGE, label: 'Bridge', emoji: '' },
-    { type: SpotType.HISTORICAL, label: 'Historical', emoji: '' },
-    { type: SpotType.MUSEUM, label: 'Museum', emoji: '' },
-    { type: SpotType.BEACH, label: 'Beach', emoji: '' },
-    { type: SpotType.SPORTS, label: 'Sports', emoji: '' },
-    { type: SpotType.OTHER, label: 'Other', emoji: '' },
-  ];
+  readonly spotTypes = SPOT_TYPES;
 
   get filteredSpots(): Spot[] {
     let spots = this.allSpots();
@@ -204,14 +196,12 @@ export class ExploreComponent implements OnInit, OnDestroy {
     return '★'.repeat(Math.round(rating));
   }
 
-  getSpotTypeEmoji(type: SpotType): string {
-    const found = this.spotTypes.find((t) => t.type === type);
-    return found?.emoji || '';
+  getSpotTypeIcon(type: SpotType): string {
+    return getSpotTypeIcon(type);
   }
 
   getSpotTypeLabel(type: SpotType): string {
-    const found = this.spotTypes.find((t) => t.type === type);
-    return found?.label || 'Other';
+    return getLabel(type);
   }
 
   clearSearch(): void {

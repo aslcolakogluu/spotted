@@ -3,7 +3,6 @@ import {
   inject,
   output,
   signal,
-  DestroyRef,
   HostListener,
 } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
@@ -29,7 +28,6 @@ export class NavbarComponent {
 
   @HostListener('window:scroll', [])
   onWindowScroll() {
-    console.log('Window scrolled:', window.scrollY);
     this.isScrolled.set(window.scrollY > 50);
   }
 }

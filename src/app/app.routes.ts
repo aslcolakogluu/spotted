@@ -27,6 +27,7 @@ export const routes: Routes = [
     path: 'add-spot',
     loadComponent: () =>
       import('./features/add-spot/add-spot').then((m) => m.AddSpotComponent),
+    canActivate: [authGuard],
   },
   {
     path: 'contact',

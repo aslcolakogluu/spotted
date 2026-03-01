@@ -3,12 +3,7 @@
 <!-- FLOATING SEARCH -->
 <div class="floating-search">
   <div class="search-container">
-    <input
-      type="text"
-      [(ngModel)]="searchQuery"
-      (keyup.enter)="onSearchSubmit()"
-      placeholder="Spot ara..."
-    />
+    <input type="text" [(ngModel)]="searchQuery" (keyup.enter)="onSearchSubmit()" placeholder="Spot ara..." />
   </div>
 </div>
 
@@ -24,21 +19,14 @@
 
     <!-- Category Filters -->
     <div class="category-filters">
-      <button
-        class="category-pill"
-        [class.active]="selectedCategory() === null"
-        (click)="setCategory(null)"
-      >
+      <button class="category-pill" [class.active]="selectedCategory() === null" (click)="setCategory(null)">
         All
       </button>
 
-      @for (item of spotTypes; track item.type) {
-      <button
-        class="category-pill"
-        [class.active]="selectedCategory() === item.type"
-        (click)="setCategory(item.type)"
-      >
-        {{ item.emoji }} {{ item.label }}
+      @for (item of spotTypes; track item.value) {
+      <button class="category-pill" [class.active]="selectedCategory() === item.value"
+        (click)="setCategory(item.value)">
+        <span class="pill-icon" [innerHTML]="item.icon"></span> {{ item.label }}
       </button>
       }
     </div>
@@ -47,11 +35,7 @@
   <!-- Spot List -->
   <div class="spot-list">
     @for (spot of filteredSpots; track spot.id; let i = $index) {
-    <div
-      class="spot-item"
-      [class.active]="selectedSpot()?.id === spot.id"
-      (click)="selectSpot(spot)"
-    >
+    <div class="spot-item" [class.active]="selectedSpot()?.id === spot.id" (click)="selectSpot(spot)">
       <div class="spot-number">{{ i + 1 }}</div>
 
       <div class="spot-info">
@@ -59,7 +43,7 @@
         <p class="spot-address">{{ spot.address }}</p>
         <div class="spot-meta">
           <span class="spot-type">
-            {{ getSpotTypeEmoji(spot.type) }} {{ getSpotTypeLabel(spot.type) }}
+            <span class="type-icon" [innerHTML]="getSpotTypeIcon(spot.type)"></span> {{ getSpotTypeLabel(spot.type) }}
           </span>
           <span class="spot-rating">
             {{ getStars(spot.rating) }} {{ spot.rating }}
@@ -75,33 +59,16 @@
 <div class="map-controls">
   <button class="map-control-btn" title="Konumum" (click)="myLocation()">
     <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        stroke-width="2"
-        d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
-      />
-      <path
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        stroke-width="2"
-        d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
-      />
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+        d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
     </svg>
   </button>
 
-  <button
-    class="map-control-btn"
-    title="Filtreleri Temizle"
-    (click)="clearFilters()"
-  >
+  <button class="map-control-btn" title="Filtreleri Temizle" (click)="clearFilters()">
     <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        stroke-width="2"
-        d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
-      />
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+        d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
     </svg>
   </button>
 </div>
@@ -114,8 +81,8 @@
   <div class="card-header">
     <h4>{{ selectedSpot()!.name }}</h4>
     <span class="card-type">
-      {{ getSpotTypeEmoji(selectedSpot()!.type) }} {{
-      getSpotTypeLabel(selectedSpot()!.type) }}
+      <span class="type-icon" [innerHTML]="getSpotTypeIcon(selectedSpot()!.type)"></span>
+      {{ getSpotTypeLabel(selectedSpot()!.type) }}
     </span>
   </div>
 

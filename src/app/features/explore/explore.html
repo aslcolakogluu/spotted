@@ -9,45 +9,30 @@
   <div class="filter-controls">
     <!-- Search Bar - ✅ Enter ile arama -->
     <div class="search-bar">
-      <input
-        type="text"
-        [(ngModel)]="searchQuery"
-        (keyup.enter)="onSearchSubmit()"
-        placeholder="Search Spot...">
+      <input type="text" [(ngModel)]="searchQuery" (keyup.enter)="onSearchSubmit()" placeholder="Search Spot...">
 
-        @if (searchQuery){
-          <button class="search-clear" (click)="clearSearch()">×</button>
-        }
-    
+      @if (searchQuery){
+      <button class="search-clear" (click)="clearSearch()">×</button>
+      }
+
     </div>
 
     <!-- Category Chips -->
     <div class="filter-chips">
-      <button
-        class="filter-chip"
-        (click)="setCategory(null)"
-        [class.active]="selectedCategory() === null"
-      >
+      <button class="filter-chip" (click)="setCategory(null)" [class.active]="selectedCategory() === null">
         All
       </button>
 
-      @for (item of spotTypes; track item.type) {
-      <button
-        class="filter-chip"
-        (click)="setCategory(item.type)"
-        [class.active]="selectedCategory() === item.type"
-      >
-        {{ item.emoji }} {{ item.label }}
+      @for (item of spotTypes; track item.value) {
+      <button class="filter-chip" (click)="setCategory(item.value)" [class.active]="selectedCategory() === item.value">
+        <span class="chip-icon" [innerHTML]="item.icon"></span> {{ item.label }}
       </button>
       }
     </div>
 
     <!-- Sort Dropdown -->
     <div class="sort-dropdown">
-      <select
-        [ngModel]="sortBy()"
-        (ngModelChange)="sortBy.set($event); onSortChange()"
-      >
+      <select [ngModel]="sortBy()" (ngModelChange)="sortBy.set($event); onSortChange()">
         <option [value]="2">Highest Rated</option>
         <option [value]="4">Most Reviewed</option>
         <option [value]="3">Newest</option>
@@ -65,32 +50,17 @@
       <h3>Puan</h3>
       <div class="rating-filter">
         <div class="rating-option">
-          <input
-            type="checkbox"
-            id="5star"
-            [(ngModel)]="filter5Star"
-            (change)="applyFilters()"
-          />
+          <input type="checkbox" id="5star" [(ngModel)]="filter5Star" (change)="applyFilters()" />
           <label for="5star"> <span class="stars">★★★★★</span> 5 Stars </label>
         </div>
 
         <div class="rating-option">
-          <input
-            type="checkbox"
-            id="4star"
-            [(ngModel)]="filter4Star"
-            (change)="applyFilters()"
-          />
+          <input type="checkbox" id="4star" [(ngModel)]="filter4Star" (change)="applyFilters()" />
           <label for="4star"> <span class="stars">★★★★</span> 4+ Stars </label>
         </div>
 
         <div class="rating-option">
-          <input
-            type="checkbox"
-            id="3star"
-            [(ngModel)]="filter3Star"
-            (change)="applyFilters()"
-          />
+          <input type="checkbox" id="3star" [(ngModel)]="filter3Star" (change)="applyFilters()" />
           <label for="3star"> <span class="stars">★★★</span> 3+ Stars </label>
         </div>
       </div>
@@ -102,13 +72,8 @@
 
       @for (item of topRankings; track item.id; let i = $index) {
       <div class="ranking-item">
-        <div
-          class="ranking-number"
-          [class.top1]="i === 0"
-          [class.top2]="i === 1"
-          [class.top3]="i === 2"
-          [class.other]="i > 2"
-        >
+        <div class="ranking-number" [class.top1]="i === 0" [class.top2]="i === 1" [class.top3]="i === 2"
+          [class.other]="i > 2">
           {{ i + 1 }}
         </div>
 
@@ -145,7 +110,7 @@
           }
 
           <span class="card-img-tag">
-            {{ getSpotTypeEmoji(spot.type) }} {{ getSpotTypeLabel(spot.type) }}
+            <span class="tag-icon" [innerHTML]="getSpotTypeIcon(spot.type)"></span> {{ getSpotTypeLabel(spot.type) }}
           </span>
         </div>
 

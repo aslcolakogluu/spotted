@@ -2,7 +2,6 @@ import { Component, output, signal, inject } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import {
   FormBuilder,
-  FormsModule,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
@@ -12,7 +11,7 @@ import { LoginForm } from '@core/models/user.model';
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [FormsModule, ReactiveFormsModule, RouterLink],
+  imports: [ReactiveFormsModule, RouterLink],
   templateUrl: './login.html',
   styleUrl: './login.css',
 })
@@ -31,13 +30,7 @@ export class Login {
   errorMessage = signal('');
 
   ngOnInit(): void {
-    this.loginForm.valueChanges.subscribe((value: any) => {
-      console.log('Login form value changed:', value);
-    });
-    console.log(
-      'Login component initialized with form:',
-      this.loginForm.valueChanges,
-    );
+    // Form value changes tracking
   }
 
   closeLogin(): void {
@@ -47,7 +40,6 @@ export class Login {
   onSubmit() {
     this.isLoading.set(true);
     this.errorMessage.set('');
-    console.log('Login form submitted with:', this.loginForm);
 
     this.authService
       .login(this.loginForm.value as LoginForm)

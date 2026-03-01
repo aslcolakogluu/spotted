@@ -153,6 +153,26 @@ router-outlet+* {
   padding-top: 72px;
 }
 
+/* Spot type inline SVG icons */
+.chip-icon,
+.pill-icon,
+.tag-icon,
+.type-icon {
+  display: inline-flex;
+  align-items: center;
+  vertical-align: middle;
+  line-height: 1;
+}
+
+.chip-icon svg,
+.pill-icon svg,
+.tag-icon svg,
+.type-icon svg {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+}
+
 .leaflet-container {
   z-index: 0 !important;
 }

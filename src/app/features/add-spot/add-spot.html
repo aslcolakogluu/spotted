@@ -81,7 +81,7 @@
             <option [ngValue]="null">Select a category</option>
             @for (type of spotTypes; track type.value) {
             <option [value]="type.value">
-              {{ type.emoji }} {{ type.label }}
+              {{ type.label }}
             </option>
             }
           </select>

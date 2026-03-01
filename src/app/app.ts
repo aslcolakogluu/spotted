@@ -28,7 +28,6 @@ import { AuthService } from '@core/services/auth.service';
 })
 export class AppComponent {
   public authService = inject(AuthService);
-  showLoginModal = signal(false);
   currentRoute = signal('/');
 
   constructor(private router: Router) {

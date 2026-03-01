@@ -13,6 +13,7 @@ import { CommonModule } from '@angular/common';
 import { SpotService } from '@core/services';
 import { AuthService } from '@core/services/auth.service';
 import { SpotType } from '@core/models';
+import { SPOT_TYPES, getSpotTypeIcon, getSpotTypeLabel } from '@shared/constants/spot-type-icons';
 
 declare const L: any;
 
@@ -23,7 +24,6 @@ interface SpotForm {
   description: string;
   latitude: number;
   longitude: number;
-  imageUrl: string;
   bestTime: string;
 }
 
@@ -55,12 +55,6 @@ export class AddSpotComponent implements OnInit, AfterViewInit, OnDestroy {
   currentStep = signal<number>(1);
   readonly totalSteps = 3;
 
-  readonly steps = [
-    { number: 1, title: 'Location' },
-    { number: 2, title: 'Details' },
-    { number: 3, title: 'Media' },
-  ];
-
   // Form data
   formData = signal<SpotForm>({
     name: '',
@@ -69,7 +63,6 @@ export class AddSpotComponent implements OnInit, AfterViewInit, OnDestroy {
     description: '',
     latitude: 39.9334,
     longitude: 32.8597,
-    imageUrl: '',
     bestTime: '',
   });
 
@@ -82,16 +75,7 @@ export class AddSpotComponent implements OnInit, AfterViewInit, OnDestroy {
   imagePreview = signal<string | null>(null);
 
   // Spot types
-  readonly spotTypes = [
-    { value: SpotType.NATURE, label: 'Nature', emoji: '' },
-    { value: SpotType.PARK, label: 'Park', emoji: '' },
-    { value: SpotType.BRIDGE, label: 'Bridge', emoji: '' },
-    { value: SpotType.HISTORICAL, label: 'Historical', emoji: '' },
-    { value: SpotType.MUSEUM, label: 'Museum', emoji: '' },
-    { value: SpotType.BEACH, label: 'Beach', emoji: '' },
-    { value: SpotType.SPORTS, label: 'Sports', emoji: '' },
-    { value: SpotType.OTHER, label: 'Other', emoji: '' },
-  ];
+  readonly spotTypes = SPOT_TYPES;
 
   // Computed preview data
   previewTitle = computed(() => {
@@ -112,31 +96,14 @@ export class AddSpotComponent implements OnInit, AfterViewInit, OnDestroy {
   previewCategory = computed(() => {
     const type = this.formData().type;
     if (!type) return '-';
-    const found = this.spotTypes.find((t) => t.value === type);
-    return found ? `${found.emoji} ${found.label}` : '-';
+    return getSpotTypeLabel(type);
   });
 
   previewTime = computed(() => {
     return this.formData().bestTime || '-';
   });
 
-  step1 = computed(
-    () =>
-      !!this.formData().name.trim() &&
-      !!this.formData().latitude &&
-      !!this.formData().longitude,
-  );
 
-  step2 = computed(
-    () =>
-      !!this.formData().type &&
-      !!this.formData().address.trim() &&
-      this.formData().description.trim().length >= 50,
-  );
-
-  step3 = computed(
-    () => !!this.imagePreview() && !!this.formData().bestTime.trim(),
-  );
 
   goToStep(step: number): void {
     this.currentStep.set(step);
@@ -310,11 +277,7 @@ export class AddSpotComponent implements OnInit, AfterViewInit, OnDestroy {
       newErrors.address = 'Address is required';
     }
 
-    if (!data.bestTime.trim()) {
-      newErrors.bestTime = 'Best time is required';
-    }
-
-    // Image is optional — fallback URL is used if no image is uploaded
+    // Image and bestTime are optional
 
     this.errors.set(newErrors);
     return Object.keys(newErrors).length === 0;

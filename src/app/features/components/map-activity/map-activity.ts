@@ -8,12 +8,12 @@ import { ActivityListComponent } from '@layout/activity-list/activity-list';
   imports: [SpotMapComponent, ActivityListComponent],
   templateUrl: './map-activity.html',
   styleUrl: './map-activity.css',
-    
- 
-    
+
+
+
 })
 export class MapActivitySectionComponent {
   onSpotSelected(spot: MapSpot): void {
-    console.log('Selected Spot:', spot.name);
+    // Spot selected handler
   }
 }

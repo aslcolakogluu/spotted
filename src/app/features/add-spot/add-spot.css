@@ -628,9 +628,6 @@
 }
 
 @media (max-width: 768px) {
-  :host {
-    padding-top: 60px;
-  }
 
   .page-header {
     padding: 8px 16px 4px;
