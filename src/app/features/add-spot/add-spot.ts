@@ -1,3 +1,5 @@
+// Add-spot (mekan ekleme) bileşeni — kullanıcıların yeni mekan eklemesini sağlayan çok adımlı form
+// Adım 1: Haritadan konum seçimi, Adım 2: Açıklama ve kategori, Adım 3: Adres ve medya
 import {
   Component,
   inject,
@@ -15,18 +17,21 @@ import { AuthService } from '@core/services/auth.service';
 import { SpotType } from '@core/models';
 import { SPOT_TYPES, getSpotTypeIcon, getSpotTypeLabel } from '@shared/constants/spot-type-icons';
 
+// Leaflet harita kütüphanesi global scope'tan erişilir (CDN ile yüklenir)
 declare const L: any;
 
+// Form verilerini tutan arayüz — her adımdaki alanları içerir
 interface SpotForm {
   name: string;
   type: SpotType | null;
   address: string;
   description: string;
-  latitude: number;
-  longitude: number;
-  bestTime: string;
+  latitude: number;    // Haritadan seçilen enlem koordinatı
+  longitude: number;   // Haritadan seçilen boylam koordinatı
+  bestTime: string;    // En iyi ziyaret saati (opsiyonel bilgi)
 }
 
+// Form validasyon hatalarını tutan arayüz — her alan için hata mesajı
 interface ValidationErrors {
   name?: string;
   type?: string;
@@ -40,46 +45,47 @@ interface ValidationErrors {
 @Component({
   selector: 'app-add-spot',
   standalone: true,
-  imports: [FormsModule, CommonModule],
+  imports: [FormsModule, CommonModule], // CommonModule: *ngIf, *ngFor direktifleri için
   templateUrl: './add-spot.html',
   styleUrl: './add-spot.css',
 })
+// OnInit: giriş kontrolü ve Leaflet yükleme, AfterViewInit: haritayı DOM'a ekle, OnDestroy: harita temizleme
 export class AddSpotComponent implements OnInit, AfterViewInit, OnDestroy {
   private router = inject(Router);
   private spotService = inject(SpotService);
   private authService = inject(AuthService);
 
-  private map: any;
-  private marker: any;
+  private map: any;     // Leaflet harita nesnesi referansı
+  private marker: any;  // Haritadaki konum markeri referansı
 
-  currentStep = signal<number>(1);
-  readonly totalSteps = 3;
+  currentStep = signal<number>(1); // Aktif adım (1, 2 veya 3)
+  readonly totalSteps = 3;          // Toplam adım sayısı
 
-  // Form data
+  // Form alanlarının reaktif durumu — her adım bu veriden okunur/yazar
   formData = signal<SpotForm>({
     name: '',
     type: null,
     address: '',
     description: '',
-    latitude: 39.9334,
-    longitude: 32.8597,
+    latitude: 39.9334,  // Ankara'nın varsayılan enlemi
+    longitude: 32.8597, // Ankara'nın varsayılan boylamı
     bestTime: '',
   });
 
-  // Validation
+  // Validasyon hataları ve gönderim durumu
   errors = signal<ValidationErrors>({});
-  isSubmitting = signal(false);
+  isSubmitting = signal(false); // Submit butonu tıklandığında çift gönderimi engeller
 
-  // Image upload
-  selectedFile = signal<File | null>(null);
-  imagePreview = signal<string | null>(null);
+  // Resim yükleme durumu
+  selectedFile = signal<File | null>(null);    // Seçilen dosya nesnesi
+  imagePreview = signal<string | null>(null);  // Base64 önizleme URL'i
 
-  // Spot types
+  // Mekan türlerinin listesi (kategori seçim butonları için)
   readonly spotTypes = SPOT_TYPES;
 
-  // Computed preview data
+  // Önizleme alanı için computed değerler — formData değiştikçe otomatik güncellenir
   previewTitle = computed(() => {
-    return this.formData().name || 'Spot Name';
+    return this.formData().name || 'Spot Name'; // Ad girilmemişse placeholder göster
   });
 
   previewAddress = computed(() => {
@@ -95,7 +101,7 @@ export class AddSpotComponent implements OnInit, AfterViewInit, OnDestroy {
 
   previewCategory = computed(() => {
     const type = this.formData().type;
-    if (!type) return '-';
+    if (!type) return '-'; // Kategori seçilmemişse tire göster
     return getSpotTypeLabel(type);
   });
 
@@ -103,34 +109,38 @@ export class AddSpotComponent implements OnInit, AfterViewInit, OnDestroy {
     return this.formData().bestTime || '-';
   });
 
-
-
+  // Belirli bir adıma gider ve adım 1 ise haritayı yeniden başlatır
   goToStep(step: number): void {
     this.currentStep.set(step);
     if (step === 1) {
-      setTimeout(() => this.reinitializeMap(), 100);
+      setTimeout(() => this.reinitializeMap(), 100); // DOM güncellemesinden sonra haritayı düzelt
     }
   }
 
+  // Bileşen başlatıldığında: kimlik doğrulama kontrolü ve Leaflet yükleme
   ngOnInit(): void {
-    // Giriş yapılmamışsa login'e yönlendir
+    // Giriş yapılmamışsa login'e yönlendir — authGuard'a ek güvenlik katmanı
     if (!this.authService.isAuthenticated()) {
       this.router.navigate(['/login']);
       return;
     }
-    this.loadLeaflet();
+    this.loadLeaflet(); // Leaflet CSS ve JS'ini DOM'a ekle
   }
 
+  // DOM hazır olduktan sonra haritayı başlat (100ms gecikme ile)
   ngAfterViewInit(): void {
     setTimeout(() => this.initMap(), 100);
   }
 
+  // Bileşen yok edilirken harita kaynakları serbest bırakılır
   ngOnDestroy(): void {
     if (this.map) {
       this.map.remove();
     }
   }
 
+  // Leaflet kütüphanesini CDN üzerinden dinamik olarak yükler
+  // window.L henüz yoksa script ve CSS link elemanları oluşturulup DOM'a eklenir
   private loadLeaflet(): void {
     if (typeof window !== 'undefined' && !(window as any).L) {
       const link = document.createElement('link');
@@ -141,19 +151,22 @@ export class AddSpotComponent implements OnInit, AfterViewInit, OnDestroy {
       const script = document.createElement('script');
       script.src = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';
       script.onload = () => {
-        setTimeout(() => this.initMap(), 100);
+        setTimeout(() => this.initMap(), 100); // JS yüklendikten sonra haritayı başlat
       };
       document.body.appendChild(script);
     }
   }
 
+  // Leaflet haritasını 'location-map' elementine bağlar ve tıklama eventini tanımlar
   private initMap(): void {
     if (typeof window === 'undefined' || !(window as any).L || this.map) return;
 
     const L = (window as any).L;
 
+    // Haritayı Ankara merkezli başlat (zoom: 12)
     this.map = L.map('location-map').setView([39.9334, 32.8597], 12);
 
+    // CARTO dark tema harita katmanı ekle
     L.tileLayer(
       'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
       {
@@ -162,36 +175,38 @@ export class AddSpotComponent implements OnInit, AfterViewInit, OnDestroy {
       },
     ).addTo(this.map);
 
-    // Map click event
+    // Haritaya tıklandığında koordinatları form verilerine kaydet
     this.map.on('click', (e: any) => {
       this.onMapClick(e.latlng.lat, e.latlng.lng);
     });
 
-    setTimeout(() => this.map.invalidateSize(), 100);
+    setTimeout(() => this.map.invalidateSize(), 100); // Boyut hesaplama tutarsızlığını düzelt
   }
 
+  // Tab değişiminde haritanın boyutunu yeniden hesaplar (CSS gizli iken boyut 0 olabilir)
   private reinitializeMap(): void {
     if (this.map) {
       setTimeout(() => this.map.invalidateSize(), 100);
     }
   }
 
+  // Haritaya tıklandığında seçilen koordinatları form verilerine kaydeder ve marker yerleştirir
   onMapClick(lat: number, lng: number): void {
     const L = (window as any).L;
 
-    // Update form data
+    // Koordinatları formData sinyaline immutable olarak güncelle
     this.formData.update((data: SpotForm) => ({
       ...data,
       latitude: lat,
       longitude: lng,
     }));
 
-    // Remove old marker
+    // Önceki markeri kaldır
     if (this.marker) {
       this.map.removeLayer(this.marker);
     }
 
-    // Add new marker
+    // Özel styled marker ekle (CSS ile şekillendirilmiş)
     const customIcon = L.divIcon({
       className: 'custom-marker',
       html: '<div class="location-marker"></div>',
@@ -202,18 +217,19 @@ export class AddSpotComponent implements OnInit, AfterViewInit, OnDestroy {
     this.marker = L.marker([lat, lng], { icon: customIcon }).addTo(this.map);
   }
 
+  // Dosya seçildiğinde boyut ve tür validasyonu yapılır, önizleme oluşturulur
   onFileSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files[0]) {
       const file = input.files[0];
 
-      // Validate file size (5MB)
+      // Dosya boyutu kontrolü (maksimum 5MB)
       if (file.size > 5 * 1024 * 1024) {
         alert('File size must be less than 5MB.');
         return;
       }
 
-      // Validate file type
+      // Dosya türü kontrolü — sadece görsel dosyalar kabul edilir
       if (!file.type.startsWith('image/')) {
         alert('Only image files are allowed.');
         return;
@@ -221,7 +237,7 @@ export class AddSpotComponent implements OnInit, AfterViewInit, OnDestroy {
 
       this.selectedFile.set(file);
 
-      // Create preview
+      // FileReader ile görseli Base64'e çevir ve önizleme oluştur
       const reader = new FileReader();
       reader.onload = (e) => {
         this.imagePreview.set(e.target?.result as string);
@@ -230,11 +246,13 @@ export class AddSpotComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
+  // Seçilen görsel önizlemesini kaldırır
   removeImage(): void {
     this.selectedFile.set(null);
     this.imagePreview.set(null);
   }
 
+  // Adım 1 validasyonu: mekan adı ve konum zorunludur
   validateStep1(): boolean {
     const newErrors: ValidationErrors = {};
     const data = this.formData();
@@ -248,9 +266,10 @@ export class AddSpotComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     this.errors.set(newErrors);
-    return Object.keys(newErrors).length === 0;
+    return Object.keys(newErrors).length === 0; // Hata yoksa true döner
   }
 
+  // Adım 2 validasyonu: kategori seçimi ve en az 50 karakterlik açıklama zorunludur
   validateStep2(): boolean {
     const newErrors: ValidationErrors = {};
     const data = this.formData();
@@ -269,6 +288,7 @@ export class AddSpotComponent implements OnInit, AfterViewInit, OnDestroy {
     return Object.keys(newErrors).length === 0;
   }
 
+  // Adım 3 validasyonu: adres zorunludur, görsel ve saat opsiyoneldir
   validateStep3(): boolean {
     const newErrors: ValidationErrors = {};
     const data = this.formData();
@@ -283,6 +303,7 @@ export class AddSpotComponent implements OnInit, AfterViewInit, OnDestroy {
     return Object.keys(newErrors).length === 0;
   }
 
+  // Tüm adımları sırayla valide eder — ilk hatalı adıma otomatik gider
   validateForm(): boolean {
     const step1Valid = this.validateStep1();
     const step2Valid = this.validateStep2();
@@ -305,9 +326,10 @@ export class AddSpotComponent implements OnInit, AfterViewInit, OnDestroy {
     return true;
   }
 
+  // İleri butonuna tıklandığında: aktif adımı valide edip bir sonraki adıma geçer
   nextStep(): void {
     if (this.currentStep() === 1 && !this.validateStep1()) {
-      return;
+      return; // Validasyon başarısız — adımda kal
     }
     if (this.currentStep() === 2 && !this.validateStep2()) {
       return;
@@ -317,16 +339,18 @@ export class AddSpotComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     if (this.currentStep() < this.totalSteps) {
-      this.currentStep.update((n: number) => n + 1);
+      this.currentStep.update((n: number) => n + 1); // Adımı artır
     }
   }
 
+  // Geri butonuna tıklandığında bir önceki adıma döner (minimum adım 1)
   prevStep(): void {
     if (this.currentStep() > 1) {
       this.currentStep.update((n: number) => n - 1);
     }
   }
 
+  // Form gönderildiğinde: son validasyon, kimlik kontrolü ve SpotService.createSpot() çağrısı
   onSubmit(): void {
     // Auth guard: kullanıcı giriş yapmamışsa login sayfasına yönlendir
     if (!this.authService.isAuthenticated()) {
@@ -335,11 +359,12 @@ export class AddSpotComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     if (!this.validateForm()) {
-      return;
+      return; // Validasyon başarısız — submit yapma
     }
 
-    this.isSubmitting.set(true);
+    this.isSubmitting.set(true); // Submit butonunu devre dışı bırak
 
+    // Giriş yapmış kullanıcıyı al — null ise işlemi durdur
     const currentUser = this.authService.getCurrentUser();
     if (!currentUser) {
       alert('Please login first.');
@@ -349,6 +374,7 @@ export class AddSpotComponent implements OnInit, AfterViewInit, OnDestroy {
 
     const data = this.formData();
 
+    // SpotService.createSpot() ile localStorage'a yeni mekan ekler ve günceller
     this.spotService
       .createSpot({
         name: data.name,
@@ -357,6 +383,7 @@ export class AddSpotComponent implements OnInit, AfterViewInit, OnDestroy {
         description: data.description,
         latitude: data.latitude,
         longitude: data.longitude,
+        // Görsel seçilmemişse Unsplash'tan varsayılan fotoğraf kullanılır
         imageUrl:
           this.imagePreview() ||
           'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800',
@@ -365,26 +392,29 @@ export class AddSpotComponent implements OnInit, AfterViewInit, OnDestroy {
         next: (spot: any) => {
           console.log('Spot added:', spot);
           alert('Spot successfully added!');
-          this.router.navigate(['/explore']);
+          this.router.navigate(['/explore']); // Başarıyla eklenince explore sayfasına git
         },
         error: (error: any) => {
           console.error('Error adding spot:', error);
           alert('An error occurred while adding the spot.');
-          this.isSubmitting.set(false);
+          this.isSubmitting.set(false); // Hata durumunda butonu tekrar aktif et
         },
       });
   }
 
+  // İptal butonuna tıklandığında onay isteyip ana sayfaya döner
   onCancel(): void {
     if (confirm('Are you sure you want to cancel? All changes will be lost.')) {
       this.router.navigate(['/']);
     }
   }
 
+  // Generic form alanı güncelleyicisi — TypeScript generic tipi ile tip güvenliği sağlar
+  // Örnek kullanım: updateField('name', 'Yeni mekan adı')
   updateField<K extends keyof SpotForm>(field: K, value: SpotForm[K]): void {
     this.formData.update((data: SpotForm) => ({
       ...data,
-      [field]: value,
+      [field]: value, // Computed property ile dinamik alan güncelleme
     }));
   }
 }
