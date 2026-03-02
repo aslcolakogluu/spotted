@@ -39,7 +39,7 @@ export class Login {
   // Kullanıcı giriş sayfasını kapatmak istediğinde ana sayfaya yönlendirir
   closeLogin(): void {
     this.router.navigate(['/']);
-  }
+  } 
 
   // Form gönderildiğinde çalışır — AuthService üzerinden giriş yapılmaya çalışılır
   onSubmit() {
