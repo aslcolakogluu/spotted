@@ -50,6 +50,9 @@ export class ExploreComponent implements OnInit, OnDestroy {
     spots = spots.filter((s) => {
       const rating = Math.round(s.rating);
 
+      // Henüz değerlendirilmemiş spotları her zaman göster
+      if (rating === 0) return true;
+
       // Hiçbir filtre seçili değilse hepsini göster
       if (!this.filter5Star && !this.filter4Star && !this.filter3Star) {
         return true;

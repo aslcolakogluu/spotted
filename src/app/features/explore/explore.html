@@ -33,9 +33,9 @@
     <!-- Sort Dropdown -->
     <div class="sort-dropdown">
       <select [ngModel]="sortBy()" (ngModelChange)="sortBy.set($event); onSortChange()">
-        <option [value]="2">Highest Rated</option>
-        <option [value]="4">Most Reviewed</option>
-        <option [value]="3">Newest</option>
+        <option value="rating">Highest Rated</option>
+        <option value="most_reviewed">Most Reviewed</option>
+        <option value="newest">Newest</option>
       </select>
     </div>
   </div>

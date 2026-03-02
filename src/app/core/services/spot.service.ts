@@ -2,17 +2,47 @@ import { Injectable, signal } from '@angular/core';
 import { Observable, of, delay, BehaviorSubject } from 'rxjs';
 import { Spot, SpotType, SpotCreateDto, SpotUpdateDto } from '../models';
 
+const STORAGE_KEY = 'spotted_spots';
+
 @Injectable({
   providedIn: 'root',
 })
 export class SpotService {
-  private spots = signal<Spot[]>(this.generateMockSpots());
+  private spots = signal<Spot[]>(this.loadFromStorage());
   readonly spots$ = this.spots.asReadonly();
 
   // Reactive stream — her spot eklenince/silinince tüm subscriber'lar güncellenir
   private spotsSubject = new BehaviorSubject<Spot[]>(this.spots());
 
-  constructor() {}
+  constructor() { }
+
+  private loadFromStorage(): Spot[] {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (raw) {
+        const parsed = JSON.parse(raw) as Spot[];
+        // createdAt / updatedAt string olarak gelir, Date'e çevir
+        return parsed.map((s) => ({
+          ...s,
+          createdAt: new Date(s.createdAt),
+          updatedAt: new Date(s.updatedAt),
+        }));
+      }
+    } catch {
+      // localStorage okunamazsa mock data kullan
+    }
+    const mocks = this.generateMockSpots();
+    this.saveToStorage(mocks);
+    return mocks;
+  }
+
+  private saveToStorage(spots: Spot[]): void {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(spots));
+    } catch {
+      // localStorage doluysa sessizce geç
+    }
+  }
 
   getSpots(): Observable<Spot[]> {
     return this.spotsSubject.asObservable();
@@ -48,6 +78,7 @@ export class SpotService {
     };
 
     this.spots.update((spots) => [...spots, newSpot]);
+    this.saveToStorage(this.spots());
     this.spotsSubject.next(this.spots()); // tüm subscriber'lara bildir
     return of(newSpot).pipe(delay(500));
   }
@@ -70,6 +101,7 @@ export class SpotService {
       return updated;
     });
 
+    this.saveToStorage(this.spots());
     return of(this.spots()[index]).pipe(delay(500));
   }
 
@@ -78,6 +110,7 @@ export class SpotService {
 
     if (exists) {
       this.spots.update((spots) => spots.filter((s) => s.id !== id));
+      this.saveToStorage(this.spots());
       this.spotsSubject.next(this.spots());
       return of(true).pipe(delay(300));
     }
