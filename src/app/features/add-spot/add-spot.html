@@ -16,11 +16,11 @@
     <div class="form-section">
       <h2 class="form-section-title">Spot Information</h2>
 
-      <!-- Step Indicator -->
+      
       <div class="step-indicator">
         <div class="step-item" [class.active]="currentStep() === 1" [class.completed]="currentStep() > 1">
           <div class="step-number">1</div>
-          <div class="step-label">Location</div>
+          <div class="step-label">Location</div> 
         </div>
         <div class="step-line" [class.active]="currentStep() > 1"></div>
         <div class="step-item" [class.active]="currentStep() === 2" [class.completed]="currentStep() > 2">
@@ -34,7 +34,7 @@
         </div>
       </div>
 
-      <!-- Step Content -->
+     
       <div class="step-content">
 
         @if (currentStep() === 1) {
@@ -50,7 +50,7 @@
           }
         </div>
 
-        <!-- Map Location Picker -->
+        
         <div class="map-picker">
           <label class="form-label form-label-required">Location</label>
           <div class="form-hint" style="margin-bottom: 10px">
@@ -73,7 +73,7 @@
 
         } @else if(currentStep() === 2) {
 
-        <!-- Category -->
+        
         <div class="form-group">
           <label class="form-label form-label-required">Category</label>
           <select class="form-select" [class.error]="errors().type" [ngModel]="formData().type"
@@ -90,7 +90,8 @@
           }
         </div>
 
-        <!-- Description -->
+        
+      
         <div class="form-group">
           <label class="form-label form-label-required">Description</label>
           <textarea class="form-textarea" [class.error]="errors().description"
@@ -105,7 +106,7 @@
 
         } @else if (currentStep() === 3) {
 
-        <!-- Image Upload -->
+      
         <div class="image-upload">
           <label class="form-label">Image</label>
 
