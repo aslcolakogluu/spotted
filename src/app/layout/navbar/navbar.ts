@@ -17,7 +17,7 @@ import { AuthService } from '@core/services/auth.service';
   templateUrl: './navbar.html',
   styleUrl: './navbar.css',
   host: {
-    'body:scroll': 'onWindowScroll()', // Alternatif scroll dinleme metodu
+    'body:scroll': 'onWindowScroll()'  // Alternatif scroll dinleme metodu
   },
 })
 export class NavbarComponent {
@@ -26,12 +26,23 @@ export class NavbarComponent {
   // Parent bileşene olay bildirimi yapmak için output sinyalleri
   loginClicked = output<void>();    // Login butonuna tıklandığında parent bileşeni bilgilendirir
   addSpotClicked = output<void>();  // Add Spot butonuna tıklandığında parent bileşeni bilgilendirir
+  yourSpotsClicked = output<void>(); // Your Spots butonuna tıklandığında parent bileşeni bilgilendirir
 
   isScrolled = signal(false); // Sayfa 50px aşağı kaydırıldığında navbar arka plan efektini tetikler
+  router: any;
+  
+  
+
 
   // Pencere scroll olayını dinler — 50px eşiği aşıldığında navbar görünümü değişir
   @HostListener('window:scroll', [])
   onWindowScroll() {
     this.isScrolled.set(window.scrollY > 50); // true: scrolled, false: en üstte
   }
+
+  logout(): void {
+    this.authService.logout(); // Kullanıcıyı çıkış yapar
+    this.router.navigate(['/']); // Ana sayfaya yönlendirir
+  }
+
 }

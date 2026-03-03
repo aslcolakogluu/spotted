@@ -39,12 +39,32 @@
 
   <!-- Actions (Right Side) -->
   <div class="flex items-center gap-4">
+    @if(authService.isAuthenticated()) {
+    <a routerLink="/your-spots" routerLinkActive="active" class="nav-btn-secondary">
+      MY SPOTS
+    </a>
+    }
     @if (!authService.isAuthenticated()) {
     <button (click)="loginClicked.emit()" class="nav-btn-primary">LOGIN</button>
     } @if (authService.isAuthenticated()) {
     <button (click)="addSpotClicked.emit()" class="nav-btn-primary">
       + ADD SPOT
     </button>
+    }
+
+    @if(authService.isAuthenticated()) {
+      <button class = "user-menu">
+        <button class = "user-avatar">
+          {{ authService.currentUser()?.name?.charAt(0)?.toUpperCase() || 'U' }}
+        </button>
+        <div class="user-dropdown">
+          <div class = "user-info">
+            <div class = "user-name">{{ authService.currentUser()?.name }}</div>
+            <div class = "user-email">{{ authService.currentUser()?.email }}</div>
+          </div>
+          <button (click)="logout()" class="logout-btn">Logout</button>
+        </div>
+      </button>
     }
 
     <!-- Mobile Menu Button -->

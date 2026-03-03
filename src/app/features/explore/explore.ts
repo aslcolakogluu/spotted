@@ -2,6 +2,7 @@
 // BehaviorSubject'e subscribe olarak yeni eklenen mekanlar otomatik olarak görüntülenir
 import { Component, inject, signal, OnInit, OnDestroy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { RouterLink } from '@angular/router';
 import { SpotService } from '@core/services';
 import { Spot, SpotType, SortOption } from '@core/models';
 import { SPOT_TYPES, getSpotTypeIcon, getSpotTypeLabel as getLabel } from '@shared/constants/spot-type-icons';
@@ -20,7 +21,7 @@ const GRADS = [
 @Component({
   selector: 'app-explore',
   standalone: true,
-  imports: [FormsModule], // FormsModule: arama inputu için ngModel bağlaması
+  imports: [FormsModule, RouterLink], // FormsModule: arama inputu için ngModel bağlaması
   templateUrl: './explore.html',
   styleUrl: './explore.css',
 })

@@ -32,7 +32,7 @@ export class FilterService {
     [PriceRange.LUXURY]: 'Luxury'
   };
 
-  constructor() {}
+  constructor() {} // constructor boş çünkü şu anda herhangi bir bağımlılık yok
 
   setFilters(filters: Partial<FilterOptions>): void { // tüm alanları vermek zorunda değilsin 
     this.currentFilters.update(current => ({
@@ -83,8 +83,8 @@ export class FilterService {
     });
   }
 
-  setSortBy(sortBy: SortOption): void {
-    this.currentFilters.update(current => ({
+  setSortBy(sortBy: SortOption): void { // sıralama seçeneği güncellenir
+    this.currentFilters.update(current => ({ // mevcut filtreler korunur, sadece sortBy güncellenir
       ...current,
       sortBy
     }));
@@ -98,7 +98,7 @@ export class FilterService {
   }
 
   toggleOpenNow(): void {
-    this.currentFilters.update(current => ({
+    this.currentFilters.update(current => ({ 
       ...current,
       isOpen: !current.isOpen ? true : undefined
     }));
@@ -135,7 +135,7 @@ export class FilterService {
     }
   }
 
-  private getActiveFiltersCount(): number {
+  private getActiveFiltersCount(): number { // aktif filtre sayısını hesaplar, bu sayı UI'da gösterilir
     const filters = this.currentFilters();
     let count = 0;
 
@@ -156,7 +156,7 @@ export class FilterService {
 
     // Type chips
     filters.types.forEach(type => { // seçili türler için chip oluşturulur
-      chips.push({
+      chips.push({ // chip id'si benzersiz olmalı, bu yüzden type'ı kullanıyoruz
         id: `type-${type}`,
         label: this.spotTypeLabels[type],
         value: type,

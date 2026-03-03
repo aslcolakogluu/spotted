@@ -47,4 +47,19 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./features/register/register').then((m) => m.RegisterComponent),
   },
+  {
+    path: 'spot/:id', // Spot detay sayfası — giriş yapılmış kullanıcılara açık
+    loadComponent: () =>
+      import('./features/spot-detail/spot-detail').then((m) => m.SpotDetailComponent),
+    canActivate: [authGuard],
+  },
+  {
+    path: 'your-spots', // Kullanıcının eklediği ve favori spotları gösteren sayfa — yalnızca giriş yapmış kullanıcılara açık
+    loadComponent: () =>
+      import('./features/your-spots/your-spots').then((m) => m.YourSpotsComponent),
+    canActivate: [authGuard],
+  },
+
+
+
 ];

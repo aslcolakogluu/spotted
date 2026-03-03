@@ -9,7 +9,7 @@ import { Activity, ActivityType } from '@core/models';
   styleUrl: './activity-item.css',
 })
 export class ActivityItemComponent {
-  @Input() activity!: Activity;
+  @Input() activity!: Activity; // Aktivite verisi parent bileşenden alınır, bu veri template'de gösterilir
 
   // ✅ Enum'u template'de kullanabilmek için
   ActivityType = ActivityType;

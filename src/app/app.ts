@@ -13,7 +13,7 @@ import { AuthService } from '@core/services/auth.service';
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [
+  imports: [ 
     RouterOutlet,
     NavbarComponent,
     FooterComponent,
@@ -27,8 +27,8 @@ import { AuthService } from '@core/services/auth.service';
   styleUrl: './app.css',
 })
 export class AppComponent {
-  public authService = inject(AuthService);
-  currentRoute = signal('/');
+  public authService = inject(AuthService); 
+  currentRoute = signal('/'); // Uygulamanın şu anda hangi rotada olduğunu tutan sinyal, başlangıçta '/' olarak ayarlanır, böylece uygulama açıldığında ana sayfada olduğunu varsayar
 
   constructor(private router: Router) {
     // Router, Angular'ın yönlendirme işlemlerini yönetmek için kullanılan bir servis, böylece uygulama içinde farklı sayfalara geçiş yapılabilir
@@ -52,5 +52,9 @@ export class AppComponent {
 
   handleAddSpotClick(): void {
     this.router.navigate(['/add-spot']); // Router'ı kullanarak '/add-spot' rotasına yönlendirir, böylece kullanıcı "Add Spot" butonuna tıkladığında ilgili sayfaya geçiş yapabilir
+  }
+
+  onYourSpotsClick(): void {
+    this.router.navigate(['/your-spots']); // Router'ı kullanarak '/your-spots' rotasına yönlendirir, böylece kullanıcı "Your Spots" butonuna tıkladığında ilgili sayfaya geçiş yapabilir
   }
 }

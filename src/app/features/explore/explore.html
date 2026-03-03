@@ -68,7 +68,7 @@
 
     <!-- Weekly Rankings -->
     <div class="rankings">
-      <h4>🏆 This Week's Most Visited</h4>
+      <h4> This Week's Most Visited</h4>
 
       @for (item of topRankings; track item.id; let i = $index) {
       <div class="ranking-item">
@@ -98,7 +98,7 @@
     <!-- Spot Grid - ✅ Parantez yok -->
     <div class="spot-grid">
       @for (spot of paginatedSpots; track spot.id; let i = $index) {
-      <a class="spot-card">
+      <a class="spot-card" [routerLink]="['/spot', spot.id]">
         <!-- Card Image -->
         <div class="card-img">
           @if (spot.imageUrl) {

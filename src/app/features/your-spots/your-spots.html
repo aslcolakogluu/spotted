@@ -1,0 +1,105 @@
+<!-- PAGE HEADER -->
+<div class="page-header">
+  <h1 class="page-title">Spotlarım</h1>
+  <p class="page-description">
+    Eklediğiniz ve favorilediğiniz spotları buradan yönetin
+  </p>
+</div>
+
+<!-- TABS -->
+<div class="tabs-container">
+  <div class="tabs">
+    <button class="tab" [class.active]="activeTab() === 'added'" (click)="setTab('added')">
+      <span class="tab-icon">✏️</span>
+      <span class="tab-label">Eklediğim Spotlar</span>
+      <span class="tab-count">{{ addedSpots().length }}</span>
+    </button>
+
+    <button class="tab" [class.active]="activeTab() === 'favorites'" (click)="setTab('favorites')">
+      <span class="tab-icon">❤️</span>
+      <span class="tab-label">Favorilerim</span>
+      <span class="tab-count">{{ favoriteSpots().length }}</span>
+    </button>
+  </div>
+</div>
+
+<!-- CONTENT -->
+<div class="content-container">
+
+  <!-- Empty State -->
+  @if (displayedSpots().length === 0) {
+  <div class="empty-state">
+    @if (activeTab() === 'added') {
+    <div class="empty-icon">📍</div>
+    <h3>Henüz spot eklemediniz</h3>
+    <p>Keşfettiğiniz huzurlu yerleri topluluğumuzla paylaşın</p>
+    <a routerLink="/add-spot" class="btn-primary">Spot Ekle</a>
+    } @else {
+    <div class="empty-icon">💔</div>
+    <h3>Henüz favori spotunuz yok</h3>
+    <p>Beğendiğiniz spotları favorilere ekleyerek buradan kolayca erişebilirsiniz</p>
+    <a routerLink="/explore" class="btn-primary">Spotları Keşfet</a>
+    }
+  </div>
+  }
+
+  <!-- Spot Grid -->
+  @if (displayedSpots().length > 0) {
+  <div class="spot-grid">
+
+    @for (spot of displayedSpots(); track spot.id; let i = $index) {
+    <div class="spot-card" [routerLink]="['/spot', spot.id]" style="cursor:pointer">
+
+      <!-- Card Image -->
+      <div class="card-img">
+        @if (spot.imageUrl) {
+        <img [src]="spot.imageUrl" [alt]="spot.name" class="card-real-img">
+        } @else {
+        <div class="card-img-bg"></div>
+        }
+
+        <div class="card-img-overlay"></div>
+
+        <!-- Favorite Button -->
+        <button class="favorite-btn" [class.favorited]="isFavorite(spot.id)" (click)="toggleFavorite(spot.id)">
+          {{ isFavorite(spot.id) ? '❤️' : '🤍' }}
+        </button>
+
+        <span class="card-img-tag">
+          {{ getSpotTypeEmoji(spot.type) }}
+        </span>
+      </div>
+
+      <!-- Card Body -->
+      <div class="card-body">
+        <h4>{{ spot.name }}</h4>
+        <p class="card-location">{{ spot.address }}</p>
+
+        <div class="card-meta">
+          <span class="card-rating">
+            <span class="card-stars">{{ getStars(spot.rating) }}</span>
+            {{ spot.rating }}
+          </span>
+          <span class="card-date">{{ formatDate(spot.createdAt) }}</span>
+        </div>
+
+        <!-- Actions (sadece eklediğim spotlar için) -->
+        @if (activeTab() === 'added') {
+        <div class="card-actions">
+          <button class="btn-edit" title="Düzenle">
+            ✏️ Düzenle
+          </button>
+          <button class="btn-delete" (click)="deleteSpot(spot.id)" title="Sil">
+            🗑️ Sil
+          </button>
+        </div>
+        }
+      </div>
+
+    </div>
+    }
+
+  </div>
+  }
+
+</div>

@@ -20,9 +20,9 @@ export class SpotService {
     try {
       const raw = localStorage.getItem(STORAGE_KEY);
       if (raw) {
-        const parsed = JSON.parse(raw) as Spot[];
+        const parsed = JSON.parse(raw) as Spot[]; // localStorage'dan gelen veriyi Spot[] tipine dönüştürür ve parseler( string -> object)
         // createdAt / updatedAt string olarak gelir, Date'e çevir
-        return parsed.map((s) => ({
+        return parsed.map((s) => ({ // her spot objesi için createdAt ve updatedAt alanlarını Date nesnesine çevirir  
           ...s,
           createdAt: new Date(s.createdAt),
           updatedAt: new Date(s.updatedAt),
@@ -75,6 +75,7 @@ export class SpotService {
       isFeatured: false,
       createdAt: new Date(),
       updatedAt: new Date(),
+      userId: dto.userId
     };
 
     this.spots.update((spots) => [...spots, newSpot]);
@@ -145,8 +146,7 @@ export class SpotService {
         longitude: 32.8541,
         rating: 4.5,
         reviewCount: 127,
-        imageUrl:
-          'https://images.unsplash.com/photo-1577999315287-51e3261f60db?q=80&w=1631&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+        imageUrl: 'https://images.unsplash.com/photo-1577999315287-51e3261f60db?q=80&w=1631&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
         tags: ['scenic', 'view', 'quiet'],
         openingHours: 'Every day 24 hours',
         priceRange: '₺₺',
@@ -154,6 +154,7 @@ export class SpotService {
         isFeatured: true,
         createdAt: new Date('2024-01-15'),
         updatedAt: new Date('2024-02-01'),
+        userId: ''
       },
       {
         id: '2',
@@ -165,8 +166,7 @@ export class SpotService {
         longitude: 32.8543,
         rating: 4.8,
         reviewCount: 234,
-        imageUrl:
-          'https://images.unsplash.com/photo-1506972804356-0061d8b8e26e?q=80&w=1287&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+        imageUrl: 'https://images.unsplash.com/photo-1506972804356-0061d8b8e26e?q=80&w=1287&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
         tags: ['breathtaking', 'romantic', 'nature'],
         openingHours: '9:00 AM - 11:00 PM',
         priceRange: '₺₺₺',
@@ -174,20 +174,19 @@ export class SpotService {
         isFeatured: true,
         createdAt: new Date('2024-01-10'),
         updatedAt: new Date('2024-01-28'),
+        userId: ''
       },
       {
         id: '3',
         name: 'Historical Square',
         type: SpotType.HISTORICAL,
-        description:
-          'Historical buildings in the middle of the city with a relaxing atmosphere',
+        description: 'Historical buildings in the middle of the city with a relaxing atmosphere',
         address: 'Ulus, Ankara',
         latitude: 39.9334,
         longitude: 32.8597,
         rating: 4.3,
         reviewCount: 89,
-        imageUrl:
-          'https://images.unsplash.com/photo-1640397367330-35130a6ef891?q=80&w=1335&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+        imageUrl: 'https://images.unsplash.com/photo-1640397367330-35130a6ef891?q=80&w=1335&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
         tags: ['family', 'historical', 'relaxing'],
         openingHours: '6 AM - 10 PM',
         priceRange: 'Free',
@@ -195,6 +194,7 @@ export class SpotService {
         isFeatured: false,
         createdAt: new Date('2024-01-20'),
         updatedAt: new Date('2024-02-02'),
+        userId: ''
       },
       {
         id: '4',
@@ -206,8 +206,7 @@ export class SpotService {
         longitude: 32.862,
         rating: 4.6,
         reviewCount: 156,
-        imageUrl:
-          'https://images.unsplash.com/photo-1765153885305-85e56c2efe92?q=80&w=1750&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+        imageUrl: 'https://images.unsplash.com/photo-1765153885305-85e56c2efe92?q=80&w=1750&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
         tags: ['art', 'culture', 'exhibition'],
         openingHours: '10:00 AM - 7:00 PM',
         priceRange: '₺',
@@ -215,6 +214,7 @@ export class SpotService {
         isFeatured: true,
         createdAt: new Date('2024-01-05'),
         updatedAt: new Date('2024-01-30'),
+        userId: ''
       },
       {
         id: '5',
@@ -226,8 +226,7 @@ export class SpotService {
         longitude: 32.7487,
         rating: 4.4,
         reviewCount: 312,
-        imageUrl:
-          'https://images.unsplash.com/photo-1724588116521-6e7098a5d6ec?q=80&w=1287&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+        imageUrl: 'https://images.unsplash.com/photo-1724588116521-6e7098a5d6ec?q=80&w=1287&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
         tags: ['green', 'trees', 'peaceful'],
         openingHours: '10:00 AM - 10:00 PM',
         priceRange: '₺₺',
@@ -235,20 +234,19 @@ export class SpotService {
         isFeatured: false,
         createdAt: new Date('2024-01-12'),
         updatedAt: new Date('2024-02-03'),
+        userId: ''
       },
       {
         id: '6',
         name: 'Beach with golden sand',
         type: SpotType.BEACH,
-        description:
-          'Golden sand beach with clear water and relaxing atmosphere',
+        description: 'Golden sand beach with clear water and relaxing atmosphere',
         address: 'Antalya, Turkey',
         latitude: 36.8917,
         longitude: 30.7825,
         rating: 4.7,
         reviewCount: 312,
-        imageUrl:
-          'https://images.unsplash.com/photo-1705304367361-3f64429b3c91?q=80&w=1740&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+        imageUrl: 'https://images.unsplash.com/photo-1705304367361-3f64429b3c91?q=80&w=1740&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
         tags: ['modern', 'golden', 'relaxing'],
         openingHours: 'Every day 24 hours',
         priceRange: '₺₺',
@@ -256,6 +254,7 @@ export class SpotService {
         isFeatured: false,
         createdAt: new Date('2025-01-12'),
         updatedAt: new Date('2025-02-03'),
+        userId: ''
       },
       {
         id: '7',
@@ -267,8 +266,7 @@ export class SpotService {
         longitude: 32.89,
         rating: 4.7,
         reviewCount: 312,
-        imageUrl:
-          'https://images.unsplash.com/photo-1751283855655-0fd0651ab45f?q=80&w=1287&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+        imageUrl: 'https://images.unsplash.com/photo-1751283855655-0fd0651ab45f?q=80&w=1287&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
         tags: ['sports', 'facility', 'relaxing'],
         openingHours: 'Every day 24 hours',
         priceRange: '₺₺',
@@ -276,6 +274,7 @@ export class SpotService {
         isFeatured: false,
         createdAt: new Date('2025-03-12'),
         updatedAt: new Date('2025-07-03'),
+        userId: ''
       },
     ];
   }

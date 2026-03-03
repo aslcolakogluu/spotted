@@ -2,6 +2,7 @@
 
 // Ana mekan veri yapısı — bir mekanın sahip olduğu tüm alanları temsil eder
 export interface Spot {
+  userId: string;
   id: string;           // Benzersiz mekan kimliği
   name: string;         // Mekanın adı
   type: SpotType;       // Mekan kategorisi (köprü, doğa, tarihi, vb.)
@@ -47,6 +48,7 @@ export interface SpotCreateDto {
   tags?: string[];
   openingHours?: string;
   priceRange?: string;
+  userId: string;
 }
 
 // Mevcut mekan güncellenirken kullanılan DTO

@@ -45,7 +45,7 @@ interface ValidationErrors {
 @Component({
   selector: 'app-add-spot',
   standalone: true,
-  imports: [FormsModule, CommonModule], // CommonModule: *ngIf, *ngFor direktifleri için
+  imports: [FormsModule],
   templateUrl: './add-spot.html',
   styleUrl: './add-spot.css',
 })
@@ -62,7 +62,7 @@ export class AddSpotComponent implements OnInit, AfterViewInit, OnDestroy {
   readonly totalSteps = 3;          // Toplam adım sayısı
 
   // Form alanlarının reaktif durumu — her adım bu veriden okunur/yazar
-  formData = signal<SpotForm>({
+  formData = signal<SpotForm>({ // spotform ile formun tüm alanlarını tek bir sinyalde tutarız, böylece formun tamamını tek bir yerde yönetebiliriz
     name: '',
     type: null,
     address: '',
@@ -153,7 +153,7 @@ export class AddSpotComponent implements OnInit, AfterViewInit, OnDestroy {
       script.onload = () => {
         setTimeout(() => this.initMap(), 100); // JS yüklendikten sonra haritayı başlat
       };
-      document.body.appendChild(script);
+      document.body.appendChild(script); // appendChild ile script eklenir, böylece yüklenme sırası korunur
     }
   }
 
@@ -383,6 +383,7 @@ export class AddSpotComponent implements OnInit, AfterViewInit, OnDestroy {
         description: data.description,
         latitude: data.latitude,
         longitude: data.longitude,
+        userId: currentUser.email,
         // Görsel seçilmemişse Unsplash'tan varsayılan fotoğraf kullanılır
         imageUrl:
           this.imagePreview() ||
